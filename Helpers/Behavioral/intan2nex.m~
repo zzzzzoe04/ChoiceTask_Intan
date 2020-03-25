@@ -1,6 +1,6 @@
-function nexData = intan2nex(dig_in,analog_in,intan_info,varargin)
+function nexData = intan2nex(dig_in,analog_in,intan,varargin)
 %
-% usage: nexData = intan2nex(dig_in,analog_in,intan_info,varargin)
+% usage: nexData = box2nex_useHeader(varargin)
 %
 % function to take a .box file (which may or may not have a header) and
 % convert timestamps to a .nex file.
@@ -8,10 +8,7 @@ function nexData = intan2nex(dig_in,analog_in,intan_info,varargin)
 % varargins:
 %   dig_in - list of .box files to convert
 %   analog_in
-%   intan_info - info about a recording session, read in from the rhd file
-%   TO ADD HERE: DESCRIPTION OF THE INFORMATION IN THE INTAN_INFO FILE,
-%   WHICH I THINK IS WHAT'S READ IN FROM THE .RHD FILE
-
+%   rhd_info - info about a recording session  
 %   'writefile' - whether or not to write the nex formatted data to a new
 %       file; default filename is the original filename with .nex appended
 %       - that is, should be "XXXX.box.nex" where XXXX is the original base
