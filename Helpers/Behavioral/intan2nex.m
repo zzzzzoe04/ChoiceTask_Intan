@@ -5,17 +5,18 @@ function nexData = intan2nex(dig_in,analog_in,intan_info,varargin)
 % function to take a .box file (which may or may not have a header) and
 % convert timestamps to a .nex file.
 %
-% varargins:
+% INPUTS:
 %   dig_in - list of .box files to convert
 %   analog_in
 %   intan_info - info about a recording session, read in from the rhd file
 %   TO ADD HERE: DESCRIPTION OF THE INFORMATION IN THE INTAN_INFO FILE,
 %   WHICH I THINK IS WHAT'S READ IN FROM THE .RHD FILE
-
+%
+% VARARGS:
 %   'writefile' - whether or not to write the nex formatted data to a new
 %       file; default filename is the original filename with .nex appended
 %       - that is, should be "XXXX.box.nex" where XXXX is the original base
-%       filename
+%       filename. NOT SURE IF WE STILL NEED THIS
 %
 % OUTPUTS:
 %   nexData - nex data structure
@@ -76,23 +77,26 @@ function nexData = intan2nex(dig_in,analog_in,intan_info,varargin)
 %   8/1/12: found that sometimes you get "pops" from high to low to high,
 %       but can also get them low to high to low. Added code to take
 %       account of this possibility.
+%   03/25/2020 - this may not be necessasry anymore
 
 analog_thresh = 2;    % volts
 
-filenames = {};
 writeFile = true;
 
+% names of what each digital line represents. I think this is correct as of
+% 3/25/2020. -DL
 dig_linenames = {'', 'foodport', 'food', 'nose5', 'houselight', 'nose4', ...
              'cue5', 'nose3', 'cue4', 'nose2', 'cue3', 'nose1', ...
              'cue2', 'gotrial', 'cue1', 'camframe'};
+% names of what each analog line represents. I think this is correct as of
+% 3/25/2020. -DL
 analog_linenames = {'tone1','tone2','whitenoise'};
 
+% concatenate the linenames so we have a full list
 all_linenames = [dig_linenames,analog_linenames];
 
 for iarg = 1 : 2 : nargin - 3
     switch lower(varargin{iarg})
-        case {'filename','filenames'}
-            filenames = varargin{iarg + 1};
         case 'writefile'
             writeFile = varargin{iarg + 1};
         case 'analog_thresh'
@@ -102,21 +106,20 @@ end
 	
 num_dig_lines = length(dig_linenames);
 % num_analog_lines = length(analog_linenames);
-if ~iscell(filenames)
-    filenames = cellstr(filenames);
-end
+
 
 % 	numLines = 16;             % 16 digital in lines on the intan system. doesn't count the analog in lines being used as digital lines
 numBytesPerSample = 2;     % assume uint16's
 totalBytes = length(dig_in) * numBytesPerSample;
 
+% pull in the sample rate from the intan_info structure
 nSampleRate = max(intan_info.frequency_parameters.board_adc_sample_rate,...
     intan_info.frequency_parameters.board_dig_in_sample_rate);   % these should always be the same
 maxNumEvents = 20000; % will choke if there are more than this many events on a line
 
 % Set up the NEX file data structure
 nexData.version = 100;
-nexData.comment = 'Converted by intan2nex.m. Dan Leventhal, 2019';
+nexData.comment = 'Converted by intan2nex.m. Dan Leventhal and Jen Magnusson, 2020';
 nexData.freq = nSampleRate;
 nexData.tbeg = 0;
 nexData.tend = totalBytes/(numBytesPerSample*nSampleRate);
@@ -140,6 +143,12 @@ for i=1:numLines
     end
     usedLines(end+1) = i;
 
+    % create nexData.events for each time a line goes "high" or "low". Note
+    % that transitions from high to low are actually lights turning on,
+    % nose ports becoming occupied, etc.
+    
+    % COMMENTS BELOW NOT RELEVANT RIGHT NOW (3/25/2020) BECAUSE WE'RE NOT USING
+    % OPTOGENETICS IN THESE EXPERIMENTS...
     % this chunk of code will name the events differently for laser
     % and shutter lines. 'On' events are generally going from high
     % to low (ie, nose-pokes, lighting cue lights, etc) because the
@@ -226,7 +235,8 @@ end
     % may be a way to fix this with a clever combination of
     % resistors, but I think this software work-around will be OK.
     
-    % hopefully, this isn't a problem in the Intan system - DL, 12/2019
+    % hopefully, this isn't a problem in the Intan system, so I commented it
+    % out - DL, 12/2019
             
 %     for iLine = 1 : numLines
 %         highIdx = find([lastSamp(iLine), allLines(iLine,:)] == 1);
