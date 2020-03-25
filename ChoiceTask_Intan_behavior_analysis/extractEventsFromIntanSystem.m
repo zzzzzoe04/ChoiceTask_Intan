@@ -2,6 +2,12 @@ function nexData = extractEventsFromIntanSystem(data_directory)
 %
 % function to translate intan system behavior events into nex format
 % 
+% INPUTS:
+%   data_directory - 
+%
+% OUTPUTS:
+%   nexData
+
 cd(data_directory)
 dig_in_file = 'digitalin.dat';
 analog_in_file = 'analogin.dat';
