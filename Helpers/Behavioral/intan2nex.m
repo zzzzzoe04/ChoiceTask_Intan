@@ -2,13 +2,20 @@ function nexData = intan2nex(dig_in,analog_in,intan_info,varargin)
 %
 % usage: nexData = intan2nex(dig_in,analog_in,intan_info,varargin)
 %
-% function to take a .box file (which may or may not have a header) and
-% convert timestamps to a .nex file.
+% function to read in timestamps from intan digital and analog in lines and
+% convert to a .nex file with events for the choice task
 %
 % INPUTS:
-%   dig_in - list of .box files to convert
-%   analog_in
-%   intan_info - info about a recording session, read in from the rhd file
+%   dig_in - name of digital input file recorded with the intan system.
+%       These are generally digital lines from the NI boards running the
+%       choice task.
+%   analog_in - name of analog input file recorded with the intan system.
+%       These are generally digital lines from the NI boards running the
+%       choice task, plugged into analog lines if we run out of digital 
+%       lines. Note that as of 3/26/2020, the line names are hard-coded in
+%       the dig_linenames = ... and analog_linenames = ... lines below.
+%   intan_info - data structure containing info read in from the rhd file
+%       .XXX - 
 %   TO ADD HERE: DESCRIPTION OF THE INFORMATION IN THE INTAN_INFO FILE,
 %   WHICH I THINK IS WHAT'S READ IN FROM THE .RHD FILE
 %
