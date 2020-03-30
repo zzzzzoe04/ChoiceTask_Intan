@@ -117,8 +117,8 @@ num_dig_lines = length(dig_linenames);
 
 % 	numLines = 16;             % 16 digital in lines on the intan system. doesn't count the analog in lines being used as digital lines
 numBytesPerSample = 2;     % assume uint16's
-nSamples = length(dig_in);
-totalBytes = nSamples * numBytesPerSample;
+nSample
+totalBytes = length(dig_in) * numBytesPerSample;
 
 % pull in the sample rate from the intan_info structure
 nSampleRate = max(intan_info.frequency_parameters.board_adc_sample_rate,...
@@ -134,6 +134,8 @@ nexData.tend = totalBytes/(numBytesPerSample*nSampleRate);
 nexData.events = {};
 on.events = {};
 off.events = {};
+
+nSamples = length(dig_in);
 
 dataOffset = 0;
 
@@ -211,17 +213,14 @@ allOffEvents = zeros(numUsedLines, maxNumEvents);
 onEventIdx = ones(numUsedLines,1);
 offEventIdx = ones(numUsedLines,1);
 
-digital_data = readIntanDigitalFile(dig_in);
-
-% CREATE A LOOP TO READ IN BLOCKS OF DATA AND CONVERT TO .NEX EVENTS
 % Collect line values from every line we care about
 for i=1:numUsedLines
     if i <= num_usedDigLines
-        allLines(i,:) = bitget(dig_in, usedLines(i));   % dig_in should really be the array of digital inputs read in
+        allLines(i,:) = bitget(dig_in, usedLines(i));
     else
         analog_idx = i - num_usedDigLines;
         try
-        allLines(i,:) = (analog_in(analog_idx,:) > analog_thresh);   % analog_in should be data read from the analog_in file
+        allLines(i,:) = (analog_in(analog_idx,:) > analog_thresh);
         catch
             keyboard
         end
