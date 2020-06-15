@@ -399,9 +399,9 @@ end
 
 % block of code to figure out if this was a correct trial, or not, and set
 % a flag to True if it was correct
-trialCorrectFlag = false;
+trialCorrectFlag = False;
 if ~isempty(trialEvents{FHidx}.timestamps) && (~isempty(trialEvents{Tone1idx}.timestamps) || ~isempty(trialEvents{Tone2idx}.timestamps))
-    trialCorrectFlag = true;
+    trialCorrectFlag = True;
     % this was a correct trial because the food hopper was activated
     % probably.
     % BUT- sometimes the food hopper fires at the end of a
@@ -410,7 +410,7 @@ if ~isempty(trialEvents{FHidx}.timestamps) && (~isempty(trialEvents{Tone1idx}.ti
     if trialEvents{FHidx}.timestamps(1) > logTrial.maxTime
         % the food hopper fired after the session was over, so if this
         % trial was actually completed, it was a wrong trial (I think)
-        trialCorrectFlag = false;
+        trialCorrectFlag = False;
     end
 end
 
@@ -445,11 +445,34 @@ if trialCorrectFlag
                                                      % trials)
         trialData.movementDirection = 2;             % moved right
         sideInAfterCue = trialEvents{NoseInidx(CueID(1) + 1)}.timestamps(trialEvents{NoseInidx(CueID(1) + 1)}.timestamps > CueTS(1));
-        trialData.timestamps.sideIn = sideInAfterCue(1);
-        trialData.timestamps.sideOut = ...
+        
+        % sometimes the last event isn't captured at the very end of a
+        % session
+        if isempty(sideInAfterCue)
+            % handle the exception here - if Tone 2 was played on the last
+            % trial and the sideIn timestamp was not recorded
+            trialData.countsAsTrial = 0;
+            trialData.valid = 0;
+            trialData.invalidNP = 0;
+            trialData.movementTooLong = 0;
+            trialData.falseStart = 0;
+            
+            trialData.logConflict.isConflict = boxLogConflicts.outcome | ...
+                                       boxLogConlicts.RT | ...
+                                       boxLogConflicts.MT | ...
+                                       boxLogConflicts.pretone | ...
+                                       boxLogConflicts.centerNP | ...
+                                       boxLogConflicts.sideNP;
+            trialData.logConflict.boxLogConflicts = boxLogConflicts;
+            
+        else
+            trialData.timestamps.sideIn = sideInAfterCue(1);
+            trialData.timestamps.sideOut = ...
                 events{NoseOutidx(CueID(1) + 1)}.timestamps(events{NoseOutidx(CueID(1) + 1)}.timestamps > NoseInTS(1));
-        trialData.timestamps.sideOut = trialData.timestamps.sideOut(1);
+            trialData.timestamps.sideOut = trialData.timestamps.sideOut(1);
             % done this way to prevent the algorithm from counting a nose-out
+            % event that may be left over from a previous trial
+        end
     else
         % tone 1 (low tone) was played
         trialData.tone = 1;
@@ -457,10 +480,31 @@ if trialCorrectFlag
         trialData.sideNP = trialData.centerNP - 1;
         trialData.movementDirection = 1;
         sideInAfterCue = trialEvents{NoseInidx(CueID(1) - 1)}.timestamps(trialEvents{NoseInidx(CueID(1) - 1)}.timestamps > CueTS(1));
-        trialData.timestamps.sideIn = sideInAfterCue(1); % Patched for sideIn timestamp empty JM 20200612
-        trialData.timestamps.sideOut = ...
+        
+        % sometimes at the end of a trial the last event gets dropped
+        if isempty(sideInAfterCue)
+            % code here to handle the exception if Tone 1 was played on the
+            % last trial and the sideIn timestamp was not recorded
+            trialData.countsAsTrial = 0;
+            trialData.valid = 0;
+            trialData.invalidNP = 0;
+            trialData.movementTooLong = 0;
+            trialData.falseStart = 0;
+            
+            trialData.logConflict.isConflict = boxLogConflicts.outcome | ...
+                                       boxLogConflicts.RT | ...
+                                       boxLogConflicts.MT | ...
+                                       boxLogConflicts.pretone | ...
+                                       boxLogConflicts.centerNP | ...
+                                       boxLogConflicts.sideNP;
+            trialData.logConflict.boxLogConflicts = boxLogConflicts;
+            
+        else
+            trialData.timestamps.sideIn = sideInAfterCue(1); % Patched for sideIn timestamp empty JM 20200612
+            trialData.timestamps.sideOut = ...
                 events{NoseOutidx(CueID(1) - 1)}.timestamps(events{NoseOutidx(CueID(1) - 1)}.timestamps > NoseInTS(1));
-        trialData.timestamps.sideOut = trialData.timestamps.sideOut(1);
+            trialData.timestamps.sideOut = trialData.timestamps.sideOut(1);
+        end
         % done this way to prevent the algorithm from counting a nose-out
         % event that may be left over from a previous trial
     end    % end if isempty(trialEvents{Tone1idx}.timestamps)
@@ -472,19 +516,34 @@ if trialCorrectFlag
         trialData.timestamps.centerIn;
     trialData.timing.RT = trialData.timestamps.centerOut - ...
         trialData.timestamps.tone;
+    if isempty(sideInAfterCue) % Patched for sideIn timestamp empty JM 20200612
+        trialData.countsAsTrial = 0;
+            trialData.valid = 0;
+            trialData.invalidNP = 0;
+            trialData.movementTooLong = 0;
+            trialData.falseStart = 0;
+            
+            trialData.logConflict.isConflict = boxLogConflicts.outcome | ...
+                                       boxLogConflicts.RT | ...
+                                       boxLogConflicts.MT | ...
+                                       boxLogConflicts.pretone | ...
+                                       boxLogConflicts.centerNP | ...
+                                       boxLogConflicts.sideNP;
+            trialData.logConflict.boxLogConflicts = boxLogConflicts;
+    else
     trialData.timing.MT = trialData.timestamps.sideIn - ...  % Patched for sideIn timestamp empty JM 20200612 R0326_20200226 trial 162 example
         trialData.timestamps.centerOut;
     trialData.timing.foodDelay = trialData.timestamps.foodClick - ...
         trialData.timestamps.sideIn;                         % Patched for sideIn timestamp empty JM 20200612 R0326_20200226 trial 162 example
     trialData.timing.sidePortHold = trialData.timestamps.sideOut - ...
         trialData.timestamps.sideIn;
-    
+    end
     % extract the FIRST time the rat went into the reward port. This is a
     % bit tricky because this may occur AFTER the next trial started
     % depending on how the behavior software was running and if the food
     % port sensor was working at all
     
-    if FoodSensidx ~= 0         % the food port sensor was working
+    if FoodSensidx ~= 0 && ~isempty(sideInAfterCue)         % the food port sensor was working
         firstFoodRetrieval = find(events{FoodSensidx}.timestamps > ...
             trialData.timestamps.sideIn);
         if ~isempty(firstFoodRetrieval)
