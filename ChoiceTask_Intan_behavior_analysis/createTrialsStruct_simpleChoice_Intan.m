@@ -36,9 +36,11 @@ function trials = createTrialsStruct_simpleChoice_Intan( logData, nexData )
 %              2 = false start, failed to hold for PSSHT (for
 %                  stop-signal/go-nogo; not relevant for simple choice task)
 %              3 = rat started in the wrong port
-%              4 = rat exceeded the limited hold
+%              4 = rat exceeded the limited hold (LimitedHold Violation -
+%              JM 06182020)
 %              5 = rat went the wrong way after the tone
 %              6 = rat failed to go back into a side port in time
+%              (MovementHold violation - JM 06182020)
 %              7 = Outcome wasn't recorded in the data file
 
 timingTolerance = 10e-3;
@@ -151,6 +153,7 @@ for iTrial = 1 : numTrials
                                         logTrial, ...
                                         trialInterval, ...
                                         timingTolerance, ...
+                                        logData.MovementHold, ...
                                         logData.LimitedHold);
     
 end
@@ -237,7 +240,7 @@ end    % function eventIdx = getEventIdx( events, eventName )
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function trialData = extractSingleTrial(events, logTrial, trialInterval, timingTolerance, LimitedHold)
+function trialData = extractSingleTrial(events, logTrial, trialInterval, timingTolerance, MovementHold, LimitedHold)
 %
 % usage:
 %
@@ -655,31 +658,32 @@ else
     trialData.timing.reactionTime = ...
         trialData.timestamps.centerOut - trialData.timestamps.tone;
 
-%     if trialData.timing.reactionTime > logTrial.responseDurationLimit %responseDurationLimit is a legacy JM 20200601
+     if trialData.timing.reactionTime > LimitedHold
 %        % nose-out occurred after limited hold expired.
-%         trialData.countsAsTrial = 1;
-%         trialData.valid = 1;
-%         trialData.invalidNP = 0;
-%         trialData.holdTooLong = 1;
-%         trialData.movementTooLong = 0;
-%         trialData.falseStart = 0;
+        trialData.countsAsTrial = 1;
+        trialData.valid = 1;
+        trialData.invalidNP = 0;
+        trialData.holdTooLong = 1;
+        trialData.movementTooLong = 0;
+        trialData.falseStart = 0;
 % 
 %         trialData.timing.wrongAnswerDelay = ...
 %             trialEvents{HLidx}.timestamps - ...
 %             (trialData.timestamps.tone + logTrial.responseDurationLimit);
-% 
+%           %responseDurationLimit is a legacy JM 20200601 
+%
 %         check that outcome, center port, and pre-tone interval match with .log file
-%         boxLogConflicts.outcome = ~(logTrial.outcome == 4);
-%         boxLogConflicts.centerNP = ~(logTrial.Center == trialData.centerNP);
-%         boxLogConflicts.pretone = ~(abs(logTrial.pretone - trialData.timing.pretone) < timingTolerance);
-% 
-%         trialData.logConflict.isConflict = boxLogConflicts.outcome | ...
-%                                            boxLogConflicts.centerNP | ...
-%                                            boxLogConflicts.pretone;
-%         trialData.logConflict.boxLogConflicts = boxLogConflicts;
-%         return;
-% 
-%     end    % end if trialData.timing.reactionTime > logTrial.responseDurationLimit
+        boxLogConflicts.outcome = ~(logTrial.outcome == 4);
+        boxLogConflicts.centerNP = ~(logTrial.Center == trialData.centerNP);
+        boxLogConflicts.pretone = ~(abs(logTrial.pretone - trialData.timing.pretone) < timingTolerance);
+
+        trialData.logConflict.isConflict = boxLogConflicts.outcome | ...
+                                           boxLogConflicts.centerNP | ...
+                                           boxLogConflicts.pretone;
+        trialData.logConflict.boxLogConflicts = boxLogConflicts;
+        return;
+
+    end    % end if trialData.timing.reactionTime > LimitedHold
 
 
 % not a limited hold violation - did the rat poke a side port in time?
@@ -728,7 +732,7 @@ else
     % hold. Limited hold is usually 1 second (for Choice Advanced), but need to figure out how to
     % get the limited hold into this function for testing. The other
     % possiblity is that this was a wrong port trial. -DL 20200420
-    % LimitedHold in trialStruct (line 150) and used patch JM 20200422
+    % MovementHold in trialStruct (line 150) and used patch JM 20200422
     
     trialData.countsAsTrial = 1;
     trialData.valid = 1;
@@ -765,7 +769,7 @@ else
     trialData.timing.wrongAnswerDelay = trialEvents{HLidx}.timestamps - ...
         trialData.timestamps.sideIn;
     
-    if trialData.timing.reactionTime + trialData.timing.movementTime > LimitedHold      % change the "1" to limited hold
+    if trialData.timing.reactionTime + trialData.timing.movementTime > MovementHold      % change the "1" to limited hold DL; edit LimitedHold to MovementHold JM 06232020
         % this was a movement hold violation
         % check that logTrial was a movement hold violation
         % ignore the fact that MT won't match up (will be recorded as zero
