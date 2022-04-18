@@ -39,6 +39,7 @@ function read_Intan_RHDinfo_file(filename)
 
 tic;
 % filename = [path,file];
+[path,file,~] = fileparts(filename);
 fid = fopen(filename, 'r');
 
 s = dir(filename);
@@ -468,7 +469,7 @@ end
 % Move variables to base workspace.
 
 % new for version 2.01: move filename info to base workspace
-filename = file;
+% filename = file;
 move_to_base_workspace(filename);
 move_to_base_workspace(path);
 

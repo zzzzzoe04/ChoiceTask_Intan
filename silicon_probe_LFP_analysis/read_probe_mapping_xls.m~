@@ -1,0 +1,8 @@
+function probe_anatomy_info = read_probe_mapping_xls(fname)
+
+% get the sheet names for this file
+
+sheets = sheetnames(fname);
+
+
+probe_anatomy_info = 0
