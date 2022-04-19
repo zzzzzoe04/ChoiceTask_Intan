@@ -32,7 +32,7 @@ samples_per_channel = amp_file.bytes / (num_channels * bytes_per_sample);
 r = round(Fs / target_Fs);
 actual_lfpFs = Fs/r;
 raw_overlap_size = ceil(filtOrder * 2 / r) * r;
-lfp_overlap_size = raw_overlap_size / (2*r);
+lfp_overlap_size = raw_overlap_size / r;
 
 lfp_block_size = raw_block_size / r;
 num_lfp_samples = ceil(samples_per_channel / r);
@@ -66,10 +66,9 @@ LFPblock_end = (LFPblock_start + lfp_block_size - 1) - lfp_overlap_size;
 for i_block = 2 : num_blocks
     
     disp(['Block ' num2str(i_block) ' of ' num2str(num_blocks)]);
-%     rewindSize = -overlap_size * numHSDchannels * bytes_per_sample;
-%     fseek(fin, rewindSize, 'cof');
     
-    read_start_sample = (i_block-1) * raw_block_size - raw_overlap_size + 1;
+%     read_start_sample = (i_block-1) * raw_block_size - raw_overlap_size + 1;
+    read_start_sample = (LFPstart-1) * r - raw_overlap_size;
     read_end_sample = read_start_sample + raw_block_plus_overlap_size - 1;
     
     new_amplifier_data = readIntanAmplifierData_by_sample_number(amp_file.name,read_start_sample,read_end_sample,amplifier_channels,convert_to_microvolts);
@@ -85,10 +84,10 @@ for i_block = 2 : num_blocks
         currentLFP(i_ch,:) = ...
             decimate(new_amplifier_data(i_ch, :), r, filtOrder, 'fir');
     end
-%     
-%     if i_block == num_blocks
-%         LFPblock_end = size(currentLFP, 2);
-%     end
+     
+    if i_block == num_blocks
+        LFPblock_end = size(currentLFP, 2);
+    end
     try
         lfp_data(:, LFPstart:LFPend) = currentLFP(:, LFPblock_start : LFPblock_end);
     catch
