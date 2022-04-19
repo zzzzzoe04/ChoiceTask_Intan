@@ -220,11 +220,7 @@ for i=1:numUsedLines
         allLines(i,:) = bitget(dig_in, usedLines(i));   % dig_in should really be the array of digital inputs read in
     else
         analog_idx = i - num_usedDigLines;
-        try
         allLines(i,:) = (analog_in(analog_idx,:) > analog_thresh);   % analog_in should be data read from the analog_in file
-        catch
-            keyboard
-        end
     end
 end        
 

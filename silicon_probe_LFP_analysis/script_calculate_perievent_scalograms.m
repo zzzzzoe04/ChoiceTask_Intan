@@ -46,11 +46,23 @@ for i_rat = 1 : length(rats_with_intan_sessions)
         
         % read digital input file
         dig_data = readIntanDigitalFile(digin_fname);
+        if ~isfield(rhd_info, 'board_adc_channels')
+            sprintf('board_adc_channels field not found in rhd_info for %s', session_folder)
+            continue
+        end
+        
         analog_data = readIntanAnalogFile(analogin_fname, rhd_info.board_adc_channels);
-        nexData = intan2nex(dig_data, analogin_fname, rhd_info);
+        nexData = intan2nex(dig_data, analog_data, rhd_info);
         
-        trials = createTrialsStruct_simpleChoice_Intan( logData, nexData );
+        try
+            sprintf('attempting to create trials structure for %s', session_folder)
+            trials = createTrialsStruct_simpleChoice_Intan( logData, nexData );
+        catch
+            sprintf('could not generate trials structure for %s', session_folder)
+            continue
+        end
         
+        sprint('placeholder')
     end
     
 end
