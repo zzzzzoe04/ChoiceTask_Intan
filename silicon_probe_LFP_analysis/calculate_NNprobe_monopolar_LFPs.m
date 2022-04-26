@@ -55,6 +55,7 @@ amplifier_data = readIntanAmplifierData_by_sample_number(amp_file.name,1,raw_blo
 for i_ch = 1 : num_channels
     currentLFP(i_ch, :) = ...
         decimate(amplifier_data(i_ch, :), r, filtOrder, 'fir');
+%     decimated_signal = decimate_zerophase(amplifier_data(i_ch, :), r, round(filtOrder/2));
 end
 lfp_data(:, LFPstart:LFPend) = currentLFP(:, 1:LFPend);
 clear currentLFP;
@@ -81,8 +82,27 @@ for i_block = 2 : num_blocks
     end
     
     for i_ch = 1 : num_channels
-        currentLFP(i_ch,:) = ...
-            decimate(new_amplifier_data(i_ch, :), r, filtOrder, 'fir');
+        try
+            currentLFP(i_ch,:) = ...
+                decimate(new_amplifier_data(i_ch, :), r, filtOrder, 'fir');
+        catch
+            % this only fails if we get to the end of the file after the 
+            % samples to include in the LFP for this block, but before 
+            % we get to the end of the extra samples loaded to reduce edge
+            % effects. In this case, just copy what's available of the
+            % decimated signal into currentLFP and ignore the rest.
+            % Shouldn't be a problem because it won't read past
+            % LFPblock_end into the lfp_data array
+            a = decimate(new_amplifier_data(i_ch, :), r, filtOrder, 'fir');
+            currentLFP(i_ch,1:length(a)) = a;
+        end
+        % below was for testing that decimate performs zero-phase filter
+%         decimated_signal = decimate_zerophase(new_amplifier_data(i_ch, :), r, round(filtOrder/2));
+%         figure(1)
+%         hold off
+%         plot(currentLFP(i_ch, :))
+%         hold on
+%         plot(decimated_signal)
     end
      
     if i_block == num_blocks
