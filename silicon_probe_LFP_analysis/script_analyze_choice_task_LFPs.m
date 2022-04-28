@@ -1,4 +1,4 @@
-probe_mapping_fname = '/Volumes/SharedX/Neuro-Leventhal/data/ChoiceTask/Probe Histology Summary/ProbeSite_Mapping.xlsx';
+probe_mapping_fname = '/Volumes/SharedX/Neuro-Leventhal/data/ChoiceTask/Probe Histology Summary/ProbeSite_Mapping_MATLAB.xlsx';
 
 intan_parent_directory = '/Volumes/SharedX/Neuro-Leventhal/data/ChoiceTask/';
 
@@ -30,6 +30,23 @@ for i_rat = 1 : length(rats_with_intan_sessions)
     
 end
 
+%%
+% get the sheet names for the probe mapping file
 
+sheets = sheetnames(probe_mapping_fname);
+num_sheets = size(sheets, 1);
+
+num_rat_sheets = 0;
+for i_sheet = 1 : num_sheets
+    
+    cur_sheet = char(sheets(i_sheet));
+    if cur_sheet(1) == 'R'
+        num_rat_sheets = num_rat_sheets + 1;
+        rat_sheets{num_rat_sheets} = cur_sheet;
+    end
+    
+end
 % lfp_name = 
-probe_anatomy_info = read_probe_mapping_xls(probe_mapping_fname)
+probe_anatomy_info = read_probe_mapping_xls(probe_mapping_fname, sheetname);
+
+%%

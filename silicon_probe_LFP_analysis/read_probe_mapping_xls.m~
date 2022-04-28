@@ -1,0 +1,9 @@
+function probe_anatomy_info = read_probe_mapping_xls(fname, sheetname)
+
+% important that the variable names are stored in range A1-G1
+opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'variablenamesrange', 'A1:G1', 'sheet', sheetname);
+T = readtable(fname, 'Sheet', sheetname);
+
+% as of 4/27/2022, variable names are:
+% AmplifierChannel - Amp
+probe_anatomy_info = 0
