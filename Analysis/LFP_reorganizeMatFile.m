@@ -68,28 +68,34 @@ verify_lfp_site29_ampflifier = lfp_amplifier(32,1:1000);
 verify_lfp_site29_fromOriginal = lfp(48, 1:1000);
 %% Use diff function to write a for loop for comparing neighboring sites
 
-% lfp_shank1_diff = diff(lfp_shank1_NNsite) - this runs the diff function
+% diff_1 = diff(lfp_NNsite(1:8,:)); - this runs the diff function
 % on shank 1 by neighboring NNsite. Work on writing this as a for loop to
 % run through all 8 shank_NNsite
 
-diff_1 = diff(lfp_NNsite(1:8,:));
-diff_2 = diff(lfp_NNsite(9:16,:));
+% diff_1 = diff(lfp_NNsite(1:8,:)); %shank1
+% diff_2 = diff(lfp_NNsite(9:16,:)); %shank2
 
+%    diff_1  = diff(lfp_NNsite(1:8,:));
+%    diff_1 = diff(lfp_NNsite(1:nrows <= 8, :));
+%    diff_2 = diff(lfp_NNsite(9:16,:));
+%    diff_3 = diff(lfp_NNsite(17:24,:));
+%    diff_4 = diff(lfp_NNsite(25:32,:));
+%    diff_5 = diff(lfp_NNsite(33:40,:));
+%    diff_6 = diff(lfp_NNsite(41:48,:));
+%    diff_7 = diff(lfp_NNsite(49:56,:));
+%    diff_8 = diff(lfp_NNsite(57:end,:))
 
-% for y=1:1:3 
-%     diff (a*exp(b*x))*sin(c*x),
-% end
-
-nrows = size(lfp_NNsite, 1); % first row length
-for r = 1:nrows
-    if r <= 8
-        A(r) = diff(lfp_NNsite,:);
-%         elseif abs(r-c) == 1
-%             A(r,c) = -1;
-%         else
-%             A(r,c) = 0;
-%         end
-    end
+num_shanks = 8; %number of shanks on NN probe
+num_sites = size(lfp_NNsite, 1);
+sites_per_shank = num_sites/num_shanks;
+num_lfp_points = size(lfp, 2);
+% pre-allocate memory for differential LFPs
+num_diff_rows = num_sites - num_shanks;
+diff_lfps = zeros(num_diff_rows, num_lfp_points); 
+for i_shank = 1 : num_shanks
+    diff_start_row = (i_shank - 1) * (sites_per_shank - 1) + 1;
+    diff_end_row = i_shank * (sites_per_shank - 1);
+    orig_start_row = (i_shank - 1) * sites_per_shank + 1;
+    orig_end_row = i_shank * sites_per_shank;
+    diff_lfps(diff_start_row:diff_end_row, :) = diff(lfp_NNsite(orig_start_row:orig_end_row, :));
 end
-
-
