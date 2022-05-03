@@ -41,7 +41,7 @@ lfp_NNsite_shank7 = lfp_shank7([1,8,2,7,3,6,4,5],:);
 lfp_NNsite_shank8 = lfp_shank8([1,8,2,7,3,6,4,5],:);
 lfp_all = cat(1,lfp_NNsite_shank1, lfp_NNsite_shank2, lfp_NNsite_shank3, lfp_NNsite_shank4, lfp_NNsite_shank5, lfp_NNsite_shank6, lfp_NNsite_shank7, lfp_NNsite_shank8);
 
-%Alternatively can be written as:
+%Alternatively can be written as (if pulled from the amplifier organized file previously NOT directly from actual NN site mapping of the H64LP map):
 lfp_NNsite_shank1 = lfp_amplifier([2,7,1,8,4,5,3,6],:);
 lfp_NNsite_shank2 = lfp_amplifier([10,15,9,16,12,13,11,14],:);
 lfp_NNsite_shank3 = lfp_amplifier([17,24,18,23,19,22,20,21],:);
@@ -102,5 +102,5 @@ for i_shank = 1 : num_shanks
     diff_end_row = i_shank * (sites_per_shank - 1);
     orig_start_row = (i_shank - 1) * sites_per_shank + 1;
     orig_end_row = i_shank * sites_per_shank;
-    diff_lfps(diff_start_row:diff_end_row, :) = diff(intan_to_site_map(orig_start_row:orig_end_row, :));
+    diff_lfps(diff_start_row:diff_end_row, :) = diff(lfp_NNsite(orig_start_row:orig_end_row, :));
 end

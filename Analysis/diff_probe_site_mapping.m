@@ -26,11 +26,11 @@ function lfp_NNsite_diff = diff_probe_site_mapping(probe_type);
 %   OUTPUTS - % diff_probe_site_mapping - structure containing the differences
 %       between neighboring sites of an NN8x8 probe ventral to dorsal
 
-cd 'X:\Neuro-Leventhal\data\ChoiceTask\R0326\R0326-processed\R0326_20200227a'
-load('lfp_NNsite.mat');
+cd 'X:\Neuro-Leventhal\data\ChoiceTask\R0326\R0326-processed\R0326_20200227a';
+load('R0326_20200227a_lfp.mat');
 
 num_shanks = 8; %number of shanks on NN probe
-num_sites = size(lfp_NNsite, 1);
+num_sites = size(lfp, 1);
 sites_per_shank = num_sites/num_shanks;
 num_lfp_points = size(lfp, 2);
 % pre-allocate memory for differential LFPs
