@@ -66,6 +66,7 @@ verify_lfp_site17_fromOriginal = lfp(33, 1:1000);
 verify_lfp_site29 = lfp_NNsite(32,1:1000); 
 verify_lfp_site29_ampflifier = lfp_amplifier(32,1:1000);
 verify_lfp_site29_fromOriginal = lfp(48, 1:1000);
+
 %% Use diff function to write a for loop for comparing neighboring sites
 
 % diff_1 = diff(lfp_NNsite(1:8,:)); - this runs the diff function
@@ -92,10 +93,14 @@ num_lfp_points = size(lfp, 2);
 % pre-allocate memory for differential LFPs
 num_diff_rows = num_sites - num_shanks;
 diff_lfps = zeros(num_diff_rows, num_lfp_points); 
+
+probe_type = 'NN8x8';
+intan_to_site_map = probe_site_mapping(probe_type);
+
 for i_shank = 1 : num_shanks
     diff_start_row = (i_shank - 1) * (sites_per_shank - 1) + 1;
     diff_end_row = i_shank * (sites_per_shank - 1);
     orig_start_row = (i_shank - 1) * sites_per_shank + 1;
     orig_end_row = i_shank * sites_per_shank;
-    diff_lfps(diff_start_row:diff_end_row, :) = diff(lfp_NNsite(orig_start_row:orig_end_row, :));
+    diff_lfps(diff_start_row:diff_end_row, :) = diff(intan_to_site_map(orig_start_row:orig_end_row, :));
 end
