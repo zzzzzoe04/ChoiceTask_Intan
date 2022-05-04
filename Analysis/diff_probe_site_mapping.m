@@ -1,8 +1,6 @@
 % re-arrange monopolar field potentials into the order on shanks
 
-% Test code to write in NNsite order; function lfp_NNsite =
-% probe_site_mapping('NN8x8'); essentially does what this block is trying
-% to do
+% Test code to order the lfp.mat in NNsite order
 
 % num_sites = size(lfp, 1);   % number of sites = number of rows in original lfp array
 % num_lfp_points = size(lfp, 2);   %n number of points = number of columns in original lfp array
@@ -12,7 +10,7 @@
 % sites_per_shank = 8;
 % for i_shank = 1 : num_shanks            % shank number
 %     for i_site = 1 : num_shanks         % site number on each shank
-%         lfp_row = (i_shank - 1) * 8 + i_site; % If i_shank = 1 then i_shank - 1 = 0 then this whole equation is 0 regardless of i_site? JM 20220501
+%         lfp_row = (i_shank - 1) * 8 + i_site;
 %         % look up the row in the table containing the site ID - don't have that with me so 
 %         % will need to look up variable names, etc.
 %         orig_lfp_row = % code here to figure out which row is i_site on i_shank in original lfp array
@@ -45,5 +43,5 @@ for i_shank = 1 : num_shanks
     diff_end_row = i_shank * (sites_per_shank - 1);
     orig_start_row = (i_shank - 1) * sites_per_shank + 1;
     orig_end_row = i_shank * sites_per_shank;
-    diff_lfps(diff_start_row:diff_end_row, :) = diff(intan_to_site_map(orig_start_row:orig_end_row, :));
+    diff_lfps(diff_start_row:diff_end_row, :) = diff(lfp(intan_to_site_map(orig_start_row:orig_end_row), :));
 end
