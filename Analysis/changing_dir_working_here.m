@@ -5,8 +5,7 @@ rat_directories = dir(data_parent_directory);
 
 num_directories = length(rat_directories);
 
-for i_dir = 1 : num_directories % i_dir = 1:length(subfolders) ?
-    
+for i_dir = 1 : length(rat_directories)
     if rat_directories(i_dir).name(1) ~= 'R'
         % make sure name starts with 'R'
         continue;
@@ -30,6 +29,8 @@ for i_dir = 1 : num_directories % i_dir = 1:length(subfolders) ?
     session_folders = dir(pwd);
     for i_session = 1 : length(session_folders)
        % insert code to loop through session folders here 
+       
+       
     end
     
     cd(data_parent_directory);

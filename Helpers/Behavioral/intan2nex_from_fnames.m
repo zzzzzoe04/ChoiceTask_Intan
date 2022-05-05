@@ -1,6 +1,6 @@
 function nexData = intan2nex_from_fnames(dig_fname,analog_fname,intan_info,varargin)
 %
-% usage: nexData = intan2nex(dig_in,analog_in,intan_info,varargin)
+% usage: nexData = intan2nex(dig_fname,analog_fname,intan_info,varargin)
 %
 % function to read in timestamps from intan digital and analog in lines and
 % convert to a .nex file with events for the choice task
