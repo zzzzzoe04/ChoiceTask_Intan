@@ -1,4 +1,4 @@
-function lfp_NNsite_diff = diff_probe_site_mapping(probe_type);
+function lfp_NNsite_diff = diff_probe_site_mapping(lfp_fname, probe_type)
 
 %   OUTPUTS - % diff_probe_site_mapping - structure containing the differences
 %       between neighboring sites of an NN8x8 probe ventral to dorsal
@@ -6,8 +6,10 @@ function lfp_NNsite_diff = diff_probe_site_mapping(probe_type);
 % cd 'X:\Neuro-Leventhal\data\ChoiceTask\R0326\R0326-processed\R0326_20200227a';
 % load('R0326_20200227a_lfp.mat');
 
-recurse_subfolders_JM_maybe;
-lfp = lfp_data.lfp;
+% recurse_subfolders_JM_maybe;
+% lfp = lfp_data.lfp;
+
+load(lfp_fname);
 
 num_shanks = 8; %number of shanks on NN probe
 num_sites = size(lfp, 1);
@@ -17,7 +19,7 @@ num_lfp_points = size(lfp, 2);
 num_diff_rows = num_sites - num_shanks;
 diff_lfps = zeros(num_diff_rows, num_lfp_points); 
 
-probe_type = 'NN8x8';
+% probe_type = 'NN8x8';
 intan_to_site_map = probe_site_mapping(probe_type);
 
 for i_shank = 1 : num_shanks
