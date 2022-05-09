@@ -31,8 +31,25 @@ for i_dir = 1 : length(rat_directories)
     session_folders = dir(pwd);
     for i_session = 1 : length(session_folders)
        % insert code to loop through session folders here 
-       filenames = fullfile({
-       
+        
+    numMats = length(session_folders);
+    switch numMats
+        case 0         % skip if no .log files present
+            cd(parentFolder);
+            continue;
+        case 1
+            validMatIdx = 1;
+        case 2
+            for iLog = 1 : length(dirs)
+                if isempty(strfind(dirs(iMat).name))
+                    validMatIdx = iMat;
+                    break;
+                end
+            end
+        otherwise      % skip if more than one .log files present
+            cd(data_parent_directory);
+            continue;
+        end
     end
     
     cd(data_parent_directory);
