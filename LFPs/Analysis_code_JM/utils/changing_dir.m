@@ -43,7 +43,7 @@ for i_dir = 1 : length(rat_directories)
         for iDir = 1:numFolders
             ii = iDir;
             cd(direct(ii).name);
-            if isfile('_lfp.mat');
+            if isfile('_lfp.mat')
                 continue;
             else
                 cd('..');
