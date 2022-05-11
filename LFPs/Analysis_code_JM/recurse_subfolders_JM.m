@@ -1,4 +1,3 @@
-@@ -0,0 +1,58 @@
 % Start with a folder and get a list of all subfolders.
 % Finds and prints names of all PNG, JPG, and TIF images in 
 % that folder and all of its subfolders.
@@ -37,14 +36,8 @@ for k = 1 : numberOfFolders
 	% Get .mat files.
 	filePattern = sprintf('%s/*.mat', thisFolder);
 	baseFileNames = dir(filePattern);
-% 	% Add on TIF files.
-% 	filePattern = sprintf('%s/*.tif', thisFolder);
-% 	baseFileNames = [baseFileNames; dir(filePattern)];
-% 	% Add on JPG files.
-% 	filePattern = sprintf('%s/*.jpg', thisFolder);
-% 	baseFileNames = [baseFileNames; dir(filePattern)];
  	numberOfMatFiles = length(baseFileNames);
-% 	% Now we have a list of all files in this folder.
+ 	% Now we have a list of all files in this folder.
 	
 	if numberOfMatFiles >= 1
 		% Go through all those .mat files.

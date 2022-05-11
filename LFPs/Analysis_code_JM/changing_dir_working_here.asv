@@ -35,18 +35,17 @@ for i_dir = 1 : length(rat_directories)
      direct=dir([ratID '*']);
      numFolders = length(direct);
 
-  %  dinfo = dir(fullfile(data_parent_directory, '**', '*.mat'));
-  %  filenames = fullfile({dinfo.folder}, {dinfo.name}); % these two lines give filenames for the .mat files 
-  
-  % - trying to identify a way to recursively identify '_lfp.mat'files exist within the subfolders
+    dinfo = dir(fullfile(data_parent_directory, '**', '*.mat'));
+    filenames = fullfile({dinfo.folder}, {dinfo.name}); % these two lines give filenames for the .mat files 
+    % - trying to identify a way to recursively identify if these filenames exist within the subfolders easily in a for loop
     
         for iDir = 1:numFolders
             ii = iDir;
             cd(direct(ii).name);
-            if isfile('_lfp.mat');
+            if isfile
                 continue;
             else
-                cd('..');
+                cd(rat_directories(i_dir).name);
             end
         end
     
