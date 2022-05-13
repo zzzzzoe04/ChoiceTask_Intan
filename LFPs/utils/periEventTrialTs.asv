@@ -10,9 +10,7 @@ function trialRanges = periEventTrialTs(trials,tWindow,eventFieldnames)
 %   eventFieldnames - length of event fields for which to extract time
 %       windows
 %       For a correct trial, eventFieldnames are as follows:
-%         cueOn, centerIn, tone, centerOut, sideIn, sideOut, foodClick, foodRetrieval
-%         - to find eventFieldnames for non-correct trials, check the
-%         timestamps column in the trials structure.
+        cueOn
 %
 % OUTPUTS
 %   trialRanges - m x n x 2 array, where m is the number of fields being

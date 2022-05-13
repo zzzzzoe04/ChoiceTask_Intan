@@ -151,7 +151,7 @@ switch lower(trialTypes)
         trialEventParams.movementTooLong = [];
         trialEventParams.outcome = 'lhfail';
         
-    case {'wronggo', 'wrong go', 'wrong direction', 'wrongdirection', ... %Keep JM 20220513
+    case {'wronggo', 'wrong go', 'wrong direction', 'wrongdirection', ...
             'wrong target', 'wrongtarget'}
         trialEventParams.trialType = 5;
         trialEventParams.correct = 0;
@@ -165,7 +165,7 @@ switch lower(trialTypes)
         trialEventParams.movementTooLong = 0;
         trialEventParams.outcome = 'wrongtarget';
         
-    case {'allstop', 'all stop', 'stop'} % gives an empty array on the extractTrials function, might not need for current ChoiceRT JM 20220513
+    case {'allstop', 'all stop', 'stop'}
         trialEventParams.trialType = 3;
         trialEventParams.correct = -1;
         trialEventParams.countsAsTrial = 1;
@@ -178,7 +178,7 @@ switch lower(trialTypes)
         trialEventParams.movementTooLong = [];
         trialEventParams.outcome = 'any';
         
-    case {'allnogo', 'all nogo', 'nogo'} % gives an empty array on the extractTrials function, might not need for current ChoiceRT JM 20220513
+    case {'allnogo', 'all nogo', 'nogo'}
         trialEventParams.trialType = 2;
         trialEventParams.correct = -1;
         trialEventParams.countsAsTrial = 1;
@@ -191,7 +191,7 @@ switch lower(trialTypes)
         trialEventParams.movementTooLong = [];
         trialEventParams.outcome = 'any';
         
-    case {'correctstop', 'correct stop'} % gives an empty array on the extractTrials function, might not need for current ChoiceRT JM 20220513
+    case {'correctstop', 'correct stop'}
         trialEventParams.trialType = 3;
         trialEventParams.correct = 1;
         trialEventParams.countsAsTrial = 1;
@@ -204,7 +204,7 @@ switch lower(trialTypes)
         trialEventParams.movementTooLong = -1;
         trialEventParams.outcome = 'correct';
         
-    case {'correctnogo', 'correct nogo'} % gives an empty array on the extractTrials function, might not need for current ChoiceRT JM 20220513
+    case {'correctnogo', 'correct nogo'}
         trialEventParams.trialType = 2;
         trialEventParams.correct = 1;
         trialEventParams.countsAsTrial = 1;
@@ -217,7 +217,7 @@ switch lower(trialTypes)
         trialEventParams.movementTooLong = [];
         trialEventParams.outcome = 'correct';
         
-    case {'failedstop', 'failed stop'} % gives an empty array on the extractTrials function, might not need for current ChoiceRT JM 20220513
+    case {'failedstop', 'failed stop'}
         trialEventParams.trialType = 3;
         trialEventParams.correct = 0;
         trialEventParams.countsAsTrial = 1;
@@ -230,7 +230,7 @@ switch lower(trialTypes)
         trialEventParams.movementTooLong = [];
         trialEventParams.outcome = 'failedstop';
         
-    case {'failednogo', 'failed nogo'} % gives an empty array on the extractTrials function, might not need for current ChoiceRT JM 20220513
+    case {'failednogo', 'failed nogo'}
         trialEventParams.trialType = 2;
         trialEventParams.correct = 0;
         trialEventParams.countsAsTrial = 1;
@@ -243,7 +243,7 @@ switch lower(trialTypes)
         trialEventParams.movementTooLong = [];
         trialEventParams.outcome = 'failedstop';
         
-    case {'any', 'all'} %gives a trial struct for ALL trials, same as allgo above. Do we need? JM 20220513
+    case {'any', 'all'}
         trialEventParams.trialType = 0;
         trialEventParams.correct = -1;
         trialEventParams.countsAsTrial = -1;
