@@ -1,6 +1,15 @@
 % creat an lfp_NNsite file
-% lfp_original = load('R0372_20201125a_lfp.mat');
-lfp_NNsite_order = lfp([2,7,1,8,4,5,3,6,... %shank 1
+% lfp_original = load('R0372_20201125a_lfp.mat'); - sample line of code to
+% load in the lfp_mat file
+intan_amplifier = lfp([49:56,...%shank1, nn sites 1-8
+        57:64,...%shank2
+        33:35, 37:39, 41:42,...%shank3
+        35,40,43:48,...%shank4
+        17:22,26,30,...%shank5
+        23:25, 27:29, 31:32,...%shank6
+        1:8,...%shank7
+        9:16],:); %shank8
+lfp_NNsite_order = intan_amplifier([2,7,1,8,4,5,3,6,... %shank 1
         10,15,9,16,12,13,11,14,... %shank2
         17,24,18,23,19,22,20,21,...%shank3
         27,25,29,26,30,28,31,32,...%shank4

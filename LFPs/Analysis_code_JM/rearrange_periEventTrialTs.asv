@@ -9,5 +9,5 @@ trialRanges_final = cat(1, trialRanges_1, trialRanges_2);
 %trialRanges_final([1,3,2,4],:);
 trialRanges_final = trialRanges_final([1,3,2,4],:);
 % trialRanges_final_frequency = trialRanges_final * actual_Fs  % May not
-% need this line if I use actual_Fs in the final code to plot
+% need this line if I use actual_Fs in the final code to 
 % the sampling frequency is 20kHz and the _lfp.mat files should be downsampled to 500, change the time (in seconds) to Hz)

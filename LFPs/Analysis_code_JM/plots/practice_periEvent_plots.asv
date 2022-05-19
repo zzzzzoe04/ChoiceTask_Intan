@@ -1,57 +1,90 @@
 % try plotting channel 1 of a lfp_NNsite file for the first correctgo trial for eventFieldnames cueOn and centerIn of the data
+% trialRanges_final(1:2,1); - [row, column]
+t_win = trialRanges_final(3:4,1);
+Fs = 500;
 
-figProps.m = 3; figProps.n = 3;
-figProps.width = 8.5 * 2.54;
-figProps.height = 8 * 2.54;
-figProps.topMargin = 6;
-figProps.panelWidth = 6 * ones(1,3);
-figProps.panelHeight = (figProps.height - 2*figProps.topMargin)/figProps.m * ones(1,3);
-figProps.colSpacing = 1 * ones(1,2);
-figProps.rowSpacing = 2 * ones(1,2);
-fullPanelWidth = sum(figProps.panelWidth) + sum(figProps.colSpacing);
-ltMargin = (figProps.width - fullPanelWidth) / 2;
-fullPanelHeight = sum(figProps.panelHeight) + sum(figProps.rowSpacing);
-botMargin = (figProps.height - figProps.topMargin - fullPanelHeight);
+ts = 10;
+sample_limits = (ts + t_win) * Fs;
 
-figUnits = 'centimeters';
-[h_fig, h_axes, figProps] = createFigPanels5(figProps, 'units', figUnits);
+lfp_to_plot = lfp_NNsite_order(:, round(sample_limits(1):sample_limits(2))); %used the round feature because the error "integer operands are required
+% for colon operator when used as an index" came up. Round seemed like a solid fix?
+nrows = size(lfp_to_plot, 1);
+t = linspace(t_win(1), t_win(2), size(lfp_to_plot, 2));
+y_lim = [-2000,2000];
 
-        axes(h_axes(1,1));
-        set(gca,'FontSize',14)
-        plot(lfp_NNsite_order(1, 415093:495093));
-        set(gca, 'xlim', [0 80000], 'ylim',[-2000 2000]);
-        
-        axes(h_axes(1,2));
-        set(gca,'FontSize',14)
-        plot(lfp_NNsite_order(2, 415093:495093));
-        set(gca,'xlim', [0 80000], 'ylim',[-2000 2000]);
+figure;
 
-        axes(h_axes(1,3));
-        set(gca,'FontSize',14)
-        plot(lfp_NNsite_order(3, 415093:495093));
-        set(gca,'xlim', [0 80000], 'ylim',[-2000 2000]);
-        
-        axes(h_axes(2,1));
-        set(gca,'FontSize',14)
-        plot(lfp_NNsite_order(4, 415093:495093));
-        set(gca,'xlim', [0 80000], 'ylim',[-2000 2000]);
-        
-        axes(h_axes(2,2));
-        set(gca,'FontSize',14)
-        plot(lfp_NNsite_diff(1, 566425:646425));
-        set(gca,'xlim', [0 80000], 'ylim',[-2000 2000]);
-        
-        axes(h_axes(2,3));
-        set(gca,'FontSize',14)
-        plot(lfp_NNsite_diff(2, 566425:646425));
-        set(gca,'xlim', [0 80000], 'ylim',[-2000 2000]);
-        
-        axes(h_axes(1,1));
-        set(gca,'FontSize',14)
-        plot(lfp_NNsite_diff(3, 566425:646425));
-        set(gca,'xlim', [0 80000], 'ylim',[-2000 2000]);
-        
-% plot(lfp_NNsite_order(10, 566425:646425)), 'black';
+for i_row = 1 : 8
+    subplot(8,1,i_row);
+    plot(t, lfp_to_plot(i_row, :);
+    set(gca,'xlim', t_win, 'ylim',y_lim);
+end
+
+% figure;
+% subplot(8,1,1);
+% plot(lfp_NNsite_order(1, 25539.15:27539.15));
+% set(gca,'xlim', [0 80000], 'ylim',[-2000 2000]);
 % hold on
-% plot(lfp_NNsite_order(2, 566425:646425)), 'red';
+% 
+% subplot(8,1,2);
+% plot(lfp_NNsite_order(2, 415093:495093));
+% set(gca,'xlim', [0 80000], 'ylim',[-2000 2000]);
+% 
+% subplot(8,1,3);
+% plot(lfp_NNsite_order(3, 415093:495093));
+% set(gca,'xlim', [0 80000], 'ylim',[-2000 2000]);
+% 
+% subplot(8,1,4);
+% plot(lfp_NNsite_order(4, 415093:495093));
+% set(gca,'xlim', [0 80000], 'ylim',[-2000 2000]);
+% 
+% subplot(8,1,5);
+% plot(lfp_NNsite_order(5, 415093:495093));
+% set(gca,'xlim', [0 80000], 'ylim',[-2000 2000]);
+% 
+% subplot(8,1,6);
+% plot(lfp_NNsite_order(6, 415093:495093));
+% set(gca,'xlim', [0 80000], 'ylim',[-2000 2000]);
+% 
+% subplot(8,1,7);
+% plot(lfp_NNsite_order(7, 415093:495093));
+% set(gca,'xlim', [0 80000], 'ylim',[-2000 2000]);
+% 
+% subplot(8,1,8);
+% plot(lfp_NNsite_order(7, 415093:495093));
+% set(gca,'xlim', [0 80000], 'ylim',[-2000 2000]);
+% 
+% hold off
+% 
+% 
+% figure;
+% subplot(7,1,1);
+% plot(lfp_NNsite_diff(1, 415093:495093));
+% set(gca,'xlim', [0 80000], 'ylim',[-1000 1000]);
+% hold on
+% 
+% subplot(7,1,2);
+% plot(lfp_NNsite_diff(2, 415093:495093));
+% set(gca,'xlim', [0 80000], 'ylim',[-1000 1000]);
+% 
+% subplot(7,1,3);
+% plot(lfp_NNsite_diff(3, 415093:495093));
+% set(gca,'xlim', [0 80000], 'ylim',[-1000 1000]);
+% 
+% subplot(7,1,4);
+% plot(lfp_NNsite_diff(4, 415093:495093));
+% set(gca,'xlim', [0 80000], 'ylim',[-1000 1000]);
+% 
+% subplot(7,1,5);
+% plot(lfp_NNsite_diff(5, 415093:495093));
+% set(gca,'xlim', [0 80000], 'ylim',[-1000 1000]);
+% 
+% subplot(7,1,6);
+% plot(lfp_NNsite_diff(6, 415093:495093));
+% set(gca,'xlim', [0 80000], 'ylim',[-1000 1000]);
+% 
+% subplot(7,1,7);
+% plot(lfp_NNsite_diff(7, 415093:495093));
+% set(gca,'xlim', [0 80000], 'ylim',[-1000 1000]);
+% 
 % hold off
