@@ -1,5 +1,6 @@
 % try plotting channel 1 of a lfp_NNsite file for the first correctgo trial for eventFieldnames cueOn and centerIn of the data
 % trialRanges_final(1:2,1); - [row, column]
+%savePath = 'X:\Neuro-Leventhal\data\ChoiceTask\R0372\R0372-processed\R0372_20201125a';
 t_win = trialRanges_final(3:4,1);
 Fs = 500;
 
@@ -12,7 +13,7 @@ rows = size(lfp_to_plot, 1);
 t = linspace(t_win(1), t_win(2), size(lfp_to_plot, 2));
 y_lim = [-2000,2000];
 
-h = figure;
+h_fig = figure;
 
 shank_num = 2;
 for i_row = 1 : 8
@@ -27,6 +28,11 @@ for i_row = 1 : 8
     %saveas(gcf, 'R0372_lfp_NNsite_single_row', 'pdf')
     % use sprintf to save based on file names
 end
-%save file here as a pdf (print?)
-saveas(h, 'R0372_lfp_NNsite_single_row', 'pdf');
-close(h);
+% save file here as a pdf (print?)
+% saveas(h, 'R0372_lfp_NNsite_single_row', 'pdf');
+% close(h);
+
+    PDFname = sprintf('%s_ch%02d_lfp.pdf',pd,header.channelNum);
+    fp = fillPage(h_fig,'margins',[0 0 1 0],'papersize',[11 8.5]);
+    print(h_fig,'-opengl','-dpdf','-r200',fullfile(pwd,PDFname))
+    close(h_fig)
