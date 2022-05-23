@@ -1,5 +1,6 @@
-% try plotting channel 1 of a lfp_NNsite file for the first correctgo trial for eventFieldnames cueOn and centerIn of the data
-% trialRanges_final(1:2,1); - [row, column]
+% This file plots all 64 channels in an NN8x8 probe in a single graph with
+% each shank as its own row. 
+
 t_win = trialRanges_final(3:4,1);
 Fs = 500;
 
@@ -19,6 +20,7 @@ for i_row = 1 : rows
     plot(t, lfp_to_plot(i_row, :));
     set(gca,'xlim', t_win, 'ylim',y_lim);
     grid on
-    caption = sprintf('NNsite #%d', i_row);
+    caption = sprintf('NNsite #%d', i_row); % This names the channels 1 - 64; need to rename this section ...
+    % so it names each one according to the actual NNsite mapping
     title(caption, 'FontSize', 15);
  end

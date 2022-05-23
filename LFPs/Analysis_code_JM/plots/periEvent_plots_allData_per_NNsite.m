@@ -1,6 +1,6 @@
-% try plotting channel 1 of a lfp_NNsite file for the first correctgo trial for eventFieldnames cueOn and centerIn of the data
-% trialRanges_final(1:2,1); - [row, column]
-t_win = [0 3576.2671];
+% This file plots a single channel from a single NNsite of a 64 channel NeuroNexus probe
+
+t_win = [0 3600];
 Fs = 500;
 
 ts = 10;
@@ -10,18 +10,17 @@ lfp_to_plot = lfp_NNsite_order(:, round(sample_limits(1):sample_limits(2))); % u
 
 rows = size(lfp_to_plot, 1);
 t = linspace(t_win(1), t_win(2), size(lfp_to_plot, 2));
-y_lim = [-2000,2000];
+y_lim = [-5000,5000];
 
 h = figure;
-set(gcf, 'PaperOrientation', 'landscape');
-
 
 shank_num = 2;
-for i_row = 1 : 8
-    subplot(8,1,i_row);
-    lfp_row = (shank_num - 1) * 8 + i_row;
+for i_row = 1 : 1
+    subplot(1,1,i_row);
+    lfp_row = (shank_num - 1) * 8 + i_row + 1; % the last + 1 can be changed for numbers 0 - 7 to get each channel as its own graph. For loop to iterate through this?
     plot(t, lfp_to_plot(lfp_row, :));
     set(gca,'xlim', t_win, 'ylim',y_lim);
+    set(gcf, 'PaperOrientation', 'landscape', 'Position',[100 100 650 650])
     grid on
     caption = sprintf('NNsite #%d', lfp_row); % input mapping file so its in the correct NNsite order (check mapping)
     title(caption, 'FontSize', 15);
@@ -30,5 +29,6 @@ for i_row = 1 : 8
     % use sprintf to save based on file names
 end
 %save file here as a pdf (print?)
-saveas(h, 'R0372_lfp_NNsite_single_channel_all_LFP', 'pdf');
+saveas(h, 'R0372_lfp_NNsite_single_channel_all_LFP', 'pdf'); % somehow find a way to iterate through saving using...
+% sprintf so the name doesn't need to be changed with each run?
 close(h);

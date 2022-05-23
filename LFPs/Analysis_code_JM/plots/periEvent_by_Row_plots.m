@@ -1,5 +1,6 @@
-% try plotting channel 1 of a lfp_NNsite file for the first correctgo trial for eventFieldnames cueOn and centerIn of the data
-% trialRanges_final(1:2,1); - [row, column]
+% This file plots all 8 channels in an NN8x8 probe in a single graph with
+% each channel as its own row. (e.g. sites 1 - 8 as a single column)
+
 t_win = trialRanges_final(3:4,1);
 Fs = 500;
 
@@ -23,9 +24,6 @@ for i_row = 1 : 8
     grid on
     caption = sprintf('NNsite #%d', lfp_row); % input mapping file so its in the correct NNsite order (check mapping)
     title(caption, 'FontSize', 15);
-    % save file here as a pdf (print?)
-    %saveas(gcf, 'R0372_lfp_NNsite_single_row', 'pdf')
-    % use sprintf to save based on file names
 end
 %save file here as a pdf (print?)
 saveas(h, 'R0372_lfp_NNsite_single_row', 'pdf');
