@@ -8,25 +8,25 @@ rats_with_intan_sessions = find_rawdata_folders(intan_parent_directory);
 % cd(test_folder);
 
 %%
-% for i_rat = 1 : length(rats_with_intan_sessions)
-%     
-%     intan_folders = rats_with_intan_sessions(i_rat).intan_folders;
-%     
-%     for i_sessionfolder = 1 : length(intan_folders)
-%         rd_metadata = parse_rawdata_folder(intan_folders{i_sessionfolder});
-%         pd_folder = create_processed_data_folder(rd_metadata, intan_parent_directory);
-%         
-%         lfp_fname = fullfile(pd_folder, create_lfp_fname(rd_metadata))
-%         
-%         if exist(lfp_fname, 'file')
-%             continue
-%         end
-%         
-%         [lfp, actual_Fs] = calculate_NNprobe_monopolar_LFPs(intan_folders{i_sessionfolder}, 500);
-%         
-%         save(lfp_fname, 'lfp', 'actual_Fs');
-%         
-%     end
-%     
-% end
+for i_rat = 1 : length(rats_with_intan_sessions)
+    
+    intan_folders = rats_with_intan_sessions(i_rat).intan_folders;
+    
+    for i_sessionfolder = 1 : length(intan_folders)
+        rd_metadata = parse_rawdata_folder(intan_folders{i_sessionfolder});
+        pd_folder = create_processed_data_folder(rd_metadata, intan_parent_directory);
+        
+        lfp_fname = fullfile(pd_folder, create_lfp_fname(rd_metadata))
+        
+        if exist(lfp_fname, 'file')
+            continue
+        end
+        
+        [lfp, actual_Fs] = calculate_NNprobe_monopolar_LFPs(intan_folders{i_sessionfolder}, 500);
+        
+        save(lfp_fname, 'lfp', 'actual_Fs');
+        
+    end
+    
+end
 %%

@@ -21,10 +21,12 @@ LFP = LFP';
 [power_lfps, f] = pwelch(LFP,pw_samplewin,pw_overlapsamples,f,Fs, 'power');
 
 power_lfps = power_lfps';
-       
+
+% save the file. use fullfile and sprintf ? % checking on code to do this %
+% tried several iterations but no success yet.
+
+
 end
-
-
 
 % figure;
 % plot(f, 10*log10(power_lfps(:,1)))
