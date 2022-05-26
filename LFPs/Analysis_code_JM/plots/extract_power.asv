@@ -9,6 +9,18 @@ function [power_lfps, f] = extract_power(LFP,Fs)
 % OUTPUTS
 %   power_lfps - array containing power analysis
 
+topLevelDir = 'X:\Neuro-Leventhal\data\ChoiceTask';
+ratID = 'R0372';
+parentFolder = fullfile(topLevelDir, ...
+         ratID, ...
+         [ratID '-rawdata']);
+cd(parentFolder);
+direct=dir([ratID '*']);
+numFolders = length(direct);
+
+        
+
+
 pw_twin = 4;
 pw_samplewin = pw_twin * Fs;
 pw_overlapsamples = round(pw_samplewin / 2);
@@ -21,7 +33,15 @@ LFP = LFP';
 [power_lfps, f] = pwelch(LFP,pw_samplewin,pw_overlapsamples,f,Fs, 'power');
 
 power_lfps = power_lfps';
-       
+
+
+        A=cell(1,2);
+        A{1} = ['Subject: ' logData.subject];
+        A{2} = ['Date: ' logData.date]; % get the date for the current directory from the logData file (this is read in for each folder from the Choice Task Intan wor
+        textString{1} = [direct(ii).name '_LogAnalysis'];
+        saveas(textString{1}, 'pdf')
+
+        
 end
 
 

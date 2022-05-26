@@ -1,6 +1,7 @@
-% creat an lfp_NNsite file
+% create an lfp_NNsite file
 % lfp_original = load('R0372_20201125a_lfp.mat'); - sample line of code to
 % load in the lfp_mat file
+
 intan_amplifier = lfp([49:56,...%shank1, nn sites 1-8
         57:64,...%shank2
         33:35, 37:39, 41:42,...%shank3
