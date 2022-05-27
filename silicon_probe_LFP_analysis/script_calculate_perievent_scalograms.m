@@ -1,8 +1,8 @@
 % script_calculate_perievent_scalograms
 
-probe_mapping_fname = '/Volumes/SharedX/Neuro-Leventhal/data/ChoiceTask/Probe Histology Summary/ProbeSite_Mapping.xlsx';
+% probe_mapping_fname = '/Volumes/SharedX/Neuro-Leventhal/data/ChoiceTask/Probe Histology Summary/ProbeSite_Mapping.xlsx';
 
-intan_parent_directory = '/Volumes/SharedX/Neuro-Leventhal/data/ChoiceTask/';
+intan_parent_directory = 'X:\Neuro-Leventhal\data\ChoiceTask';
 
 rats_with_intan_sessions = find_rawdata_folders(intan_parent_directory);
 
@@ -62,7 +62,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
             continue
         end
         
-        sprint('placeholder')
+        sprintf('placeholder')
     end
     
 end
