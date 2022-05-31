@@ -4,6 +4,10 @@ intan_choicetask_parent = 'X:\Neuro-Leventhal\data\ChoiceTask';
 
 % loop through all the processed data folders here, load the lfp file
 valid_rat_folders = find_processed_folders(intan_choicetask_parent);
+probe_type = 'NN8x8';
+Fs = 500;
+% lfp_fname = dir(fullfile(intan_choicetask_parent,'**','*_lfp.mat')); % This
+% generates a matrix of '*_lfp.mat' filenames
 
 for i_ratfolder = 1 : length(valid_rat_folders)
     
@@ -11,25 +15,56 @@ for i_ratfolder = 1 : length(valid_rat_folders)
     
     for i_sessionfolder = 1 : length(session_folders)
     % extract the ratID and session name from the LFP file
+        session_path = session_folders{i_sessionfolder};
+        pd_processed_data = parse_processed_folder(session_path);
+        ratID = pd_processed_data.ratID;
+        session_name = pd_processed_data.session_name;
+        
+        % create filenames to hold mono- and diff-LFPs
+        mono_power_fn = [session_name, '_monopolar_power.mat'];
+        mono_power_fn = fullfile(session_path, mono_power_fn);
+
+        diff_power_fn = [session_name, '_diff_power.mat'];
+        diff_power_fn = fullfile(session_path, diff_power_fn);
+        
+        % Might be good to add a check here to see if mono_power_fn and/or diff_power_fn
+        % exists, if exists skip reading in the data to save time.
+ 
+        lfp_file = dir(fullfile(session_path, '**', '*_lfp.mat'));
+        cd(session_path);
+        % lfp = load(lfp_fname.name); % I think the lfp needs to be loaded
+        % in the lfp_NNsite_order script in the next line of this fxn.
+       
+        % LFP file needs to be loaded before the [power_lfps,f] function
+        lfp_fname = fullfile(lfp_file.folder, lfp_file.name);
+        
+        power_fn = [session_name, '_monopolar_power.mat'];
+        power_fn = fullfile(session_path, power_fn);
+        
+        diff_power_fn = 
+        
+        
+        lfp_data = load(lfp_fname);
+        lfp_NNsite_order = lfp_by_probe_site(lfp_data, probe_type); 
+
+        % Reorganize by NNsite and calculate the diffs
+        lfp_NNsite_diff = diff_probe_site_mapping(lfp_data, probe_type); % calculates diffs
+
+            [power_lfps, f] = extract_power(lfp_NNsite_order,Fs); % in the original code (LFP, Fs); 
+            
+        power_fn = [session_name, '_monopolar_power.mat'];
+        power_fn = fullfile(session_path, power_fn);
+        save(power_fn, 'power_lfps', 'f')
+        
+        % how to differentiate between lfp_NNsite_order and
+        % lfp_NNsite_diff? test here
+%             [power_lfps_diff, f] = extract_power(lfp_NNsite_diff,Fs);
+%             power_fn_diff = [session_name, '_diff_power.mat'];
+%             power_fn_diff = fullfile(session_path, power_fn_diff);
+%             save(power_fn_diff, 'power_lfps_diff', 'f')
+            
+    end
     
-
-fpath, fname = fileparts(
-
-% create filenames to hold mono- and diff-LFPs
-mono_power_fn = [ratID, '_', session_name, '_monopolar_power.mat'];
-mono_power_fn = fullfile(session_path, mono_power_fn);
-
-diff_power_fn = [ratID, '_', session_name, '_diff_power.mat'];
-diff_power_fn = fullfile(session_path, diff_power_fn);
+end
 
 % check if this power
-
-
-% load the lfp file, reorder channels, then calculate power spectra
-[power_lfps, f] = extract_power(LFP,Fs);
-
-power_fn = [ratID, '_', session_name, '_monopolar_power.mat'];
-power_fn = fullfile(session_path, power_fn);
-save(power_fn, 'power_lfps', 'f')
-
-%

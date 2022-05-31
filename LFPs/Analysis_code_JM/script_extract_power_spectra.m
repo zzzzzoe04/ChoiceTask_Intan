@@ -4,6 +4,10 @@ intan_choicetask_parent = 'X:\Neuro-Leventhal\data\ChoiceTask';
 
 % loop through all the processed data folders here, load the lfp file
 valid_rat_folders = find_processed_folders(intan_choicetask_parent);
+probe_type = 'NN8x8';
+Fs = 500;
+% lfp_fname = dir(fullfile(intan_choicetask_parent,'**','*_lfp.mat')); % This
+% generates a matrix of '*_lfp.mat' filenames
 
 for i_ratfolder = 1 : length(valid_rat_folders)
     
@@ -21,23 +25,45 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         mono_power_fn = fullfile(session_path, mono_power_fn);
 
         diff_power_fn = [session_name, '_diff_power.mat'];
-        diff_power_fn = fullfile(session_path, diff_power_fn);l
+        diff_power_fn = fullfile(session_path, diff_power_fn);
         
-        [power_lfps, f] = extract_power(LFP,Fs);
-
-        power_fn = [session_name, '_monopolar_power.mat'];
+        % Might be good to add a check here to see if mono_power_fn and/or diff_power_fn
+        % exists, if exists skip reading in the data to save time.
+ 
+        lfp_file = dir(fullfile(session_path, '**', '*_lfp.mat'));
+        cd(session_path);
+        % lfp = load(lfp_fname.name); % I think the lfp needs to be loaded
+        % in the lfp_NNsite_order script in the next line of this fxn.
+       
+        % LFP file needs to be loaded before the [power_lfps,f] function
+        lfp_fname = fullfile(lfp_file.folder, lfp_file.name);
+        
+        power_fn = [session_name, '_monopolarpower.mat'];
         power_fn = fullfile(session_path, power_fn);
-        save(power_fn, 'power_lfps', 'f')
         
+        diff_power_fn = [session_name, '_diffpower.mat'];
+        diff_power_fn = fullfile(session_path, diff_power_fn);
+        
+        if exist(power_fn, 'file') && exist(diff_power_fn, 'file')
+            continue
+        end
+        
+        lfp_data = load(lfp_fname);
+        Fs = lfp_data.actual_Fs;
+        
+        if ~exist(power_fn, 'file')
+            lfp_NNsite_order = lfp_by_probe_site(lfp_data, probe_type); 
+            [power_lfps, f] = extract_power(lfp_NNsite_order,Fs); % in the original code (LFP, Fs); 
+            save(power_fn, 'power_lfps', 'f', 'Fs');
+        end
+        
+        if ~exist(diff_power_fn, 'file')
+            % Reorganize by NNsite and calculate the diffs
+            lfp_NNsite_diff = diff_probe_site_mapping(lfp_data, probe_type); % calculates diffs
+            [power_lfps_diff, f] = extract_power(lfp_NNsite_diff,Fs);
+            save(diff_power_fn, 'power_lfps_diff', 'f', 'Fs');
+        end
+            
     end
     
 end
-
-
-
-% check if this power
-
-
-
-
-%

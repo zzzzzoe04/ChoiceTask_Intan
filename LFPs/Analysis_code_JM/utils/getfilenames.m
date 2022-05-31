@@ -9,7 +9,7 @@ function filenames = getfilenames(varargin)
 %---Example: mfiles = getfilenames('c:\') will return all subfolders recursively
 %---in the root
 root = varargin{1};
-if nargin==2,
+if nargin==2
     refiles = varargin{2};
 else
     refiles = [];

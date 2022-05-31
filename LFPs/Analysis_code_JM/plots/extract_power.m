@@ -20,11 +20,8 @@ LFP = LFP';
 
 [power_lfps, f] = pwelch(LFP,pw_samplewin,pw_overlapsamples,f,Fs, 'power');
 
+f = f';
 power_lfps = power_lfps';
-
-% save the file. use fullfile and sprintf ? % checking on code to do this %
-% tried several iterations but no success yet.
-
 
 end
 

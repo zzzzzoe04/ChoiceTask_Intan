@@ -2,17 +2,11 @@
 % lfp_original = load('R0372_20201125a_lfp.mat'); - sample line of code to
 % load in the lfp_mat file
 
-function lfp_NNsite_order = lfp_by_probe_site(lfp_fname, probe_type)
+function lfp_NNsite_order = lfp_by_probe_type(lfp_fname, probe_type)
 
 % INPUTS - 
 %   lfp_fname - num_channels x num_samples array 
-%   probe_type - probe type, e.g. NeuroNexus 8x8 array
-%
-% OUTPUTS -
-%   intan_amplifier - m x n array of *_lfp.mat file rearranged by shank #
-%   lfp_NNsite_order - m x n array of intan_amplifier array arranged by
-%       shank number then NNsite order (with neighboring sites next to each
-%       other)
+%   probe_type - 
 
 intan_amplifier = lfp([49:56,...%shank1, nn sites 1-8
         57:64,...%shank2
@@ -30,4 +24,3 @@ lfp_NNsite_order = intan_amplifier([2,7,1,8,4,5,3,6,... %shank 1
         42,47,41,48,43,46,45,44,...%shank6
         49,56,50,55,51,54,52,53,...%shank7
         57,64,58,63,59,62,60,61], :);  %shank8
-end

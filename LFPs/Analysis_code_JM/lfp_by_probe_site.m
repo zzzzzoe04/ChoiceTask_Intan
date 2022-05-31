@@ -2,7 +2,7 @@
 % lfp_original = load('R0372_20201125a_lfp.mat'); - sample line of code to
 % load in the lfp_mat file
 
-function lfp_NNsite_order = lfp_by_probe_site(lfp_fname, probe_type)
+function lfp_NNsite_order = lfp_by_probe_site(lfp_data, probe_type)
 
 % INPUTS - 
 %   lfp_fname - num_channels x num_samples array 
@@ -13,6 +13,18 @@ function lfp_NNsite_order = lfp_by_probe_site(lfp_fname, probe_type)
 %   lfp_NNsite_order - m x n array of intan_amplifier array arranged by
 %       shank number then NNsite order (with neighboring sites next to each
 %       other)
+
+if isstring(lfp_data)
+    if exist(lfp_data, 'file')
+        lfp = load(lfp_data);
+        lfp = lfp.lfp;
+    else
+        lfp_NNsite_order = [];
+        return
+    end
+else
+    lfp = lfp_data.lfp;
+end
 
 intan_amplifier = lfp([49:56,...%shank1, nn sites 1-8
         57:64,...%shank2
