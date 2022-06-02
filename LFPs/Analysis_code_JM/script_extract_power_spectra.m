@@ -51,6 +51,12 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         lfp_data = load(lfp_fname);
         Fs = lfp_data.actual_Fs;
         
+        num_rows = size(lfp_data.lfp,1); % for now, skipping R0378_20210507a because the session only recorded 63 channels instead of 64. Need to rewrite lfp_NNsite_order and diff functions to fix this issue by determining which channel was not recorded. 
+        if num_rows < 64
+            continue
+        end
+                   
+        
         if ~exist(power_fn, 'file')
             lfp_NNsite_order = lfp_by_probe_site(lfp_data, probe_type); 
             [power_lfps, f] = extract_power(lfp_NNsite_order,Fs); % in the original code (LFP, Fs); 
