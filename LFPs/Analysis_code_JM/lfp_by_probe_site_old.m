@@ -2,7 +2,7 @@
 % lfp_original = load('R0372_20201125a_lfp.mat'); - sample line of code to
 % load in the lfp_mat file
 
-function [ordered_lfp, intan_site_order, NNsite_order] = lfp_by_probe_site(lfp, probe_type)
+function [ordered_lfp, intan_site_order, NNsite_order] = lfp_by_probe_site_old(lfp, probe_type)
 %
 % This function rearranges an lfp matrix to be in the order of recording
 % sites on each shank (ventral to dorsal)
@@ -10,7 +10,9 @@ function [ordered_lfp, intan_site_order, NNsite_order] = lfp_by_probe_site(lfp, 
 % INPUTS - 
 %   lfp - num_sites x num_points array containing the original lfp data 
 %       ordered as recorded in the amplifier.dat file.
-%   probe_type - probe type, e.g. NeuroNexus 8x8 array
+%   probe_type - probe type
+%       'NN8x8' - Neuronexus 8x8 array
+%       OTHER PROBE TYPE LABELS GO HERE
 %
 % OUTPUTS -
 %   ordered_lfp - m x n array of *_lfp.mat file rearranged by shank #
@@ -42,13 +44,22 @@ if strcmpi(probe_type, 'nn8x8')
             42,47,41,48,43,46,45,44,...%shank6
             49,56,50,55,51,54,52,53,...%shank7
             57,64,58,63,59,62,60,61];
-    NNsite_order = [
-                   ];
+    NNsite_order = [1,8,2,7,3,6,4,5,...%shank1
+            9,16,10,15,11,14,12,13,...%shank2
+            17,24,18,23,19,22,20,21,...%shank3
+            25,32,26,31,27,30,28,29,...%shank4
+            33,40,34,39,35,38,36,37, ...%shank5
+            41,48,42,47,43,46,44,45,...%shank6
+            49,56,50,55,51,54,52,53,...%shank7
+            57,64,58,63,59,62,60,61]; %shank8
            
 end
+ordered_lfp = intan_amplifier(intan_site_order, :);
+end
 
-ordered_lfp = intan_amplifier(intan_site_order, :);  %shank8
-% lfp_NNsite_order = intan_amplifier([2,7,1,8,4,5,3,6,... %shank 1
+
+% lfp_NNsite_order = intan_amplifier([2,7,1,8,4,5,3,6,... %shank 1 %saved
+% here just in case the above code has issues with the updates
 %         10,15,9,16,12,13,11,14,... %shank2
 %         17,24,18,23,19,22,20,21,...%shank3
 %         27,25,29,26,30,28,31,32,...%shank4
@@ -56,4 +67,3 @@ ordered_lfp = intan_amplifier(intan_site_order, :);  %shank8
 %         42,47,41,48,43,46,45,44,...%shank6
 %         49,56,50,55,51,54,52,53,...%shank7
 %         57,64,58,63,59,62,60,61], :);  %shank8
-end
