@@ -1,5 +1,5 @@
 % fxn to plot '*_monopolar_power.mat' files by shank
-% lfp_NNsite_order, NNsite_order = lfp_by_probe_site(lfp_fname, probe_type);
+% lfp_NNsite_order = lfp_by_probe_site(lfp_fname, probe_type);
 % [power_lfps, f] = extract_power(LFP,Fs);
 
 
@@ -29,14 +29,13 @@ for i_row = 1 : num_rows
     % subplot(8,8,i_row);
 %     nexttile(p);
     plot_col = ceil(i_row / LFPs_per_shank);
-    plot_row = i_row - LFPs_per_shank * (plot_col-1);
-    plot_num = (plot_row-1) * 8 + plot_col;
+    plot_row = i_row - 
     
     subplot(LFPs_per_shank,8,plot_num);
     plot(f, power_lfps(i_row, :));
     set(gca,'xlim', x_lim, 'ylim',y_lim);
     grid on
-    caption = sprintf('NNsite #%d', NNsite_order(i_row)); % This names the channels 1 - 64; need to rename this section ...
+    caption = sprintf('NNsite #%d', i_row); % This names the channels 1 - 64; need to rename this section ...
     % so it names each one according to the actual NNsite mapping
     title(caption, 'FontSize', 15);
     %nexttile(p);
