@@ -18,8 +18,8 @@ sample_limits = (ts + t_win) * Fs;
 num_rows = size(power_lfps, 1);
 num_points = size(power_lfps,2);
 t = linspace(t_win(1), t_win(2), size(power_lfps, 2));
- y_lim = [0, 150000];
- x_lim = [0 150];
+ y_lim = [0 1500];
+ x_lim = [0 100];
 
 % a = figure;
 
@@ -38,6 +38,16 @@ for i_row = 1 : num_rows
     grid on
     caption = sprintf('NNsite #%d', NNsite_order(i_row)); % This names the channels 1 - 64; need to rename this section ...
     % so it names each one according to the actual NNsite mapping
-    title(caption, 'FontSize', 15);
+    title(caption, 'FontSize', 10);
     %nexttile(p);
+    
+    if plot_row < LFPs_per_shank
+        set(gca,'xticklabels',[])
+    end
+    
+    if plot_col > 1
+        set(gca,'yticklabels',[])
+    end
+        
 end
+ 

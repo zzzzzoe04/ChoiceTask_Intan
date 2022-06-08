@@ -27,13 +27,13 @@ if strcmpi(probe_type, 'nn8x8')
     if isstring(lfp_data)
         if exist(lfp_data, 'file')
             lfp = load(lfp_data);
-            lfp = lfp.lfp;
+            lfp_data = lfp.lfp;
         else
             intan_site_order = [];
             return
         end
     else
-        lfp = lfp_data.lfp;
+            lfp_data = lfp_data.lfp;
     end
 
     intan_amplifier = lfp_data([49:56,...%shank1, nn sites 1-8
@@ -60,7 +60,8 @@ if strcmpi(probe_type, 'nn8x8')
             41,48,42,47,43,46,44,45,...%shank6
             49,56,50,55,51,54,52,53,...%shank7
             57,64,58,63,59,62,60,61]; %shank8
-end
+        
 ordered_lfp = intan_amplifier(intan_site_order, :);
+
 end
 
