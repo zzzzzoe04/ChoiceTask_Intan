@@ -2,10 +2,16 @@
 % lfp_NNsite_order, NNsite_order = lfp_by_probe_site(lfp_fname, probe_type);
 % [power_lfps, f] = extract_power(LFP,Fs);
 
-intan_choicetask_parent = 'X:\Neuro-Leventhal\data\ChoiceTask';
-parentFolder = fullfile(intan_choicetask_parent, ...
-         ratID, ...
-         [ratID '-rawdata']);
+% intan_choicetask_parent = 'X:\Neuro-Leventhal\data\ChoiceTask';
+% ratID = 'R0326';
+% direct=dir([ratID '*']);
+% numFolders = length(direct);
+% parentFolder = fullfile(intan_choicetask_parent, ...
+%          ratID, ...
+%          [ratID '-rawdata']);
+% 
+% % load in the log file to create the title for each session?
+% logData = readLogData(fname);
 
 figure;
 % plot(f, 10*log10(power_lfps(:,1)))
@@ -24,34 +30,6 @@ num_points = size(power_lfps,2);
 t = linspace(t_win(1), t_win(2), size(power_lfps, 2));
  y_lim = [0 1500];
  x_lim = [0 100];
-
-% load in the log file to create the title for each session?
-for iDir=1:numFolders %#ok<ALIGN>
-    ii = iDir + 3;
-    ii = iDir;
-    dirs=dir(fullfile(pwd,'*.log'));
-        numLogs = length(dirs);
-        switch numLogs
-            case 0         % skip if no .log files present
-                cd(parentFolder);
-                continue;
-            case 1
-                validLogIdx = 1;
-            case 2
-                for iLog = 1 : length(dirs)
-                    if isempty(strfind(dirs(iLog).name, 'old'))
-                        validLogIdx = iLog;
-                        break;
-                    end
-                end
-            otherwise      % skip if more than one .log files present
-                cd(parentFolder);
-                continue;
-        end
-
-
-    logData = readLogData(dirs(validLogIdx).name);
-end
 
 % Plot the data
 LFPs_per_shank = num_rows / 8;   % will be 8 for 64 channels, 7 for 56 channels (diff)

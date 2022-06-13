@@ -10,7 +10,8 @@ probe_type = 'NN8x8';
 % power_lfps file.
 
 naming_convention; % this loads the NNsite order ventral to dorsal as a variable in the workspace for labeling the plots (create this as a fxn?)
-
+naming_convention_diffs;
+sessions_to_ignore = {'R0378_20210507a'};
 % lfp_fname = dir(fullfile(intan_choicetask_parent,'**','*_lfp.mat')); % This
 % generates a matrix of '*_lfp.mat' filenames
 
@@ -25,6 +26,10 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         ratID = pd_processed_data.ratID;
         session_name = pd_processed_data.session_name;
         
+        if any(strcmp(session_name, sessions_to_ignore))
+            continue
+        end
+        
         % make a folder for the processed data graphs (monopolar and diff
         % graphs)
         parentFolder = fullfile(intan_choicetask_parent, ...
@@ -34,7 +39,7 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         processed_graphFolder = [parentFolder(1:end-9) 'processed-graphs'];
         if ~exist(processed_graphFolder, 'dir')
             mkdir(processed_graphFolder);
-        end  
+        end    
         
         % create filenames to hold mono- and diff-LFPs
         mono_power_plot = [session_name, '_monopolarpower.pdf'];
@@ -55,9 +60,10 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         if exist(mono_power_plot, 'file') && exist(diff_power_plot, 'file') 
             continue
         end
-        
+       
         power_lfps_file = dir(fullfile(session_path, '**', '*_monopolarpower.mat'));
-        power_lfps_fname = fullfile(power_lfps_file.folder, power_lfps_file.name);
+        power_lfps_fname = fullfile(power_lfps_file.folder, power_lfps_file.name); 
+        % This catches at R0378, the file with 63 channels that didn't record a power_lfps file
         power_lfps = load(power_lfps_fname);
         Fs = power_lfps.Fs;
         f = power_lfps.f;
@@ -65,20 +71,19 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         
         num_rows = size(power_lfps,1); % for now, skipping R0378_20210507a because the session only recorded 63 channels instead of 64. Need to rewrite lfp_NNsite_order and diff functions to fix this issue by determining which channel was not recorded. 
                            
-        % Plot the Data
+        % Plot the monopolar Data
         if ~exist(mono_power_plot, 'file')
-            plot_monopolar_power;
-            save(mono_power_plot); % saves the plot in -processed-graphs
+            plot_monopolar_power_single_plot;
+            saveas(gcf, mono_power_plot); % saves the plot in -processed-graphs
+            close;
         end
         
-        %write a code for plotting diff plots then rewrite this section to
-        %make the graphs.
-%         if ~exist(diff_power_fn, 'file')
-%             % Reorganize by NNsite and calculate the diffs
-%             lfp_NNsite_diff = diff_probe_site_mapping(lfp_data, probe_type); % calculates diffs
-%             [power_lfps_diff, f] = extract_power(lfp_NNsite_diff,Fs);
-%             save(diff_power_fn, 'power_lfps_diff', 'f', 'Fs');
-%         end
+        % plot the diff data
+        if ~exist(diff_power_plot, 'file')
+            plot_diff_power_single_plot;
+            saveas(gcf, diff_power_plot); % saves the plot in -processed-graphs
+            close;
+        end
             
     end
     
