@@ -43,10 +43,8 @@ for i_row = 1 : num_rows
     plot(f, power_lfps(i_row, :));
     set(gca,'xlim', x_lim, 'ylim',y_lim);
     grid on
-    caption = sprintf('NNsite #%d', NNsite_order(i_row)); % This names the channels 1 - 64; need to rename this section ...
-    % so it names each one according to the actual NNsite mapping
-    title(caption, 'FontSize', 10);
-    %nexttile(p);
+    caption = sprintf('NNsite #%d', NNsite_order(i_row)); % using naming_convention for monopolar plot captions (naming_convention_diffs for diffs plot)
+    title(caption, 'FontSize', 8);
     
     if plot_row < LFPs_per_shank
         set(gca,'xticklabels',[])

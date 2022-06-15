@@ -45,7 +45,7 @@ for i_row = 1 : num_rows
     grid on
     caption = sprintf('Diff #%d', NNsite_order_diffs(i_row)); % This names the channels 1 - 64; need to rename this section ...
     % so it names each one according to the actual NNsite mapping
-    title(caption, 'FontSize', 10);
+    title(caption, 'FontSize', 8);
     %nexttile(p);
     
     if plot_row < LFPs_per_shank

@@ -74,21 +74,18 @@ for i_ratfolder = 1 : length(valid_rat_folders)
                            
         % Plot the monopolar Data
         if ~exist(mono_power_plot, 'file')
-            plot_monopolar_power_single_plot;
-
-%              These parameters are the start of making the full
-%              page/saveas work
-%             set(gcf,'PaperUnits','centimeters');
+            figure =plot_monopolar_power_single_plot;
+%             set(gcf,'PaperUnits','centimeters'); 
 %             set(gcf,'PaperSize',[8 8]); 
 %             fig = gcf; 
 %             fig.PaperUnits = 'centimeters';  
 %             fig.PaperPosition = [0 0 8 5]; 
 %             fig.Units = 'centimeters'; 
 %             fig.PaperSize=[8 7];
-
-            set(gcf, 'WindowState', 'maximize'); % maximizes the window so that it exports the graphics with appropriate font size
+            % is there a way to save the StyleSheet
+            fig = figure;
+            fig.WindowState = 'maximized';
             exportgraphics(gcf, mono_power_plot);
-            % is there a way to save the StyleSheet to use saveas instead?
             % saveas(fig, mono_power_plot); % saves the plot in -processed-graphs
             close;
         end

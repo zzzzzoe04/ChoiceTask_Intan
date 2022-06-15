@@ -37,16 +37,34 @@ choiceRTdifficulty{9}  = 'choice advanced';
 choiceRTdifficulty{10} = 'testing';
 
 intan_choicetask_parent = 'X:\Neuro-Leventhal\data\ChoiceTask';
+% loop through all the rawdata data folders here, (load the log file?)
+valid_rat_folders = find_rawdata_folders(intan_choicetask_parent); % find folders that contain raw_data_folders AND have intan data?
 
-ratID = 'R0326';
-parentFolder = fullfile(intan_choicetask_parent, ...
+% loop through all the processed data folders here, load the lfp file
+valid_rat_folders = find_processed_folders(intan_choicetask_parent);
+
+for i_ratfolder = 1 : length(valid_rat_folders)
+    
+    session_folders = valid_rat_folders(i_ratfolder).processed_folders;
+    
+    for i_sessionfolder = 1 : length(session_folders)
+    % extract the ratID and session name from the LFP file
+        session_path = session_folders{i_sessionfolder};
+        pd_processed_data = parse_processed_folder(session_path);
+        ratID = pd_processed_data.ratID;
+        session_name = pd_processed_data.session_name;
+        
+        if any(strcmp(session_name, sessions_to_ignore))
+            continue
+        end
+        
+        % make a folder for the processed data graphs (monopolar and diff
+        % graphs)
+        parentFolder = fullfile(intan_choicetask_parent, ...
          ratID, ...
          [ratID '-rawdata']);
 
-cd(parentFolder);
-direct=dir([ratID '*']);
-
-logData = readLogData(fname);
+        logData = readLogData(fname);
 
         
         A=cell(1,3);
@@ -56,6 +74,6 @@ logData = readLogData(fname);
         A{3} = ['Task Level: ' choiceRTdifficulty{logData.taskLevel+1}];
         textString{1} = [direct(ii).name '_LogAnalysis'];
         
-
+    end
  
 end
