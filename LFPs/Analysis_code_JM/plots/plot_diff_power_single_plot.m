@@ -32,14 +32,14 @@ t = linspace(t_win(1), t_win(2), size(power_lfps_diff, 2));
  x_lim = [0 100];
 
 % Plot the data
-LFPs_per_shank = num_rows / 7;   % will be 8 for 64 channels, 7 for 56 channels (diff)
+LFPs_per_shank = num_rows / 8;   % will be 8 for 64 channels, 7 for 56 channels (diff)
 for i_row = 1 : num_rows
 
     plot_col = ceil(i_row / LFPs_per_shank);
     plot_row = i_row - LFPs_per_shank * (plot_col-1);
-    plot_num = (plot_row-1) * 7 + plot_col;
+    plot_num = (plot_row-1) * 8 + plot_col;
     
-    subplot(LFPs_per_shank,7,plot_num);
+    subplot(LFPs_per_shank,8,plot_num);
     plot(f, power_lfps_diff(i_row, :));
     set(gca,'xlim', x_lim, 'ylim',y_lim);
     grid on
