@@ -81,16 +81,15 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         % This catches at R0378, the file with 63 channels that didn't record a power_lfps file
         power_lfps = load(power_lfps_fname);
         power_lfps = power_lfps.power_lfps;
-            
         num_rows = size(power_lfps,1); % for now, skipping R0378_20210507a because the session only recorded 63 channels instead of 64. Need to rewrite lfp_NNsite_order and diff functions to fix this issue by determining which channel was not recorded. 
-        
-        
+        % The actual plot section
         plot_monopolar = plot_monopolar_power_single_plot(power_lfps_fname);   % include info for making a title, etc. in the single_plot function
-       
-        sgtitle(A);
+        sgtitle(A, 'Interpreter','none'); % 'Interpreter', 'none'  --- allows the title to have an underscore instead of a subscript
         set(gcf, 'WindowState', 'maximize'); % maximizes the window so that it exports the graphics with appropriate font size
         exportgraphics(gcf, mono_power_plot);
-                           
+        close;
+                    
+        
         % For diff plots
         power_lfps_diff_file = dir(fullfile(session_path, '**', '*_diffpower.mat'));
         power_lfps_diff_fname = fullfile(power_lfps_diff_file.folder, power_lfps_diff_file.name); 
@@ -98,45 +97,16 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         power_lfps_diff = load(power_lfps_diff_fname);
         f = power_lfps_diff.f;
         power_lfps_diff = power_lfps_diff.power_lfps_diff;
-                
         num_rows_diff = size(power_lfps_diff,1);
 
-               for i_rat = 1 : length(rats_with_intan_sessions)
-                   intan_folders = rats_with_intan_sessions(i_rat).intan_folders;
-                   for i_session = 1 : length(intan_folders)
-                       [session, ~, ~] = fileparts(intan_folders{i_session});
-                       session_log = find_session_log(session);
-                       if isempty(session_log)
-                           sprintf('no log file found for %s', session)
-                       end
-                       logData = readLogData(session_log); % Is there a way to load the log data ONLY when there is no plot found aka associated with a specific folder/file?
-                           A=cell(1,3);
-                           A{1} = ['Subject: ' logData.subject];
-                           A{2} = ['Date: ' logData.date];
-                           A{3} = ['Task Level: ' choiceRTdifficulty{logData.taskLevel+1}];   
-                       % somehow it just loads from the first session it
-                       % looks at (R0326)?  Work here to try to get it to
-                       % iterate through and create the correct title
-                  % Plot the monopolar Data
-%                        if ~exist(mono_power_plot, 'file')
-                           
 
-                           % is there a way to save the StyleSheet to use saveas instead?
-                           % saveas(fig, mono_power_plot); % saves the plot in -processed-graphs
-                           close;
-%                        end
-                    end
-           
-                end
-        % After getting the monopolar_plots to plot correctly, fix this
-        % plot the diff data
-        if ~exist(diff_power_plot, 'file')
-            plot_diff_power_single_plot;
-            set(gcf, 'WindowState', 'maximize'); % maximizes the window so that it exports the graphics with appropriate font size
-            exportgraphics(gcf, diff_power_plot);
-            close;
-        end
-            
+        % The actual plot section
+        plot_diff = plot_diff_power_single_plot(power_lfps_diff_fname);
+        set(gcf, 'WindowState', 'maximize'); % maximizes the window so that it exports the graphics with appropriate font size
+        sgtitle(A, 'Interpreter','none');
+        exportgraphics(gcf, diff_power_plot);
+        close;
+                   
     end
     
 end
