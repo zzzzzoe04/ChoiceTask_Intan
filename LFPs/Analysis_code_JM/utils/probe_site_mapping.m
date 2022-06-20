@@ -36,7 +36,7 @@ if strcmpi(probe_type, 'NN8x8')
         57,64,58,63,59,62,60,61];  %shank8
     
 %     % Map sites ventral to dorsal on the NeuroNexus H64LP A8x8 probe.
-%     THIS CHUNK OF CODE IS THE LITERAL NEURONEXUS VENTRAL TO DORSAL ORDER.
+%     THIS CHUNK OF CODE IS THE LITERAL NEURONEXUS NUMBERS VENTRAL TO DORSAL ORDER.
 %         NNsite_order = [1,8,2,7,3,6,4,5,... %shank 1
 %         9,16,10,15,11,14,12,13,... %shank2
 %         17,24,18,23,19,22,20,21,...%shank3
