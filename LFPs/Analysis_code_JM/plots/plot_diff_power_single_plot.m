@@ -30,7 +30,7 @@ sample_limits = (ts + t_win) * Fs;
 num_rows = size(power_lfps_diff, 1);
 num_points = size(power_lfps_diff,2);
 % t = linspace(t_win(1), t_win(2), size(power_lfps_diff, 2));
- y_lim = [0 1500];
+ y_lim = [0 2000];
  x_lim = [0 100];
 
 % Plot the data
