@@ -34,7 +34,7 @@ sample_limits = (ts + t_win) * Fs;
 num_rows = size(power_lfps, 1);
 num_points = size(power_lfps,2);
 % t = linspace(t_win(1), t_win(2), size(power_lfps, 2));
- y_lim = [0 2000];
+ y_lim = [0 5000];
  x_lim = [0 100];
 
 % Plot the data
