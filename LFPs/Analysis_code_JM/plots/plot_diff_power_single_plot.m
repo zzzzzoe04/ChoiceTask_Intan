@@ -30,7 +30,7 @@ sample_limits = (ts + t_win) * Fs;
 num_rows = size(power_lfps_diff, 1);
 num_points = size(power_lfps_diff,2);
 % t = linspace(t_win(1), t_win(2), size(power_lfps_diff, 2));
- y_lim = [0 5000];
+ y_lim = [0 100];
  x_lim = [0 100];
 
 % Plot the data
@@ -42,7 +42,7 @@ for i_row = 1 : num_rows
     plot_num = (plot_row-1) * 8 + plot_col;
     
     subplot(LFPs_per_shank,8,plot_num);
-    plot_diff = plot(f, power_lfps_diff(i_row, :));
+    plot_diff = plot(f, 10*log10(power_lfps_diff(i_row, :))); % change to log10 -- plot(f, 10*log10(power_lfps(:,1)))
     set(gca,'xlim', x_lim, 'ylim',y_lim);
     grid on
     caption = sprintf('Diff #%d', NNsite_order_diffs(i_row)); % This names the channels 1 - 64; need to rename this section ...

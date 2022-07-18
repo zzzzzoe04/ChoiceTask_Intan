@@ -34,7 +34,7 @@ sample_limits = (ts + t_win) * Fs;
 num_rows = size(power_lfps, 1);
 num_points = size(power_lfps,2);
 % t = linspace(t_win(1), t_win(2), size(power_lfps, 2));
- y_lim = [0 5000];
+ y_lim = [0 100];
  x_lim = [0 100];
 
 % Plot the data
@@ -46,7 +46,7 @@ for i_row = 1 : num_rows
     plot_num = (plot_row-1) * 8 + plot_col;
     
     subplot(LFPs_per_shank,8,plot_num);
-    plot_monopolar = plot(f, power_lfps(i_row, :));
+    plot_monopolar = plot(f, 10*log10(power_lfps(i_row, :))); % change to log10 -- plot(f, 10*log10(power_lfps(:,1)))
     set(gca,'xlim', x_lim, 'ylim',y_lim);
     grid on
     caption = sprintf('NNsite #%d', NNsite_order(i_row)); % using naming_convention for monopolar plot captions (naming_convention_diffs for diffs plot)
