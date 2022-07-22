@@ -1,6 +1,6 @@
-probe_mapping_fname = '/Volumes/SharedX/Neuro-Leventhal/data/ChoiceTask/Probe Histology Summary/ProbeSite_Mapping.xlsx';
+probe_mapping_fname = 'X:\Neuro-Leventhal\data\ChoiceTask\Probe Histology Summary\ProbeSite_Mapping_MATLAB_Channels.xlsx';
 
-intan_parent_directory = '/Volumes/SharedX/Neuro-Leventhal/data/ChoiceTask/';
+intan_parent_directory = 'X:\Neuro-Leventhal\data\ChoiceTask';
 
 rats_with_intan_sessions = find_rawdata_folders(intan_parent_directory);
 
