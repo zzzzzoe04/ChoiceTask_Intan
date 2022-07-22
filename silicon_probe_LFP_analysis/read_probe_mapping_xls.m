@@ -16,6 +16,6 @@ for i_sheet = 1 : num_sheets
     
 end
 
-T = readtable(fname, rat_sheets{1})
+T = readtable(fname, rat_sheets{1});
 
-probe_anatomy_info = 0
+probe_anatomy_info = 0;
