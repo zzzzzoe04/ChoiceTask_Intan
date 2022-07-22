@@ -33,7 +33,7 @@ if strcmpi(probe_type, 'nn8x8')
             return
         end
     else
-            lfp_data = lfp_data.lfp;
+       lfp_data = lfp_data.lfp;
     end
 
     intan_amplifier = lfp_data([49:56,...%shank1, nn sites 1-8
