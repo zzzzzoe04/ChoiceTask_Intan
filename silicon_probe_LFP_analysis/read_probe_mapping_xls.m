@@ -12,10 +12,10 @@ for i_sheet = 1 : num_sheets
     if cur_sheet(1) == 'R'
         num_rat_sheets = num_rat_sheets + 1;
         rat_sheets{num_rat_sheets} = cur_sheet;
-    end
+    end 
     
 end
 
-T = readtable(fname, rat_sheets{1});
-
+%T = readtable(fname, rat_sheets{1});
+T = readtable(fname,'Sheet', rat_sheets{1});
 probe_anatomy_info = 0;

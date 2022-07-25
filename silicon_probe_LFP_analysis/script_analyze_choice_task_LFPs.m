@@ -1,4 +1,4 @@
-probe_mapping_fname = 'X:\Neuro-Leventhal\data\ChoiceTask\Probe Histology Summary\ProbeSite_Mapping_MATLAB_Channels.xlsx';
+probe_mapping_fname = 'X:\Neuro-Leventhal\data\ChoiceTask\Probe Histology Summary\ProbeSite_Mapping_MATLAB.xlsx';
 
 intan_parent_directory = 'X:\Neuro-Leventhal\data\ChoiceTask';
 
@@ -32,4 +32,6 @@ end
 
 
 % lfp_name = 
-probe_anatomy_info = read_probe_mapping_xls(probe_mapping_fname);
+probe_anatomy_info = read_probe_mapping_xls(probe_mapping_fname); % Still not clear what Dan was trying to accomplish here. 
+% The probe mapping file basically makes a table of R0326 even if the
+% cur_sheet is for R0425?
