@@ -1,4 +1,4 @@
-function intan_to_site_map = probe_site_mapping(probe_type)
+function intan_to_site_map = probe_site_mapping_all_probes(probe_type)
 
 % INPUTS:
     % probe_type - this current mapping is for the  NeuroNexus H64LP A8x8 probe.
@@ -50,7 +50,7 @@ if strcmpi(probe_type, 'NN8x8')
    %intan_to_site_map = NNsite_order';
    
 elseif strcmpi(probe_type, 'ASSY156')
-     intan_amplifier_ASSY156 = [1:17,19:32,63,...% Shank A
+     intan_amplifier = [1:17,19:32,63,...% Shank A
         18,33:62, 64]; % Shank B
     
      Cambridge156_order = [39,43,52,56,57,44,64,33,... % Shank B
@@ -61,9 +61,20 @@ elseif strcmpi(probe_type, 'ASSY156')
             10,8,20,12,24,16,14,22,...
             7,3,30,1,31,4,28,18,...
             6,26,27,36,23,11,13,25];
+     intan_to_site_map = intan_amplifier(Cambridge156_order)';   
 
 elseif strcmpi(probe_type, 'ASSY236')
-    intan_amplifier_ASSY236 = [1:17,19:32,63,...% Shank A
+    intan_amplifier = [1:17,19:32,63,...% Shank A
         18,33:62, 64]; % Shank B
+    Cambridge236_order = [63,62,39,47,36,61,33,57,...
+            49,41,51,34,37,59,46,54,...
+            40,52,56,60,43,38,55,42,...
+            45,64,50,35,53,44,58,48,...
+            12,13,8,30,32,16,15,6,...
+            27,20,5,26,4,21,9,1,...
+            29,19,14,28,24,31,22,7,...
+            18,10,2,23,3,17,25,11];  %shank8
     
+   intan_to_site_map = intan_amplifier(Cambridge236_order)';
+end
 end
