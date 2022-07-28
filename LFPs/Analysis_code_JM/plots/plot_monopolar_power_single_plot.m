@@ -17,7 +17,9 @@ f = power_lfps.f;
 Fs = power_lfps.Fs;
 power_lfps = power_lfps.power_lfps;
 
-naming_convention;
+naming_convention; %  This needs to be changed based on probe type
+% Shouldn't we have a line about probe_site_mapping somewhere here? Or how
+% does the code below account  for probe site mapping?
 
 figure;
 % plot(f, 10*log10(power_lfps(:,1)))

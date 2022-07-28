@@ -55,6 +55,15 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         A{1} = ['Subject: ' ratID];
         A{2} = ['Session: ' session_name];
         
+        if ratID == 'R0326'
+            probe_type = 'NN8x8';
+        end
+        
+        if ratID == 'R0411'
+            probe_type = 'ASSY156'
+        end
+
+        
         session_rawfolder = fullfile(intan_choicetask_parent, ratID, [ratID '-rawdata'], session_name);
         session_log = find_session_log(session_rawfolder);
         logData = readLogData(session_log);

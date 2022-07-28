@@ -77,4 +77,8 @@ for i_ratfolder = 1 : num_valid_rat_folders
 end
 
 end
-
+if valid_rat_folder == 'R0326'
+    probe_type = 'NN8x8'
+elseif valide_rat_folder == 'R0411'
+    probe_type = '
+end
