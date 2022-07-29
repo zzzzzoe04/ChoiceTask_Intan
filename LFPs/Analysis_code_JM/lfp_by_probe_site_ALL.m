@@ -2,7 +2,7 @@
 % lfp_original = load('R0372_20201125a_lfp.mat'); - sample line of code to
 % load in the lfp_mat file
 
-function [ordered_lfp, intan_site_order, NNsite_order] = lfp_by_probe_site(lfp_data, probe_type)
+function [ordered_lfp, intan_site_order, NNsite_order] = lfp_by_probe_site_ALL(lfp_data, probe_type)
 
 % INPUTS - 
 %   lfp_data - num_sites x num_points array containing the original lfp data 
@@ -66,8 +66,19 @@ if strcmpi(probe_type, 'nn8x8')
 ordered_lfp = intan_amplifier(intan_site_order, :);
 
 elseif strcmpi(probe_type, 'ASSY156')
-     intan_amplifier = [1:17,19:32,63,...% Shank A
-        18,33:62, 64]; % Shank B
+    if isstring(lfp_data)
+        if exist(lfp_data, 'file')
+            lfp = load(lfp_data);
+            lfp_data = lfp.lfp;
+        else
+            intan_site_order = [];
+            return
+        end
+    else
+       lfp_data = lfp_data.lfp;
+    end
+     intan_amplifier = lfp_data([1:17,19:32,63,...% Shank A
+        18,33:62, 64]); % Shank B
     
      Cambridge156_order = [39,43,52,56,57,44,64,33,... % Shank B
             49,35,47,63,36,46,61,38,...
@@ -77,11 +88,23 @@ elseif strcmpi(probe_type, 'ASSY156')
             10,8,20,12,24,16,14,22,...
             7,3,30,1,31,4,28,18,...
             6,26,27,36,23,11,13,25];
+        
 ordered_lfp = intan_amplifier(Cambridge156_order)';   
 
 elseif strcmpi(probe_type, 'ASSY236')
-    intan_amplifier = [1:17,19:32,63,...% Shank A
-        18,33:62, 64]; % Shank B
+    if isstring(lfp_data)
+        if exist(lfp_data, 'file')
+            lfp = load(lfp_data);
+            lfp_data = lfp.lfp;
+        else
+            intan_site_order = [];
+            return
+        end
+    else
+       lfp_data = lfp_data.lfp;
+    end
+    intan_amplifier = lfp_data([1:17,19:32,63,...% Shank A
+        18,33:62, 64]); % Shank B
     Cambridge236_order = [63,62,39,47,36,61,33,57,...
             49,41,51,34,37,59,46,54,...
             40,52,56,60,43,38,55,42,...

@@ -58,7 +58,7 @@ for i_ratfolder = 1 : length(valid_rat_folders)
                    
         
         if ~exist(power_fn, 'file')
-            [ordered_lfp, intan_site_order, NNsite_order] = lfp_by_probe_site(lfp_data, probe_type);
+            [ordered_lfp, intan_site_order, NNsite_order] = lfp_by_probe_site(lfp_data, probe_type); % change probe_type to a list of rats with each probe_type? Add a variable?
             % lfp_NNsite_order = lfp_by_probe_site(lfp_data, probe_type); % grandfathered code
             [power_lfps, f] = extract_power(ordered_lfp,Fs); % in the original code (LFP, Fs); 
             save(power_fn, 'power_lfps', 'f', 'Fs');
