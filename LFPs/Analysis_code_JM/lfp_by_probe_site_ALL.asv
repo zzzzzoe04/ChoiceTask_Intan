@@ -25,8 +25,6 @@ function [ordered_lfp, intan_site_order, NNsite_order] = lfp_by_probe_site_ALL(l
 %       DIFFERENT from the intan order (see
 %       https://www.neuronexus.com/files/probemapping/64-channel/H64LP-Maps.pdf)
 
-
-
 if strcmpi(probe_type, 'nn8x8')
     if isstring(lfp_data)
         if exist(lfp_data, 'file')
