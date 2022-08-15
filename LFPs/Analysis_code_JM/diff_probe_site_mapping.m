@@ -11,7 +11,7 @@ function diff_lfps = diff_probe_site_mapping(lfp_data, probe_type)
 
 % cd 'X:\Neuro-Leventhal\data\ChoiceTask\R0326\R0326-processed\R0326_20200227a';
 % load('R0326_20200227a_lfp.mat');
-lfp_data = load('R0326_20200228a_lfp.mat'); % Line required if running the code individually, not needed if running as the package
+% lfp_data = load('R0326_20200228a_lfp.mat'); % Line required if running the code individually, not needed if running as the package
 
 if isstring(lfp_data)
     if exist(lfp_data, 'file')

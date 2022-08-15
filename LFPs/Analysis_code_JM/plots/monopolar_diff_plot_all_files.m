@@ -65,6 +65,14 @@ for i_ratfolder = 1 : length(valid_rat_folders)
             mkdir(processed_graphFolder);
         end    
         
+        
+%         if ratID == 'R0326'
+%             probe_type = 'NN8x8';
+%         elseif ratID == 'R0411'
+%             probe_type = 'ASSY156';
+%         end
+%         
+        
         % create filenames to hold mono- and diff-LFPs
         mono_power_plot = [session_name, '_monopolarpower.pdf'];
         mono_power_plot = fullfile(processed_graphFolder, mono_power_plot);
