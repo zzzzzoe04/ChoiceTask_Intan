@@ -4,10 +4,12 @@ intan_choicetask_parent = 'X:\Neuro-Leventhal\data\ChoiceTask';
 
 % loop through all the processed data folders here, load the lfp file
 valid_rat_folders = find_processed_folders(intan_choicetask_parent);
-probe_type = 'NN8x8';
+probe_type = 'NN8x8'; % Need to edit this to reflect different probe types per ratID
 Fs = 500;
 % lfp_fname = dir(fullfile(intan_choicetask_parent,'**','*_lfp.mat')); % This
 % generates a matrix of '*_lfp.mat' filenames
+
+sessions_to_ignore = {'R0378_20210507a', 'R0425_20220728a'};
 
 for i_ratfolder = 1 : length(valid_rat_folders)
     
@@ -19,6 +21,10 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         pd_processed_data = parse_processed_folder(session_path);
         ratID = pd_processed_data.ratID;
         session_name = pd_processed_data.session_name;
+        
+        if any(strcmp(session_name, sessions_to_ignore))
+            continue
+        end
         
         % create filenames to hold mono- and diff-LFPs
         mono_power_fn = [session_name, '_monopolar_power.mat'];

@@ -31,7 +31,7 @@ samples_per_channel = amp_file.bytes / (num_channels * bytes_per_sample);
 
 r = round(Fs / target_Fs);
 actual_lfpFs = Fs/r;
-raw_overlap_size = ceil(filtOrder * 2 / r) * r; % can use this line to check the overlap by making it equal to zero
+raw_overlap_size = ceil(filtOrder * 2 / r) * r;
 lfp_overlap_size = raw_overlap_size / r;
 
 lfp_block_size = raw_block_size / r;
