@@ -65,15 +65,15 @@ LFPblock_end = (LFPblock_start + lfp_block_size - 1) - lfp_overlap_size;
 
 read_final_samples = false;
 for i_block = 2 : num_blocks
-    
+   
     disp(['Block ' num2str(i_block) ' of ' num2str(num_blocks)]);
-    
+   
 %     read_start_sample = (i_block-1) * raw_block_size - raw_overlap_size + 1;
     read_start_sample = (LFPstart-1) * r - raw_overlap_size;
     read_end_sample = read_start_sample + raw_block_plus_overlap_size - 1;
-    
+   
     new_amplifier_data = readIntanAmplifierData_by_sample_number_DL(amp_file.name,read_start_sample,read_end_sample,amplifier_channels,convert_to_microvolts);
-    
+   
     if i_block < num_blocks
         if read_end_sample > samples_per_channel
             % rarely, the end of the padded block goes past the end of the
@@ -89,7 +89,7 @@ for i_block = 2 : num_blocks
         read_final_samples = true;
         LFPend = size(lfp_data, 2);
     end
-    
+   
     for i_ch = 1 : num_channels
         currentLFP(i_ch,:) = ...
             decimate(new_amplifier_data(i_ch, :), r, filtOrder, 'fir');
