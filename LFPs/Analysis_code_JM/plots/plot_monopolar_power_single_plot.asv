@@ -18,7 +18,7 @@ power_lfps = load(power_lfps_fname);
 % power_lfps = power_lfps.power_lfps;
 
 f = power_lfps.f;
-Fs = power_lfps.actual_lfpFs;
+Fs = power_lfps.Fs;
 power_lfps = power_lfps.power_lfps;
 
 naming_convention; %  This needs to be changed based on probe type

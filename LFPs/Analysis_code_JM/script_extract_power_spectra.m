@@ -26,16 +26,18 @@ for i_ratfolder = 1 : length(valid_rat_folders)
             continue
         end
         
-        if ratID == 'R0326'
-            probe_type = 'NN8x8'; 
-        elseif ratID == 'R0411'
-            probe_type = 'ASSY156';
-        elseif ratID == 'R0420'
-            probe_type = 'ASSY236';
-        end
-        
-        
-        
+%         if ratID == 'R0326'
+%             probe_type = 'NN8x8'; 
+%         elseif ratID == 'R0411'
+%             probe_type = 'ASSY156';
+%         elseif ratID == 'R0420'
+%             probe_type = 'ASSY236';
+%         elseif ratID == 'R0425'
+%             probe_type = 'ASSY236';
+%         elseif ratID == 'R0427'
+%             probe_type = 'ASSY236';
+%         end
+
         % create filenames to hold mono- and diff-LFPs
         mono_power_fn = [session_name, '_monopolar_power.mat'];
         mono_power_fn = fullfile(session_path, mono_power_fn);
@@ -71,8 +73,8 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         if num_rows < 64
             continue
         end
-                   
         
+              
         if ~exist(power_fn, 'file')
             [ordered_lfp, intan_site_order, NNsite_order] = lfp_by_probe_site_ALL(lfp_data, probe_type); % lfp_by_probe_site_ALL has the three probe types listed. 
                 % Working on changing probe_type to a list of rats with
