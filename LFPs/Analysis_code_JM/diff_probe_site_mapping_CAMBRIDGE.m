@@ -12,7 +12,8 @@ function diff_lfps = diff_probe_site_mapping_CAMBRIDGE(lfp_data, probe_type)
 
 % cd 'X:\Neuro-Leventhal\data\ChoiceTask\R0326\R0326-processed\R0326_20200227a';
 % load('R0326_20200227a_lfp.mat');
-lfp_data = load('R0427_20220826_TestSignal_220826_141536.mat'); % Line required if running the code individually, not needed if running as the package
+% lfp_data = load('R0427_20220826_TestSignal_220826_141536.mat'); % Line required if running the code individually for troubleshooting purposes
+%       not needed if running as the package
 
 if isstring(lfp_data)
     if exist(lfp_data, 'file')
