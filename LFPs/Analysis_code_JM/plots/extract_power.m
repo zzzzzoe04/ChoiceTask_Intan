@@ -1,6 +1,6 @@
-% Plot spectral density (pWelch) of all 64 channels in an NN8x8 probe in a single graph
+% calculate spectral density (pWelch) to plot all 64 channels in an NN8x8 probe in a single graph
 
-function [power_lfps, f] = extract_power(LFP,Fs)
+function [power_lfps, f] = extract_power(ordered_lfp,Fs)
 
 % INPUTS
 %   LFP - num_channels x num_samples array
@@ -16,9 +16,9 @@ pw_overlapsamples = round(pw_samplewin / 2);
 
 f = 1:250;
 
-LFP = LFP';
+ordered_lfp = ordered_lfp';
 
-[power_lfps, f] = pwelch(LFP,pw_samplewin,pw_overlapsamples,f,Fs, 'power');
+[power_lfps, f] = pwelch(ordered_lfp,pw_samplewin,pw_overlapsamples,f,Fs, 'power');
 
 f = f';
 power_lfps = power_lfps';
