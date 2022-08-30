@@ -80,7 +80,7 @@ elseif strcmpi(probe_type, 'ASSY156')
        lfp_data = lfp_data.lfp;
     end
      intan_amplifier = lfp_data([1:17,19:32,63,...% Shank A
-        18,33:62, 64]); % Shank B
+        18,33:62, 64],:); % Shank B
     
      intan_site_order = [39,43,52,56,57,44,64,33,... % Shank B
             49,35,47,63,36,46,61,38,...
@@ -99,7 +99,7 @@ elseif strcmpi(probe_type, 'ASSY156')
          42,46,18,48,17,45,20,30,...
          43,22,21,34,25,38,36,23];
         
-ordered_lfp = intan_amplifier(intan_site_order)';   
+ordered_lfp = intan_amplifier(intan_site_order, :);   
 
 elseif strcmpi(probe_type, 'ASSY236')
     if isstring(lfp_data)
@@ -114,7 +114,7 @@ elseif strcmpi(probe_type, 'ASSY236')
        lfp_data = lfp_data.lfp;
     end
     intan_amplifier = lfp_data([1:17,19:32,63,...% Shank A
-        18,33:62, 64]); % Shank B
+        18,33:62, 64],:); % Shank B
     intan_site_order = [63,62,39,47,36,61,33,57,...
             49,41,51,34,37,59,46,54,...
             40,52,56,60,43,38,55,42,...
@@ -132,7 +132,7 @@ elseif strcmpi(probe_type, 'ASSY236')
         11,28,43,25,26,10,27,58,...
         30,46,63,15,62,31,14,47];
     
-ordered_lfp = intan_amplifier(intan_site_order)';
+ordered_lfp = intan_amplifier(intan_site_order, :);
 end
 
 end
