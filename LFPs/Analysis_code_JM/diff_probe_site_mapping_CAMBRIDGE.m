@@ -23,7 +23,7 @@ if isstring(lfp_data)
         diff_lfps = [];
     end
 else
-    lfp = lfp_data.lfp_data;
+    lfp = lfp_data.lfp;
 end
 
 num_shanks = 4; %number of shanks on NN probe

@@ -86,10 +86,21 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         end
         
         if ~exist(diff_power_fn, 'file')
-            % Reorganize by NNsite and calculate the diffs
-            lfp_NNsite_diff = diff_probe_site_mapping(lfp_data, probe_type); % calculates diffs
-            [power_lfps_diff, f] = extract_power(lfp_NNsite_diff,Fs);
-            save(diff_power_fn, 'power_lfps_diff', 'f', 'Fs');
+            % Reorganize by site and calculate the diffs; specify
+            % probe_type so it reorganzies the lfp files based on sites
+            if strcmpi(probe_type, 'nn8x8')
+                lfp_NNsite_diff = diff_probe_site_mapping(lfp_data, probe_type); % calculates diffs
+                [power_lfps_diff, f] = extract_power(lfp_NNsite_diff,Fs);
+                save(diff_power_fn, 'power_lfps_diff', 'f', 'Fs');
+            elseif strcmpi(probe_type, 'ASSY236')
+                diff_lfps = diff_probe_site_mapping_CAMBRIDGE(lfp_data, probe_type);
+                [power_lfps_diff, f] = extract_power(diff_lfps,Fs);
+                save(diff_power_fn, 'power_lfps_diff', 'f', 'Fs');
+            elseif strcmpi(probe_type, 'ASSY156')
+                diff_lfps = diff_probe_site_mapping_CAMBRIDGE(lfp_data, probe_type);
+                [power_lfps_diff, f] = extract_power(diff_lfps,Fs);
+                save(diff_power_fn, 'power_lfps_diff', 'f', 'Fs');
+            end
         end
             
     end
