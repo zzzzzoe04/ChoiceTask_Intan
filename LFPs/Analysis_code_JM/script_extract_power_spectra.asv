@@ -9,9 +9,9 @@ Fs = 500;
 % lfp_fname = dir(fullfile(intan_choicetask_parent,'**','*_lfp.mat')); % This
 % generates a matrix of '*_lfp.mat' filenames
 
-A = ["R0326", "R0327", "R0372", "R0379", "R0374", "R0378", "R0394", "R0395", "R0396", "R0412", "R0413"];
+A = ["R0326", 'R0327', 'R0372', 'R0379', 'R0374', 'R0378', 'R0394', 'R0395', 'R0396', 'R0412', 'R0413');
 B = ["R0411", "R0419"];
-C = ["R0420", "R0425", "R0427"];
+C = char('R0420', 'R0425', 'R0427');
 
 sessions_to_ignore = {'R0378_20210507a', 'R0425_20220728a'}; % R0425_20220728a debugging because the intan side was left on for 15 hours.
 
