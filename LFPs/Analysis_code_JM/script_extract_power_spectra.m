@@ -30,7 +30,6 @@ for i_ratfolder = 1 : length(valid_rat_folders)
             continue
         end
 
-       
         if contains(ratID, A)
             probe_type = 'NN8x8'; 
         elseif contains(ratID, B)
@@ -38,15 +37,6 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         elseif contains(ratID, C)
             probe_type = 'ASSY236';
         end
-
-           
-%         if ratID == 'R0326', 'R0327', 'R0372', 'R0379', 'R0374', 'R0378', 'R0394', 'R0395', 'R0396', 'R0412', 'R0413'
-%             probe_type = 'NN8x8'; 
-%         elseif ratID == 'R0411', 'R0419'
-%             probe_type = 'ASSY156';
-%         elseif ratID == 'R0420', 'R0425', 'R0427'
-%             probe_type = 'ASSY236';
-%         end
 
         % create filenames to hold mono- and diff-LFPs
         mono_power_fn = [session_name, '_monopolar_power.mat'];
