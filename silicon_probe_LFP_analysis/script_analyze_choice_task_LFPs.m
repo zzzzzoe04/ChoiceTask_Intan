@@ -22,7 +22,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
             continue
         end
         
-        [lfp, actual_Fs] = calculate_NNprobe_monopolar_LFPs(intan_folders{i_sessionfolder}, 500);
+        [lfp, actual_Fs] = calculate_monopolar_LFPs(intan_folders{i_sessionfolder}, 500); % This file should not need to be probe_type specific JM 20220909
         
         save(lfp_fname, 'lfp', 'actual_Fs');
         

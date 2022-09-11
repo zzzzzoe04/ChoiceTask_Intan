@@ -25,7 +25,7 @@ function [ordered_lfp, intan_site_order, site_order] = lfp_by_probe_site_ALL(lfp
 %       DIFFERENT from the intan order (see
 %       https://www.neuronexus.com/files/probemapping/64-channel/H64LP-Maps.pdf)
 
-% lfp_data = load('R0425_20220812a_lfp.mat');
+lfp_data = load('R0427_20220909_Test_lfp.mat');
 
 if strcmpi(probe_type, 'nn8x8')
     if isstring(lfp_data)
@@ -111,7 +111,7 @@ elseif strcmpi(probe_type, 'ASSY236')
             return
         end
     else
-       lfp_data = lfp_data.lfp;
+       lfp_data = lfp_data.lfp_data;
     end
     intan_amplifier = lfp_data([1:17,19:32,63,...% Shank A
         18,33:62, 64],:); % Shank B
