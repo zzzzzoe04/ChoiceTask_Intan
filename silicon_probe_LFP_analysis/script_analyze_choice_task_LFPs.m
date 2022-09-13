@@ -35,3 +35,5 @@ end
 probe_anatomy_info = read_probe_mapping_xls(probe_mapping_fname); % Still not clear what Dan was trying to accomplish here. 
 % The probe mapping file basically makes a table of R0326 even if the
 % cur_sheet is for R0425?
+% Plus we don't 'need' to read the probe mapping on this file (lfp's are
+% lfp's)
