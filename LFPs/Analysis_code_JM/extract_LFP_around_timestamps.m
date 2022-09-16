@@ -10,6 +10,9 @@ function event_triggered_lfps = extract_LFP_around_timestamps(LFP, ts, t_win, Fs
 %   event_triggered_lfps - num_events x num_channels x samples_per_event
 %       containing lfp snips
 
+ LFP = load(LFP); % actually load in the data
+ LFP = LFP.lfp;
+
 num_channels = size(LFP, 1);
 num_samples = size(LFP, 2);
 max_t = Fs * num_samples;
@@ -31,5 +34,5 @@ for i_ts = 1 : num_events
     
 end
 
-mean_lfp = mean(event_triggered_lfps, 1);
+% mean_lfp = mean(event_triggered_lfps, 1);
     
