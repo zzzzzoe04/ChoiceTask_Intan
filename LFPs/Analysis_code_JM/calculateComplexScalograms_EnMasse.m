@@ -48,8 +48,8 @@ freqList = [];
 f_filterBank = [];
 
 if size(varargin)>0
-    for iarg= 1:2:length(varargin),   % assume an even number of varargs
-        switch lower(varargin{iarg}),
+    for iarg= 1:2:length(varargin)   % assume an even number of varargs
+        switch lower(varargin{iarg})
 			case 'fpass'
 				fpass = varargin{iarg+1};
 			case 'numfreqs'
@@ -58,7 +58,7 @@ if size(varargin)>0
 				Fs = varargin{iarg+1};
 			case {'doplot', 'plot'}
 				doplot = varargin{iarg+1};
-            case 'freqlist',
+            case 'freqlist'
                 freqList = varargin{iarg + 1};
                 numfreqs = length(freqList);
             case 'filterbank'
