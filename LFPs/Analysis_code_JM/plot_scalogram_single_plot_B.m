@@ -15,7 +15,7 @@
 % Then take the mean of numtrials for that channel. Then squeeze that and
 % plot it. mean(data,dim)
 
-function plot_scalogram_single_plot_B = plot_scalogram_single_plot_B(myData)
+function surface_plot = plot_scalogram_single_plot_B(myData)
 %       monopolar_fname - filename of the file to plot
 % INPUTS
 %   event_triggered_lfps - squeezed data
@@ -23,19 +23,16 @@ function plot_scalogram_single_plot_B = plot_scalogram_single_plot_B(myData)
 % OUTPUTS
 %       cfs_mean - m x n array of monopolar power
 %       f - 
-myData = load('R0326_20200228a_myData');
+myData = load('R0326_20200228a_myData.mat');
 myData = myData.myData2;
-
-
-naming_convention; %  This needs to be changed based on probe type
-% Shouldn't we have a line about probe_site_mapping somewhere here? Or how
-% does the code below account  for probe site mapping?
 
 figure;
 
 time = linspace(-2,2,2001); % time (x-axis)
 Fs = 500;
 f = flip(linspace(0,60,81))'; % frequency (y-axis); writing it this way allows for the high frequencies to actually plot correctly
+
+naming_convention;
 
 % ts = 10;
 % sample_limits = (ts + t_win) * Fs;
@@ -44,29 +41,28 @@ f = flip(linspace(0,60,81))'; % frequency (y-axis); writing it this way allows f
 
 num_rows = size(myData, 1);
 num_points = size(myData,2);
-y_lim = f;
-x_lim = time;
 
 % Plot the data
 LFPs_per_shank = num_rows / 8;   % will be 8 for 64 channels, 7 for 56 channels (diff)
 for i_row = 1 : num_rows
-    [cfs_mean,f] = cwt(myData(i_row, :),'amor',500);
+   [cfs_mean,f] = cwt(myData(i_row, :), 'amor', Fs);
+     
     plot_col = ceil(i_row / LFPs_per_shank);
     plot_row = i_row - LFPs_per_shank * (plot_col-1);
     plot_num = (plot_row-1) * 8 + plot_col;
     
     subplot(LFPs_per_shank,8,plot_num);
     % plot_scalogram_single_plot_B = surface(time,f, abs(myData(i_row, :))); % Dan suggested plotting the log so trying here
-    plot_scalogram_single_plot_B = surface(time,f,abs(cfs_mean(i_row, :)));
+    surface_plot = surface(time,f,abs(cfs_mean));
+    f = flip(linspace(0,60,81))';
     % set(gca,'xlim', x_lim, 'ylim',y_lim);
     axis tight
     shading flat
-    set(gca,'yscale','linear')
+    % set(gca,'xlim', time, 'ylim', f);
     grid on
-    caption = sprintf('ASSY236 #%d', ASSY236_order(i_row)); % Make a catch so this doesn't need to be edited every graph
-    %caption = sprintf('NNsite #%d', NNsite_order(i_row)); % using naming_convention for monopolar plot captions (naming_convention_diffs for diffs plot)
+    % caption = sprintf('ASSY236 #%d', ASSY236_order(i_row)); % Make a catch so this doesn't need to be edited every graph
+    caption = sprintf('NNsite #%d', NNsite_order(i_row)); % using naming_convention for monopolar plot captions (naming_convention_diffs for diffs plot)
     title(caption, 'FontSize', 8);
-    % title('Signal and Scalogram')
     
     if plot_row < LFPs_per_shank
         set(gca,'xticklabels',[])

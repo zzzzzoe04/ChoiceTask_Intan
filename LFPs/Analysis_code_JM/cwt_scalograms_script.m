@@ -1,8 +1,10 @@
 % Test code for scalograms using cwt function 
 % x = event_triggered_lfps. Maybe pull out one line
 
+num_rows = size(myData2, 1);
+% mydata_channel_1 = myData2(1,:);
 
-[cfs_mean,f] = cwt(myData_channel_one,'amor',500);
+[cfs_mean,f] = cwt(myData2(1,:),'amor',500);
 
 Fs = 500;
 f = flip(linspace(0,60,81))'; % frequency (y-axis); writing it this way allows for the high frequencies to actually plot correctly
