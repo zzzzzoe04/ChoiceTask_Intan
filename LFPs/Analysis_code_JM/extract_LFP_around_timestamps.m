@@ -11,7 +11,7 @@ function event_triggered_lfps = extract_LFP_around_timestamps(LFP, ts, t_win, Fs
 %       containing lfp snips
 
  LFP = load(LFP); % actually load in the data
- LFP = LFP.lfp;
+ LFP = LFP.ordered_lfp;
 
 num_channels = size(LFP, 1);
 num_samples = size(LFP, 2);
