@@ -65,14 +65,6 @@ for i_ratfolder = 1 : length(valid_rat_folders)
             mkdir(processed_graphFolder);
         end    
         
-        
-%         if ratID == 'R0326'
-%             probe_type = 'NN8x8';
-%         elseif ratID == 'R0411'
-%             probe_type = 'ASSY156';
-%         end
-%         
-        
         % create filenames to hold mono- and diff-LFPs
         mono_power_plot = [session_name, '_monopolarpower.pdf'];
         mono_power_plot = fullfile(processed_graphFolder, mono_power_plot);
@@ -91,6 +83,7 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         power_lfps = load(power_lfps_fname);
         power_lfps = power_lfps.power_lfps;
         num_rows = size(power_lfps,1); % for now, skipping R0378_20210507a because the session only recorded 63 channels instead of 64. Need to rewrite lfp_NNsite_order and diff functions to fix this issue by determining which channel was not recorded. 
+        
         % The actual plot section
         plot_monopolar = plot_monopolar_power_single_plot(power_lfps_fname);   % include info for making a title, etc. in the single_plot function
         sgtitle(A, 'Interpreter','none'); % 'Interpreter', 'none'  --- allows the title to have an underscore instead of a subscript

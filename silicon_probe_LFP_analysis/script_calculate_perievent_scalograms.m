@@ -61,6 +61,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
             sprintf('could not generate trials structure for %s', session_folder)
             continue
         end
+        % update here for next steps in calculating perievent scalograms
         
         sprintf('placeholder')
     end
