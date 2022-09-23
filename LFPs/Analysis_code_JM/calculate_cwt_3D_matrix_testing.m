@@ -51,7 +51,8 @@ for i_event = 1 : num_events
     % you might want to create a separate file for each event and save
     % session_scalos here if it's too big with all the events and all the
     % channels in one file
-    save(fname, 'session_scalos', 'Fs', 'f')
+    save('R0326_20200228a_cueOn_correctGo.mat', 'session_scalos', 'Fs', 'f', '-v7.3') % change to fname
+    
 end
 
 % now still have to write scalos either into another array for storage, or
