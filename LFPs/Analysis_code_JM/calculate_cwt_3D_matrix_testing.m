@@ -1,11 +1,11 @@
-
+% calculate_cwt_3D_matrix_testing.m
 
 eventlist = {'nosein','cueon','noseout', 'sidein', 'sideout', 'foodretrievel'};
 num_events = length(eventlist);
 
-pts_per_event = size(event_triggered_lfps_ordered,3);
-num_channels = size(event_triggered_lfps_ordered,2);
-num_trials = size(event_triggered_lfps_ordered, 1);
+pts_per_event = size(event_triggered_lfps,3);
+num_channels = size(event_triggered_lfps,2);
+num_trials = size(event_triggered_lfps, 1);
 
 flim = [1, 100];
 fb = cwtfilterbank('SignalLength', pts_per_event, ...
@@ -32,11 +32,11 @@ for i_event = 1 : num_events
     % event
     for i_channel = 1 : num_channels
 
-        channel_lfps = squeeze(event_triggered_lfps_ordered(:, i_channel, :));
+        channel_lfps = squeeze(event_triggered_lfps(:, i_channel, :));
 
-        [scalos, f] = calculate_single_channel_event_triggered_scalograms(channel_lfps(i_event, :, :, :), fb);
-        % session_scalos(i_event, i_channel, :, :) = scalos; % does this need to be rewritten? Scalos is channels, trials, length, pts per event
-        session_scalos = scalos;
+        [scalos, f] = calculate_single_channel_event_triggered_scalograms(channel_lfps, fb);
+        session_scalos(i_event, :, :, :) = scalos; % does this need to be rewritten? Scalos is channels, trials, length, pts per event
+        % session_scalos = scalos;
         
         % test that the scalogram looks reasonable; comment out for batch
         % processing

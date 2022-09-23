@@ -1,4 +1,4 @@
-function [ trialEventParams ] = getTrialEventParams( trialTypes, varargin  )
+function ;
 % function to return a set of trial parameters for analysis given an input
 % string describing the trial type
 %
