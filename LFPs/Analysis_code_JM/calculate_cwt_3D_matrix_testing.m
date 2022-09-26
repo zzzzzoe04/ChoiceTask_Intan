@@ -1,5 +1,7 @@
 % calculate_cwt_3D_matrix_testing.m
 
+P = cd;
+
 eventlist = {'nosein','cueon','noseout', 'sidein', 'sideout', 'foodretrievel'};
 num_events = length(eventlist);
 
@@ -51,7 +53,8 @@ for i_event = 1 : num_events
     % you might want to create a separate file for each event and save
     % session_scalos here if it's too big with all the events and all the
     % channels in one file
-    save('R0326_20200228a_cueOn_correctGo.mat', 'session_scalos', 'Fs', 'f', '-v7.3') % change to fname
+    G = sprintf('session_scalos%u.mat',i_event);
+    save(fullfile(P,G), 'session_scalos', 'Fs', 'f', '-v7.3') % change to fname
     
 end
 
