@@ -2,7 +2,7 @@ function event_triggered_lfps = extract_event_related_LFPs(LFP_fname, trials, ev
 
 %   LFP_fname - name of the LFP file
 %   trials - trials structure
-%   eventFieldnames - name of event for which to extract timestamps:
+%   eventname - name of event for which to extract timestamps:
 %       For a correct trial, eventname options are as follows:
 %         cueOn, centerIn, tone, centerOut, sideIn, sideOut, foodClick, foodRetrieval
 %         - to find eventFieldnames for non-correct trials, check the
@@ -13,8 +13,8 @@ function event_triggered_lfps = extract_event_related_LFPs(LFP_fname, trials, ev
 %   twin
 
 
-if ~iscell(eventFieldnames)
-    eventFieldnames = {eventFieldnames};
+if ~iscell(eventname)
+    eventname = {eventname};
 end
 
 twin = [-2.5 2.5];
@@ -29,6 +29,6 @@ for iarg = 1 : 2 : nargin - 3
     end
 end
 
-ts = extract_trial_ts(trials, eventFieldnames);
+ts = extract_trial_ts(trials, eventname);
 
 event_triggered_lfps = extract_LFP_around_timestamps(LFP_fname, ts, twin, Fs);

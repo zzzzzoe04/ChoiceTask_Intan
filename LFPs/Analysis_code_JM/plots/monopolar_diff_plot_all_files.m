@@ -45,8 +45,7 @@ for i_ratfolder = 1 : length(valid_rat_folders)
             continue
         end
         
-        % make a folder for the processed data graphs (monopolar and diff
-        % graphs)
+        
         parentFolder = fullfile(intan_choicetask_parent, ...
          ratID, ...
          [ratID '-processed']);
@@ -60,6 +59,9 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         logData = readLogData(session_log);
         A{3} = ['Task Level: ' choiceRTdifficulty{logData.taskLevel+1}];   
         
+        
+        % make a folder for the processed data graphs (monopolar and diff
+        % graphs)        
         processed_graphFolder = [parentFolder(1:end-9) 'processed-graphs'];
         if ~exist(processed_graphFolder, 'dir')
             mkdir(processed_graphFolder);
