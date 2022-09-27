@@ -7,7 +7,7 @@ function trial_ts = extract_trial_ts(trials, eventFieldnames)
 %       before and after each event to extract. Note that both elements of
 %       tWindow will be added to the reference event (so usually the first
 %       number will be negative, second will be positive)
-%   eventFieldnames - length of event fields for which to extract time
+%   eventFieldnames - event fields for which to extract time
 %       windows
 %       For a correct trial, eventFieldnames are as follows:
 %         cueOn, centerIn, tone, centerOut, sideIn, sideOut, foodClick, foodRetrieval

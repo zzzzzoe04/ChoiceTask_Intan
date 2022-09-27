@@ -1,7 +1,7 @@
-function event_triggered_lfps = extract_LFP_around_timestamps(LFP, ts, t_win, Fs)
+function event_triggered_lfps = extract_LFP_around_timestamps(LFP_fname, ts, t_win, Fs)
 
 % INPUTS
-%   lfp - num_channels x num_samples array
+%   LFP_fname - filename of the LFP file
 %   ts - vector of timestamps. NOT an array of time ranges
 %   t_win - 2-element vector with start and end time for each event
 %   Fs - sampling rate in Hz
@@ -10,8 +10,8 @@ function event_triggered_lfps = extract_LFP_around_timestamps(LFP, ts, t_win, Fs
 %   event_triggered_lfps - num_events x num_channels x samples_per_event
 %       containing lfp snips
 
- LFP = load(LFP); % actually load in the data
- LFP = LFP.ordered_lfp;
+LFP_data = load(LFP_fname); % actually load in the data
+LFP = LFP_data.ordered_lfp;
 
 num_channels = size(LFP, 1);
 num_samples = size(LFP, 2);
