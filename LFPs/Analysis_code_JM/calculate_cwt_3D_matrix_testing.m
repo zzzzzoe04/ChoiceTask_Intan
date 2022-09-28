@@ -7,10 +7,15 @@ rats_with_intan_sessions = find_rawdata_folders(intan_parent_directory);
 % get the trial structure for that session
 % run this analysis
 
-eventlist = {'nosein','cueon','noseout', 'sidein', 'sideout', 'foodretrievel'};
+eventlist = {'nosein'};
+    % eventlist = {'nosein','cueon','noseout', 'sidein', 'sideout',
+    % 'foodretrievel'}; This is the full eventlist for a correctGo trial.
+    % Choose one for generating event_triggered_lfps.
 num_events = length(eventlist);
+t_win = [-2.5 2.5]; % need this line for the event_triggered_lfps to select the correct 
+trialType = ('correctGo'); % to pull out trIdx of the trials structure (just correct go trials)
 
-intan_ignore = {'R0326_20191107a'};
+intan_ignore = {'R0326_20191107a'}; % still troubleshooting these two lines to avoid looping through irrelevant data files (e.g. files with no info.rhd file.
 sessions_to_ignore = {'R0326_20191107a', 'R0427_20220920a'};
 
 %Start here to get the trials structure
@@ -52,7 +57,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
         if ~exist(analogin_fname, 'file')
             sprintf('no analog input file for %s', session_folder)
             continue
-                end
+        end
         
         if ~exist(rhd_fname, 'file')
             sprintf('no rhd info file for %s', session_folder)
@@ -80,19 +85,25 @@ for i_rat = 1 : length(rats_with_intan_sessions)
             continue
         end
         
+        % extract Trial Type (e.g. correctGo)
+        % Set trialType at beginning of file
+        [ trialEventParams ] = getTrialEventParams(trialType); % Need to verify this section. Working Here
+        trIdx = extractTrials(trials, trialEventParams);
+        
         %Getting the LFP-fname
         rd_metadata = parse_rawdata_folder(intan_folders{i_sessionfolder});
         pd_folder = create_processed_data_folder(rd_metadata, intan_parent_directory);
         
         lfp_fname = fullfile(pd_folder, create_lfp_fname(rd_metadata));
-        lfp_data = load(lfp_fname);
+        lfp_data = load(lfp_fname); % Load in the LFP data for rearranging LFP data (ordering it by probe_type)
+        Fs = lfp_data.actual_Fs; % need the Fs loaded in for gathering event_triggered_lfps in the next 'for' loop
         
         
-        NN8x8 = ["R0326", "R0327", "R0372", "R0379", "R0374", "R0378", "R0394", "R0395", "R0396", "R0412", "R0413"];
+        NN8x8 = ["R0326", "R0327", "R0372", "R0379", "R0374", "R0378", "R0394", "R0395", "R0396", "R0412", "R0413"]; % Specify list of ratID associated with each probe_type
         ASSY156 = ["R0411", "R0419"];
         ASSY236 = ["R0420", "R0425", "R0427"];
         
-        if contains(ratID, NN8x8)
+        if contains(ratID, NN8x8) % if the ratID is in the list, it'll assign it the correct probe_type for ordering the LFP data correctly
             probe_type = 'NN8x8'; 
         elseif contains(ratID, ASSY156)
             probe_type = 'ASSY156';
@@ -100,16 +111,16 @@ for i_rat = 1 : length(rats_with_intan_sessions)
             probe_type = 'ASSY236';
         end
         
-        % Need to order the lfps here        
-        [ordered_lfp, intan_site_order, site_order] = lfp_by_probe_site_ALL(lfp_data, probe_type); % Orders the lfps by probe site mapping    
-        
+        % Order the lfps here        
+        [ordered_lfp, intan_site_order, site_order] = lfp_by_probe_site_ALL(lfp_data, probe_type); % Orders the lfps by probe site mapping (double check the single file to remove catches for loading in single data)
         
         % This is where the scalograms are being calculated.
         for i_event = 1 : num_events
                     % write code here to get event_triggered_lfps_ordered for each separate
                     % event
-
-                    event_triggered_lfps = extract_event_related_LFPs(lfp_fname, trials, eventlist{i_event}, 'fs', Fs, 'twin', t_win); % should I make this ordered_lfp?
+                    
+                    
+                    event_triggered_lfps = extract_event_related_LFPs(ordered_lfp, trials(trIdx), eventlist{i_event}, 'fs', Fs, 'twin', t_win); % should I make this ordered_lfp?
                                       
                     % at this point, event_triggered_lfps_ordered is an m x n x p array where
                     % m is the number of events (i.e., all the cueon OR nosein OR other...
@@ -153,6 +164,9 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                         scalograms = fullfile(pd_folder,scalograms);
                         save(fname, 'scalograms', 'Fs', 'f', 'fb');
 
+                 G = sprintf('ratID' + 'eventlist' + 'session_scalos%u.mat',i_event);
+                 save(fullfile(pd_folder,G), 'session_scalos', 'Fs', 'f', '-v7.3') % change to fname
+                        
                         % test that the scalogram looks reasonable; comment out for batch
                         % processing
                         figure(1)
@@ -166,17 +180,9 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                 % you might want to create a separate file for each event and save
                 % session_scalos here if it's too big with all the events and all the
                 % channels in one file
-
-                % This save has been edited as above fname.
-
-        %         G = sprintf('session_scalos%u.mat',i_event);
-        %         save(fullfile(data_path,G), 'session_scalos', 'Fs', 'f', '-v7.3') % change to fname
         end
         
    
     
     end
 end
-
-% now still have to write scalos either into another array for storage, or
-% write to disk

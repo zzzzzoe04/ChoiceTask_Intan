@@ -1,6 +1,6 @@
-function event_triggered_lfps = extract_event_related_LFPs(LFP_fname, trials, eventFieldnames, varargin)
+function event_triggered_lfps = extract_event_related_LFPs(ordered_lfp, trials, eventFieldnames, varargin)
 
-%   LFP_fname - name of the LFP file
+%   ordered_lfp - m x n array of channels x data-points in an ordered array
 %   trials - trials structure
 %   eventFieldnames - name of event for which to extract timestamps:
 %       For a correct trial, eventname options are as follows:
@@ -31,4 +31,4 @@ end
 
 ts = extract_trial_ts(trials, eventFieldnames);
 
-event_triggered_lfps = extract_LFP_around_timestamps(LFP_fname, ts, twin, Fs);
+event_triggered_lfps = extract_LFP_around_timestamps(ordered_lfp, ts, twin, Fs);

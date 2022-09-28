@@ -1,4 +1,4 @@
-function event_triggered_lfps = extract_LFP_around_timestamps(LFP_fname, ts, t_win, Fs)
+function event_triggered_lfps = extract_LFP_around_timestamps(ordered_lfp, ts, t_win, Fs)
 
 % INPUTS
 %   LFP_fname - filename of the LFP file
@@ -10,11 +10,12 @@ function event_triggered_lfps = extract_LFP_around_timestamps(LFP_fname, ts, t_w
 %   event_triggered_lfps - num_events x num_channels x samples_per_event
 %       containing lfp snips
 
-LFP_data = load(LFP_fname); % actually load in the data
-LFP = LFP_data.ordered_lfp;
+% LFP_data = load(LFP_fname); grandfathered code when needing to load data
+% in from fname
+% LFP = LFP_data.ordered_lfp;
 
-num_channels = size(LFP, 1);
-num_samples = size(LFP, 2);
+num_channels = size(ordered_lfp, 1);
+num_samples = size(ordered_lfp, 2);
 max_t = Fs * num_samples;
 valid_ts = ts(ts > -t_win(1));
 valid_ts = valid_ts(valid_ts < max_t - t_win(2));
