@@ -17,7 +17,7 @@ sessions_to_ignore = {'R0326_20191107a', 'R0427_20220920a'};
 for i_rat = 1 : length(rats_with_intan_sessions)
     
     intan_folders = rats_with_intan_sessions(i_rat).intan_folders;
-        if any(strcmp(session_name, sessions_to_ignore))
+        if any(strcmp(intan_folders, intan_ignore))
             continue
         end 
     for i_sessionfolder = 1 : length(intan_folders)
@@ -27,7 +27,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
         ratID = pd_processed_data.ratID;
         session_name = pd_processed_data.session_name;
         
-        if any(strcmp(session_name, sessions_to_ignore))
+        if any(strcmp(ratID, sessions_to_ignore)) % can't quite get this to debug but seems ok (if it worked it would run through the code quicker)
             continue
         end        
         
@@ -85,23 +85,22 @@ for i_rat = 1 : length(rats_with_intan_sessions)
         pd_folder = create_processed_data_folder(rd_metadata, intan_parent_directory);
         
         lfp_fname = fullfile(pd_folder, create_lfp_fname(rd_metadata));
+        lfp_data = load(lfp_fname);
+
+        % Need to order the lfps here        
+        [ordered_lfp, intan_site_order, site_order] = lfp_by_probe_site_ALL(lfp_data, probe_type); % Orders the lfps by probe site mapping    
         
-        if exist(lfp_fname, 'file')
-            continue
-        end
         
-   
         % This is where the scalograms are being calculated.
         for i_event = 1 : num_events
                     % write code here to get event_triggered_lfps_ordered for each separate
                     % event
 
-                    event_triggered_lfps = extract_event_related_LFPs(lfp_fname, trials, eventlist{i_event}, 'fs', Fs, 'twin', t_win);
+                    event_triggered_lfps = extract_event_related_LFPs(lfp_fname, trials, eventlist{i_event}, 'fs', Fs, 'twin', t_win); % should I make this ordered_lfp?
                     % event_triggered_lfps should be an m x n x p array where m is the
                     % number of trials, n is the number of channels, p is the number of
                     % time points extracted around each LFP
-                    
-                    
+                                        
                     % at this point, event_triggered_lfps_ordered is an m x n x p array where
                     % m is the number of events (i.e., all the cueon OR nosein OR other...
                     % events) in a single session; n is the number of channels in that session

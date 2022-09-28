@@ -9,9 +9,9 @@ Fs = 500;
 % lfp_fname = dir(fullfile(intan_choicetask_parent,'**','*_lfp.mat')); % This
 % generates a matrix of '*_lfp.mat' filenames
 
-A = ["R0326", "R0327", "R0372", "R0379", "R0374", "R0378", "R0394", "R0395", "R0396", "R0412", "R0413"];
-B = ["R0411", "R0419"];
-C = ["R0420", "R0425", "R0427"];
+NN8x8 = ["R0326", "R0327", "R0372", "R0379", "R0374", "R0378", "R0394", "R0395", "R0396", "R0412", "R0413"];
+ASSY156 = ["R0411", "R0419"];
+ASSY236 = ["R0420", "R0425", "R0427"];
 
 sessions_to_ignore = {'R0378_20210507a', 'R0425_20220728a', 'R0427_20220920a'}; % R0425_20220728a debugging because the intan side was left on for 15 hours; 
 % R0427_20220920a does not have an 'info.rhd' file
@@ -31,11 +31,11 @@ for i_ratfolder = 1 : length(valid_rat_folders)
             continue
         end
 
-        if contains(ratID, A)
+        if contains(ratID, NN8x8)
             probe_type = 'NN8x8'; 
-        elseif contains(ratID, B)
+        elseif contains(ratID, ASSY156)
             probe_type = 'ASSY156';
-        elseif contains(ratID, C)
+        elseif contains(ratID, ASSY236)
             probe_type = 'ASSY236';
         end
 

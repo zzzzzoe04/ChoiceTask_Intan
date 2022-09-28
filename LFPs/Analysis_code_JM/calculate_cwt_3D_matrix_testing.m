@@ -86,7 +86,20 @@ for i_rat = 1 : length(rats_with_intan_sessions)
         
         lfp_fname = fullfile(pd_folder, create_lfp_fname(rd_metadata));
         lfp_data = load(lfp_fname);
-
+        
+        
+        NN8x8 = ["R0326", "R0327", "R0372", "R0379", "R0374", "R0378", "R0394", "R0395", "R0396", "R0412", "R0413"];
+        ASSY156 = ["R0411", "R0419"];
+        ASSY236 = ["R0420", "R0425", "R0427"];
+        
+        if contains(ratID, NN8x8)
+            probe_type = 'NN8x8'; 
+        elseif contains(ratID, ASSY156)
+            probe_type = 'ASSY156';
+        elseif contains(ratID, ASSY236)
+            probe_type = 'ASSY236';
+        end
+        
         % Need to order the lfps here        
         [ordered_lfp, intan_site_order, site_order] = lfp_by_probe_site_ALL(lfp_data, probe_type); % Orders the lfps by probe site mapping    
         
@@ -97,11 +110,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                     % event
 
                     event_triggered_lfps = extract_event_related_LFPs(lfp_fname, trials, eventlist{i_event}, 'fs', Fs, 'twin', t_win); % should I make this ordered_lfp?
-                    % event_triggered_lfps should be an m x n x p array where m is the
-                    % number of trials, n is the number of channels, p is the number of
-                    % time points extracted around each LFP
-                    
-                    
+                                      
                     % at this point, event_triggered_lfps_ordered is an m x n x p array where
                     % m is the number of events (i.e., all the cueon OR nosein OR other...
                     % events) in a single session; n is the number of channels in that session
