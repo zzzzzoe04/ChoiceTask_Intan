@@ -7,11 +7,11 @@ rats_with_intan_sessions = find_rawdata_folders(intan_parent_directory);
 % get the trial structure for that session
 % run this analysis
 
-eventlist = {'nosein'};
-    % eventlist = {'nosein','cueon','noseout', 'sidein', 'sideout',
+eventFieldnames = {'centerIn'};
+    % eventlist = {'centerin','cueon','centerout', 'sidein', 'sideout',
     % 'foodretrievel'}; This is the full eventlist for a correctGo trial.
     % Choose one for generating event_triggered_lfps.
-num_events = length(eventlist);
+num_events = length(eventFieldnames);
 t_win = [-2.5 2.5]; % need this line for the event_triggered_lfps to select the correct 
 trialType = ('correctGo'); % to pull out trIdx of the trials structure (just correct go trials)
 
@@ -89,6 +89,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
         % Set trialType at beginning of file
         [ trialEventParams ] = getTrialEventParams(trialType); % Need to verify this section. Working Here
         trIdx = extractTrials(trials, trialEventParams);
+        trial_ts = extract_trial_ts(trials(trIdx), eventFieldnames); % This is actually pulled in from the extract_event_related_LFPs script so do we need it here? 
         
         %Getting the LFP-fname
         rd_metadata = parse_rawdata_folder(intan_folders{i_sessionfolder});
@@ -120,7 +121,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                     % event
                     
                     
-                    event_triggered_lfps = extract_event_related_LFPs(ordered_lfp, trials(trIdx), eventlist{i_event}, 'fs', Fs, 'twin', t_win); % should I make this ordered_lfp?
+                    event_triggered_lfps = extract_event_related_LFPs(ordered_lfp, trials(trIdx), eventFieldnames, 'fs', Fs, 'twin', t_win); % should I make this ordered_lfp?
                                       
                     % at this point, event_triggered_lfps_ordered is an m x n x p array where
                     % m is the number of events (i.e., all the cueon OR nosein OR other...
@@ -159,13 +160,10 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                         % create a file name that includes ratID, session #, chXX,
                         % eventname, scalograms
                         % for example, 'R0326_20200228a_ch01_cueOn_scalos.mat'
-
-                        scalograms = fullfile(session_path, '_scalograms.mat'); % UPDATE DATA_PATH TO THE PROCESSED FOLDER!!
-                        scalograms = fullfile(pd_folder,scalograms);
-                        save(fname, 'scalograms', 'Fs', 'f', 'fb');
-
-                 G = sprintf('ratID' + 'eventlist' + 'session_scalos%u.mat',i_event);
-                 save(fullfile(pd_folder,G), 'session_scalos', 'Fs', 'f', '-v7.3') % change to fname
+               
+                        fname_to_save = char(strcat(session_name(1:end-13), eventFieldnames, '_', 'sessionScalos', '_', sprintf('ch%u.mat', i_channel))); 
+                        % I believe this is saving channels (i_channel). It was originally written as i_event which rewrote the file.
+                        save(fullfile(pd_folder,fname_to_save), 'scalograms', 'Fs', 'f', 'fb', '-v7.3');
                         
                         % test that the scalogram looks reasonable; comment out for batch
                         % processing

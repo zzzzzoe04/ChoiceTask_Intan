@@ -3,10 +3,14 @@ function trial_ts = extract_trial_ts(trials, eventFieldnames)
 %
 % INPUTS
 %   trials - trials structure
-%   tWindow - two-element array containing length of time (in seconds)
-%       before and after each event to extract. Note that both elements of
-%       tWindow will be added to the reference event (so usually the first
-%       number will be negative, second will be positive)
+
+% %   tWindow - two-element array containing length of time (in seconds)
+% %       before and after each event to extract. Note that both elements of
+% %       tWindow will be added to the reference event (so usually the first
+% %       number will be negative, second will be positive)
+
+% WHY DOES THIS FILE NEED TWINDOW?? DOES NOT MAKE SENSE.
+
 %   eventFieldnames - event fields for which to extract time
 %       windows
 %       For a correct trial, eventFieldnames are as follows:

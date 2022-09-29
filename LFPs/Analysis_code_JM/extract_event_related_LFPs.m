@@ -29,6 +29,6 @@ for iarg = 1 : 2 : nargin - 3
     end
 end
 
-ts = extract_trial_ts(trials, eventFieldnames);
+trial_ts = extract_trial_ts(trials, eventFieldnames);
 
-event_triggered_lfps = extract_LFP_around_timestamps(ordered_lfp, ts, twin, Fs);
+event_triggered_lfps = extract_LFP_around_timestamps(ordered_lfp, trial_ts, twin, Fs);

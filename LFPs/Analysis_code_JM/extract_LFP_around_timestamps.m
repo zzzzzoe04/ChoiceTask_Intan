@@ -1,4 +1,4 @@
-function event_triggered_lfps = extract_LFP_around_timestamps(ordered_lfp, ts, t_win, Fs)
+function event_triggered_lfps = extract_LFP_around_timestamps(ordered_lfp, trial_ts, t_win, Fs)
 
 % INPUTS
 %   LFP_fname - filename of the LFP file
@@ -17,7 +17,7 @@ function event_triggered_lfps = extract_LFP_around_timestamps(ordered_lfp, ts, t
 num_channels = size(ordered_lfp, 1);
 num_samples = size(ordered_lfp, 2);
 max_t = Fs * num_samples;
-valid_ts = ts(ts > -t_win(1));
+valid_ts = trial_ts(trial_ts > -t_win(1));
 valid_ts = valid_ts(valid_ts < max_t - t_win(2));
 
 num_events = length(valid_ts);
@@ -27,9 +27,9 @@ event_triggered_lfps = zeros(num_events, num_channels, samples_per_event);
 
 for i_ts = 1 : num_events
     
-    start_sample = floor(ts(i_ts) * Fs);
+    start_sample = floor(trial_ts(i_ts) * Fs);
     end_sample = start_sample + samples_per_event - 1;
-    current_lfp = LFP(:, start_sample:end_sample);
+    current_lfp = ordered_lfp(:, start_sample:end_sample); % changed LFP to ordered_lfp for the calculate_cwt_3D_matrix script
     
     event_triggered_lfps(i_ts, :, :) = current_lfp;
     
