@@ -7,13 +7,13 @@ rats_with_intan_sessions = find_rawdata_folders(intan_parent_directory);
 % get the trial structure for that session
 % run this analysis
 
-eventFieldnames = {'cueOn'};
+eventFieldnames = {'cueOn', 'centerIn', 'centerOut', 'tone', 'sideIn', 'sideOut', 'foodClick', 'foodRetrievel'};
     % eventlist = {'centerin','cueon','centerout', 'sidein', 'sideout',
     % 'foodretrievel'}; This is the full eventlist for a correctGo trial.
     % Choose one for generating event_triggered_lfps.
 num_events = length(eventFieldnames);
-t_win = [-3 5]; % need this line for the event_triggered_lfps to select the correct 
-trialType = ('allGo'); % to pull out trIdx of the trials structure (just correct go trials)
+t_win = [-2.5 2.5]; % need this line for the event_triggered_lfps to select the correct 
+trialType = ('correctGo'); % to pull out trIdx of the trials structure (just correct go trials)
 
 intan_ignore = {'R0326_20191107a'}; % still troubleshooting these two lines to avoid looping through irrelevant data files (e.g. files with no info.rhd file.
 sessions_to_ignore = {'R0326_20191107a', 'R0427_20220920a'};
@@ -89,7 +89,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
         % Set trialType at beginning of file
         [ trialEventParams ] = getTrialEventParams(trialType); % Need to verify this section. Working Here
         trIdx = extractTrials(trials, trialEventParams);
-        trial_ts = extract_trial_ts(trials(trIdx), eventFieldnames); % This is actually pulled in from the extract_event_related_LFPs script so do we need it here? 
+        
         
         %Getting the LFP-fname
         rd_metadata = parse_rawdata_folder(intan_folders{i_sessionfolder});
@@ -120,8 +120,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                     % write code here to get event_triggered_lfps_ordered for each separate
                     % event
                     
-                    
-                    event_triggered_lfps = extract_event_related_LFPs(ordered_lfp, trials(trIdx), eventFieldnames, 'fs', Fs, 'twin', t_win); % made this using ordered_lfp data
+                    event_triggered_lfps = extract_event_related_LFPs(ordered_lfp, trials(trIdx), eventFieldnames{i_event}, 'fs', Fs, 'twin', t_win); % made this using ordered_lfp data
                                       
                     % at this point, event_triggered_lfps_ordered is an m x n x p array where
                     % m is the number of events (i.e., all the cueon OR nosein OR other...
@@ -134,6 +133,8 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                     % interested in (i.e., cueon AND nose in AND others...)
 
                     % above here, the lfp file, trial structure never change
+                    
+                    trial_ts = extract_trial_ts(trials(trIdx), eventFieldnames{i_event}); % This is actually pulled in from the extract_event_related_LFPs script so do we need it here? 
                     
                     pts_per_event = size(event_triggered_lfps,3); % I think these lines need to go into the for loop for whenever a set of data is loaded into the workspace.
                     num_channels = size(event_triggered_lfps,2);
@@ -153,6 +154,12 @@ for i_rat = 1 : length(rats_with_intan_sessions)
 
                     for i_channel = 1 : num_channels
 
+                        fname_to_save = char(strcat(session_name(1:end-13), eventFieldnames{i_event}, '_', trialType, '_', 'sessionScalos', '_', sprintf('ch%u.mat', i_channel))); 
+                        full_name = fullfile(pd_folder, fname_to_save);
+                        if exist(full_name,'file')
+                            continue;
+                        end
+                        
                         channel_lfps = squeeze(event_triggered_lfps(:, i_channel, :));
 
                         [scalograms, f] = calculate_single_channel_event_triggered_scalograms(channel_lfps, fb);
@@ -161,7 +168,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                         % eventname, scalograms
                         % for example, 'R0326_20200228a_ch01_cueOn_scalos.mat'
                
-                        fname_to_save = char(strcat(session_name(1:end-13), eventFieldnames, '_', 'sessionScalos', '_', sprintf('ch%u.mat', i_channel))); 
+                       
                         % I believe this is saving channels (i_channel). It was originally written as i_event which rewrote the file.
                         save(fullfile(pd_folder,fname_to_save), 'scalograms', 'Fs', 'f', 'fb', '-v7.3');
                         
