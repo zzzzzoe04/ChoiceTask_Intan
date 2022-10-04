@@ -7,13 +7,13 @@ rats_with_intan_sessions = find_rawdata_folders(intan_parent_directory);
 % get the trial structure for that session
 % run this analysis
 
-eventFieldnames = {'centerIn'};
+eventFieldnames = {'cueOn'};
     % eventlist = {'centerin','cueon','centerout', 'sidein', 'sideout',
     % 'foodretrievel'}; This is the full eventlist for a correctGo trial.
     % Choose one for generating event_triggered_lfps.
 num_events = length(eventFieldnames);
-t_win = [-2.5 2.5]; % need this line for the event_triggered_lfps to select the correct 
-trialType = ('correctGo'); % to pull out trIdx of the trials structure (just correct go trials)
+t_win = [-3 5]; % need this line for the event_triggered_lfps to select the correct 
+trialType = ('allGo'); % to pull out trIdx of the trials structure (just correct go trials)
 
 intan_ignore = {'R0326_20191107a'}; % still troubleshooting these two lines to avoid looping through irrelevant data files (e.g. files with no info.rhd file.
 sessions_to_ignore = {'R0326_20191107a', 'R0427_20220920a'};
@@ -121,7 +121,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                     % event
                     
                     
-                    event_triggered_lfps = extract_event_related_LFPs(ordered_lfp, trials(trIdx), eventFieldnames, 'fs', Fs, 'twin', t_win); % should I make this ordered_lfp?
+                    event_triggered_lfps = extract_event_related_LFPs(ordered_lfp, trials(trIdx), eventFieldnames, 'fs', Fs, 'twin', t_win); % made this using ordered_lfp data
                                       
                     % at this point, event_triggered_lfps_ordered is an m x n x p array where
                     % m is the number of events (i.e., all the cueon OR nosein OR other...
@@ -139,8 +139,8 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                     num_channels = size(event_triggered_lfps,2);
                     num_trials = size(event_triggered_lfps, 1);
                     flim = [1, 100];
-                    Fs = 500;
-                    t_win = [-2.5 2.5];
+                    Fs = 500; % make a universal Fs to pull out the actual_Fs from _lfp.mat or _ordered_lfp.mat file
+                   % t_win = [-3 5]; % This is above
                     fb = cwtfilterbank('SignalLength', pts_per_event, ...
                         'SamplingFrequency', Fs, ...
                         'FrequencyLimits',flim, ...

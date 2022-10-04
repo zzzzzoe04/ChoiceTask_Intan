@@ -1,4 +1,4 @@
-function trIdx = extractTrials( t, trialEventParams )
+function trIdx = extractTrials( trials, trialEventParams )
 %
 % usage: trIdx = extractTrials( t, trialEventParams )
 %
@@ -6,7 +6,7 @@ function trIdx = extractTrials( t, trialEventParams )
 % trialEventParams.
 %
 % INPUTS:
-%   t - trial array
+%   trials - trial array generated using the ChoiceTaskWorkflow
 %   trialEventParams - a structure containing information necessary to extract
 %      appropriate trials. If trialTypes is a cell array, trialEventParams is
 %      an array of structures. the trialEventParams structure has the following
@@ -39,14 +39,14 @@ function trIdx = extractTrials( t, trialEventParams )
 
 trialParamFields = fieldnames(trialEventParams);
 numFields = length(trialParamFields);
-numTrials = length(t);
+numTrials = length(trials);
 tMarkers = false(numTrials, 1);
 
 trList = true(numTrials, 1);
 
-if isfield(t(1), 'trialType') && trialEventParams.trialType > 0
+if isfield(trials(1), 'trialType') && trialEventParams.trialType > 0
     
-    trialType = [t.trialType]';
+    trialType = [trials.trialType]';
     
     if trialEventParams.trialType == 5 
         tMarkers = (trialType == 1 | trialType == 4);
@@ -64,19 +64,19 @@ trList = trList & tMarkers;
 
 for iField = 2 : numFields - 2
 
-    if isfield(t(1), trialParamFields{iField})
+    if isfield(trials(1), trialParamFields{iField})
         
         if trialEventParams.(trialParamFields{iField}) > -1
             
-            for iTest = 1 : length(t)
+            for iTest = 1 : length(trials)
                 % this for loop is a work-around because occasionally some
                 % values are missing for trial parameters - DL 1/15/2011
-                if isempty(t(iTest).(trialParamFields{iField}))
-                    t(iTest).(trialParamFields{iField}) = 0;
+                if isempty(trials(iTest).(trialParamFields{iField}))
+                    trials(iTest).(trialParamFields{iField}) = 0;
                 end
             end
             
-            fieldMarkers = [t.(trialParamFields{iField})]';
+            fieldMarkers = [trials.(trialParamFields{iField})]';
             tMarkers = (fieldMarkers == trialEventParams.(trialParamFields{iField}));
         else
             tMarkers = true(numTrials, 1);

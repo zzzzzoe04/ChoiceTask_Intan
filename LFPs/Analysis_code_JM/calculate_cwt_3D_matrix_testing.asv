@@ -89,7 +89,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
         % Set trialType at beginning of file
         [ trialEventParams ] = getTrialEventParams(trialType); % Need to verify this section. Working Here
         trIdx = extractTrials(trials, trialEventParams);
-        trial_ts = extract_trial_ts(trials(trIdx), eventFieldnames);
+        trial_ts = extract_trial_ts(trials(trIdx), eventFieldnames); % This is actually pulled in from the extract_event_related_LFPs script so do we need it here? 
         
         %Getting the LFP-fname
         rd_metadata = parse_rawdata_folder(intan_folders{i_sessionfolder});
@@ -121,7 +121,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                     % event
                     
                     
-                    event_triggered_lfps = extract_event_related_LFPs(ordered_lfp, trials(trIdx), eventFieldnames, 'fs', Fs, 'twin', t_win); % should I make this ordered_lfp?
+                    event_triggered_lfps = extract_event_related_LFPs(ordered_lfp, trials(trIdx), eventFieldnames, 'fs', Fs, 'twin', t_win); % made this using ordered_lfp data
                                       
                     % at this point, event_triggered_lfps_ordered is an m x n x p array where
                     % m is the number of events (i.e., all the cueon OR nosein OR other...
@@ -140,7 +140,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                     num_trials = size(event_triggered_lfps, 1);
                     flim = [1, 100];
                     Fs = 500;
-                    t_win = [-2.5 2.5];
+                    t_win = [-3 5];
                     fb = cwtfilterbank('SignalLength', pts_per_event, ...
                         'SamplingFrequency', Fs, ...
                         'FrequencyLimits',flim, ...
@@ -161,7 +161,8 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                         % eventname, scalograms
                         % for example, 'R0326_20200228a_ch01_cueOn_scalos.mat'
                
-                        fname_to_save = char(strcat(session_name(1:end-13), eventFieldnames,'_', 'session_scalos', sprintf('%u.mat', i_event))); % Need to save each channel?
+                        fname_to_save = char(strcat(session_name(1:end-13), eventFieldnames, '_', 'sessionScalos', '_', sprintf('ch%u.mat', i_channel))); 
+                        % I believe this is saving channels (i_channel). It was originally written as i_event which rewrote the file.
                         save(fullfile(pd_folder,fname_to_save), 'scalograms', 'Fs', 'f', 'fb', '-v7.3');
                         
                         % test that the scalogram looks reasonable; comment out for batch
