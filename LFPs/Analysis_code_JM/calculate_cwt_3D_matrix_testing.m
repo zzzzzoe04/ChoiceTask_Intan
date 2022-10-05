@@ -99,7 +99,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
         lfp_data = load(lfp_fname); % Load in the LFP data for rearranging LFP data (ordering it by probe_type)
         Fs = lfp_data.actual_Fs; % need the Fs loaded in for gathering event_triggered_lfps in the next 'for' loop
         
-        
+       
         NN8x8 = ["R0326", "R0327", "R0372", "R0379", "R0374", "R0378", "R0394", "R0395", "R0396", "R0412", "R0413"]; % Specify list of ratID associated with each probe_type
         ASSY156 = ["R0411", "R0419"];
         ASSY236 = ["R0420", "R0425", "R0427"];
