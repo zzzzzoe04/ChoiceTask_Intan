@@ -5,8 +5,12 @@
 % probe_mapping_fname = '/Volumes/SharedX/Neuro-Leventhal/data/ChoiceTask/Probe Histology Summary/ProbeSite_Mapping.xlsx';
 
 intan_parent_directory = 'X:\Neuro-Leventhal\data\ChoiceTask';
-
 rats_with_intan_sessions = find_rawdata_folders(intan_parent_directory);
+
+% lists for ratID probe_type       
+NN8x8 = ["R0326", "R0327", "R0372", "R0379", "R0374", "R0378", "R0394", "R0395", "R0396", "R0412", "R0413"]; % Specify list of ratID associated with each probe_type
+ASSY156 = ["R0411", "R0419"];
+ASSY236 = ["R0420", "R0425", "R0427", "R0457"];
 
 %%
 for i_rat = 1 : length(rats_with_intan_sessions)
@@ -36,7 +40,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
         if ~exist(analogin_fname, 'file')
             sprintf('no analog input file for %s', session_folder)
             continue
-                end
+        end
         
         if ~exist(rhd_fname, 'file')
             sprintf('no rhd info file for %s', session_folder)
@@ -75,12 +79,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
         lfp_fname = fullfile(pd_folder, create_lfp_fname(rd_metadata));
         lfp_data = load(lfp_fname); % Load in the LFP data for rearranging LFP data (ordering it by probe_type)
         Fs = lfp_data.actual_Fs; % need the Fs loaded in for gathering event_triggered_lfps in the next 'for' loop
-        
        
-        NN8x8 = ["R0326", "R0327", "R0372", "R0379", "R0374", "R0378", "R0394", "R0395", "R0396", "R0412", "R0413"]; % Specify list of ratID associated with each probe_type
-        ASSY156 = ["R0411", "R0419"];
-        ASSY236 = ["R0420", "R0425", "R0427"];
-        
         if contains(ratID, NN8x8) % if the ratID is in the list, it'll assign it the correct probe_type for ordering the LFP data correctly
             probe_type = 'NN8x8'; 
         elseif contains(ratID, ASSY156)

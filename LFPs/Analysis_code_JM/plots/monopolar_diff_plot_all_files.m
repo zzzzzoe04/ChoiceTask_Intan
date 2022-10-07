@@ -26,7 +26,7 @@ rats_with_intan_sessions = find_rawdata_folders(intan_choicetask_parent);
 
 naming_convention; % this loads the NNsite order ventral to dorsal as a variable in the workspace for labeling the plots (create this as a fxn?)
 naming_convention_diffs;
-sessions_to_ignore = {'R0378_20210507a'};
+sessions_to_ignore = {'R0378_20210507a'}; % Need to check this against other files for analysis - is this the only session we need to ignore in this spot?
 % lfp_fname = dir(fullfile(intan_choicetask_parent,'**','*_lfp.mat')); % This
 % generates a matrix of '*_lfp.mat' filenames
 
@@ -44,7 +44,6 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         if any(strcmp(session_name, sessions_to_ignore))
             continue
         end
-        
         
         parentFolder = fullfile(intan_choicetask_parent, ...
          ratID, ...
