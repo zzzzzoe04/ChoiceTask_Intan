@@ -6,6 +6,8 @@
 intan_parent_directory = 'X:\Neuro-Leventhal\data\ChoiceTask';
 rats_with_intan_sessions = find_rawdata_folders(intan_parent_directory);
 
+num_trials_to_plot = 5;
+
 % start with an LFP file
 % get the trial structure for that session
 % run this analysis
@@ -163,19 +165,23 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                     
                     trial_ts = extract_trial_ts(trials(trIdx), eventFieldnames{i_event}); % This is actually pulled in from the extract_event_related_LFPs script so do we need it here? 
         
-                    pts_per_event = size(event_triggered_lfps,3); % I think these lines need to go into the for loop for whenever a set of data is loaded into the workspace.
-                    num_channels = size(event_triggered_lfps,2);
-                    num_trials = size(event_triggered_lfps, 1);
+%                     pts_per_event = size(event_triggered_lfps,3); % I think these lines need to go into the for loop for whenever a set of data is loaded into the workspace.
+%                     num_channels = size(event_triggered_lfps,2);
+                     num_trials = size(event_triggered_lfps, 1);
                     
-                    for i_trial = 1:num_trials
-                        fname_to_save = char(strcat(session_name(1:end-13), eventFieldnames{i_event}, '_', trialType, '_', 'channel_lfps', '_', sprintf('trial%u.pdf', i_trial)));
+                    % select trials for plotting at random
+                    trial_idx_to_plot = randperm(num_trials, num_trials_to_plot);
+                    for i_trial = 1:num_trials_to_plot
+                        trial_idx = trial_idx_to_plot(i_trial);
+                        % get rid of trial number as part of file name
+                        fname_to_save = char(strcat(session_name(1:end-13), eventFieldnames{i_event}, '_', trialType, '_', 'channel_lfps', '.pdf')); % add in ''_', sprintf('trial%u.pdf', trial_idx)' should you want to save files individually
                         full_name = fullfile(pd_folder, fname_to_save);
                         
-                        if exist(full_name,'file')
-                            continue;
-                        end
+%                         if exist(full_name,'file')
+%                             continue;
+%                         end
                         
-                            channel_lfps = squeeze(event_triggered_lfps(i_trial,:, :)); 
+                            channel_lfps = squeeze(event_triggered_lfps(trial_idx,:, :)); 
                             % trials, create a 64channel graph for each trial?
                         
                             % Plot the data
@@ -220,15 +226,18 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                          A{1} = ['Subject: ' ratID];
                          A{2} = ['Session: ' session_name(1:end-14)];
                          A{3} = ['Task Level: ' choiceRTdifficulty{logData.taskLevel+1}];
-                         A{4} = ['Trial Number: ' num2str(i_trial)];
+                         A{4} = ['Trial Number: ' num2str(trial_idx)];
                          A{5} = ['EventFieldname and Trial Type: ' eventFieldnames{i_event} '_' trialType];
                         
                         sgtitle(A, 'Interpreter','none');
-                        exportgraphics(gcf, fname_to_save);
-                        close;
-                       % needed?
+                        
+                        if i_trial == 1
+                            exportgraphics(gcf, full_name);
+                        else
+                            exportgraphics(gcf, full_name, 'append', true);   %ADD APPEND FLAG HERE
+                        end
+                        % close;
                        
-
                     end
         
         end
