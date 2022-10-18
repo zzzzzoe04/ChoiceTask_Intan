@@ -99,6 +99,13 @@ for i_rat = 1 : length(rats_with_intan_sessions)
         lfp_data = load(lfp_fname); % Load in the LFP data for rearranging LFP data (ordering it by probe_type)
         Fs = lfp_data.actual_Fs; % need the Fs loaded in for gathering event_triggered_lfps in the next 'for' loop
         
+        % for now, skipping R0378_20210507a because the session only recorded 63 channels instead of 64. 
+        % sessions_to_ignore doesn't seem to be working here so using this
+        % catch instead
+        num_rows = size(lfp_data.lfp,1); 
+            if num_rows < 64
+                continue;
+            end
        
         NN8x8 = ["R0326", "R0327", "R0372", "R0379", "R0374", "R0378", "R0394", "R0395", "R0396", "R0412", "R0413"]; % Specify list of ratID associated with each probe_type
         ASSY156 = ["R0411", "R0419"];

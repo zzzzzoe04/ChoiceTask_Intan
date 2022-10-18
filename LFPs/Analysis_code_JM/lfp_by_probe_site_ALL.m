@@ -41,7 +41,7 @@ if strcmpi(probe_type, 'nn8x8')
        lfp_data = lfp_data.lfp;
     end
 
-    intan_amplifier = lfp_data([49:56,...%shank1, nn sites 1-8
+   intan_amplifier = lfp_data([49:56,...%shank1, nn sites 1-8
             57:64,...%shank2
             33:35, 37:39, 41:42,...%shank3
             35,40,43:48,...%shank4
@@ -112,7 +112,7 @@ elseif strcmpi(probe_type, 'ASSY236')
             return
         end
     else
-       lfp_data = lfp_data.lfp_data;
+       lfp_data = lfp_data.lfp;
     end
     intan_amplifier = lfp_data([1:17,19:32,63,...% Shank A
         18,33:62, 64],:); % Shank B
