@@ -28,7 +28,7 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         session_name = pd_processed_data.session_name;
         
         if any(strcmp(session_name, sessions_to_ignore))
-            continue
+            continue;
         end
 
         if contains(ratID, NN8x8)
@@ -40,12 +40,18 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         end
 
         % create filenames to hold mono- and diff-LFPs
-        mono_power_fn = [session_name, '_monopolar_power.mat'];
-        mono_power_fn = fullfile(session_path, mono_power_fn);
-
-        diff_power_fn = [session_name, '_diff_power.mat'];
-        diff_power_fn = fullfile(session_path, diff_power_fn);
+%         mono_power_fn = [session_name, '_monopolar_power.mat'];
+%         mono_power_fn = fullfile(session_path, mono_power_fn);
+% 
+%         diff_power_fn = [session_name, '_diff_power.mat'];
+%         diff_power_fn = fullfile(session_path, diff_power_fn);
         
+        power_fn = [session_name, '_monopolarpower.mat'];
+        power_fn = fullfile(session_path, power_fn);
+        
+        diff_power_fn = [session_name, '_diffpower.mat'];
+        diff_power_fn = fullfile(session_path, diff_power_fn);
+
         % Might be good to add a check here to see if mono_power_fn and/or diff_power_fn
         % exists, if exists skip reading in the data to save time.
  
@@ -56,13 +62,7 @@ for i_ratfolder = 1 : length(valid_rat_folders)
        
         % LFP file needs to be loaded before the [power_lfps,f] function
         lfp_fname = fullfile(lfp_file.folder, lfp_file.name);
-        
-        power_fn = [session_name, '_monopolarpower.mat'];
-        power_fn = fullfile(session_path, power_fn);
-        
-        diff_power_fn = [session_name, '_diffpower.mat'];
-        diff_power_fn = fullfile(session_path, diff_power_fn);
-        
+                
         if exist(power_fn, 'file') && exist(diff_power_fn, 'file')
             continue
         end

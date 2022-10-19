@@ -2,7 +2,7 @@
 % lfp_NNsite_order, NNsite_order = lfp_by_probe_site(lfp_fname, probe_type);
 % [power_lfps, f] = extract_power(LFP,Fs);
 
-function plot_monopolar = plot_monopolar_power_single_plot(power_lfps_fname)
+function plot_monopolar = plot_monopolar_power_single_plot_NNsite(power_lfps_fname)
 
 % INPUTS
 %       monopolar_fname - filename of the file to plot
@@ -55,8 +55,8 @@ for i_row = 1 : num_rows
     plot_monopolar = plot(f, 10*log10(power_lfps(i_row, :))); % change to log10 -- plot(f, 10*log10(power_lfps(:,1)))
     set(gca,'xlim', x_lim, 'ylim',y_lim);
     grid on
-    caption = sprintf('ASSY236 #%d', ASSY236_order(i_row)); % Make a catch so this doesn't need to be edited every graph
-    %caption = sprintf('NNsite #%d', NNsite_order(i_row)); % using naming_convention for monopolar plot captions (naming_convention_diffs for diffs plot)
+    % caption = sprintf('ASSY236 #%d', ASSY236_order(i_row)); % Make a catch so this doesn't need to be edited every graph
+    caption = sprintf('NNsite #%d', NNsite_order(i_row)); % using naming_convention for monopolar plot captions (naming_convention_diffs for diffs plot)
     title(caption, 'FontSize', 8);
     
     if plot_row < LFPs_per_shank

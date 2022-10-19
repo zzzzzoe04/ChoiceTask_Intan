@@ -42,7 +42,7 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         session_name = pd_processed_data.session_name;
         
         if any(strcmp(session_name, sessions_to_ignore))
-            continue
+            continue;
         end
         
         parentFolder = fullfile(intan_choicetask_parent, ...
@@ -73,9 +73,9 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         diff_power_plot = [session_name, '_diffpower.pdf'];
         diff_power_plot = fullfile(processed_graphFolder, diff_power_plot);
       
-%         if exist(mono_power_plot, 'file') && exist(diff_power_plot, 'file') 
-%             continue
-%         end
+        if exist(mono_power_plot, 'file') && exist(diff_power_plot, 'file') 
+            continue
+        end
         
         % For monopolar_power plots
         power_lfps_file = dir(fullfile(session_path, '**', '*_monopolarpower.mat'));
@@ -93,7 +93,9 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         close;
                     
         
-        % For diff plots
+        % For diff plots - how do you plot the diff plots for Cambridge
+        % probes which should have 60 plots? put an if statement for those
+        % probe styles to do the plot differently.
         power_lfps_diff_file = dir(fullfile(session_path, '**', '*_diffpower.mat'));
         power_lfps_diff_fname = fullfile(power_lfps_diff_file.folder, power_lfps_diff_file.name); 
         % This catches at R0378, the file with 63 channels that didn't record a power_lfps file
