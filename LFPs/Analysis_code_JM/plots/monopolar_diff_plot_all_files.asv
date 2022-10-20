@@ -26,7 +26,7 @@ rats_with_intan_sessions = find_rawdata_folders(intan_choicetask_parent);
 naming_convention_diffs_NNsite;
 naming_convention_diffs_Cambridge; % this loads the NNsite order ventral to dorsal as a variable in the workspace for labeling the plots (create this as a fxn?)
 naming_convention;
-sessions_to_ignore = {'R0378_20210507a', 'R0425_20220728a'}; % Need to check this against other files for analysis - is this the only session we need to ignore in this spot?
+sessions_to_ignore = {'R0378_20210507a'}; % Need to check this against other files for analysis - is this the only session we need to ignore in this spot?
 % lfp_fname = dir(fullfile(intan_choicetask_parent,'**','*_lfp.mat')); % This
 % generates a matrix of '*_lfp.mat' filenames
 
@@ -84,13 +84,8 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         
         % For monopolar_power plots
         power_lfps_file = dir(fullfile(session_path, '**', '*_monopolarpower.mat'));
-        
-        try    
         power_lfps_fname = fullfile(power_lfps_file.folder, power_lfps_file.name); 
-        catch
-            keyboard
-        end
-
+        
         % This catches at R0378, the file with 63 channels that didn't record a power_lfps file
         power_lfps = load(power_lfps_fname);
         power_lfps = power_lfps.power_lfps;

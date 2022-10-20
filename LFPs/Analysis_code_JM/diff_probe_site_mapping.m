@@ -32,7 +32,6 @@ num_lfp_points = size(lfp, 2);
 num_diff_rows = num_sites - num_shanks;
 diff_lfps = zeros(num_diff_rows, num_lfp_points); 
 
-% probe_type = 'NN8x8';
 intan_to_site_map = probe_site_mapping(probe_type);
 
 for i_shank = 1 : num_shanks

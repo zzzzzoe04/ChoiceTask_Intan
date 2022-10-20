@@ -2,7 +2,7 @@
 % lfp_NNsite_order, NNsite_order = lfp_by_probe_site(lfp_fname, probe_type);
 % [power_lfps, f] = extract_power(LFP,Fs);
 
-function plot_monopolar = plot_monopolar_power_single_plot_NNsite(power_lfps_fname)
+function plot_monopolar = plot_monopolar_power_single_plot_ASSY236(power_lfps_fname)
 
 % INPUTS
 %       monopolar_fname - filename of the file to plot
@@ -21,7 +21,7 @@ f = power_lfps.f;
 Fs = power_lfps.Fs;
 power_lfps = power_lfps.power_lfps;
 
-naming_convention_NNsite; %  This needs to be changed based on probe type
+naming_convention; %  This needs to be changed based on probe type
 % Shouldn't we have a line about probe_site_mapping somewhere here? Or how
 % does the code below account  for probe site mapping?
 
@@ -43,19 +43,24 @@ num_points = size(power_lfps,2);
  y_lim = [0 100];
  x_lim = [0 100];
 
+% Specify Probe Type For captions (monopolar data should already be ordered
+% using this information) - in full script may not need
+% ASSY156 = ["R0411", "R0419"];
+% ASSY236 = ["R0420", "R0425", "R0427"];
+
 % Plot the data
-LFPs_per_shank = num_rows / 8;   % will be 8 for 64 channels, 7 for 56 channels (diff)
+LFPs_per_shank = num_rows / 4;   % will be 8 for 64 channels, 7 for 56 channels (diff)
 for i_row = 1 : num_rows
 
     plot_col = ceil(i_row / LFPs_per_shank);
     plot_row = i_row - LFPs_per_shank * (plot_col-1);
-    plot_num = (plot_row-1) * 8 + plot_col;
+    plot_num = (plot_row-1) * 4 + plot_col;
     
-    subplot(LFPs_per_shank,8,plot_num);
+    subplot(LFPs_per_shank,4,plot_num);
     plot_monopolar = plot(f, 10*log10(power_lfps(i_row, :))); % change to log10 -- plot(f, 10*log10(power_lfps(:,1)))
     set(gca,'xlim', x_lim, 'ylim',y_lim);
     grid on
-    caption = sprintf('NNsite #%d', NNsite_order(i_row)); % using naming_convention for monopolar plot captions (naming_convention_diffs for diffs plot)
+    caption = sprintf('ASSY236 #%d', ASSY236_order(i_row)); % Make a catch so this doesn't need to be edited every graph
     title(caption, 'FontSize', 8);
     
     if plot_row < LFPs_per_shank
