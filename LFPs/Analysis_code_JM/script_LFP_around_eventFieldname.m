@@ -34,7 +34,7 @@ ASSY156 = ["R0411", "R0419"];
 ASSY236 = ["R0420", "R0425", "R0427", "R0457"];
 
 intan_ignore = {'R0378_20210507a', 'R0326_20191107a'}; % still troubleshooting these two lines to avoid looping through irrelevant data files (e.g. files with no info.rhd file.
-sessions_to_ignore = {'R0378_20210507a', 'R0326_20191107a', 'R0427_20220920a'};
+sessions_to_ignore = {'R0378_20210507a', 'R0326_20191107a','R0425_20220728a', 'R0427_20220920a'};
 
 naming_convention; % for labeling graphs
 
@@ -253,7 +253,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                             end
                         set(gcf, 'WindowState', 'maximize'); % maximizes the window so that it exports the graphics with appropriate font size
                         
-                         A=cell(1,4);
+                         A=cell(1,5);
                          A{1} = ['Subject: ' ratID];
                          A{2} = ['Session: ' session_name(1:end-14)];
                          A{3} = ['Task Level: ' choiceRTdifficulty{logData.taskLevel+1}];
