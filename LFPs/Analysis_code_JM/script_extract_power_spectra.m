@@ -9,9 +9,9 @@ Fs = 500;
 % lfp_fname = dir(fullfile(intan_choicetask_parent,'**','*_lfp.mat')); % This
 % generates a matrix of '*_lfp.mat' filenames
 
-NN8x8 = ["R0326", "R0327", "R0372", "R0379", "R0374", "R0378", "R0394", "R0395", "R0396", "R0412", "R0413"];
+NN8x8 = ["R0326", "R0327", "R0372", "R0379", "R0374", "R0376", "R0378", "R0394", "R0395", "R0396", "R0412", "R0413"]; % Specify list of ratID associated with each probe_type
 ASSY156 = ["R0411", "R0419"];
-ASSY236 = ["R0420", "R0425", "R0427"];
+ASSY236 = ["R0420", "R0425", "R0427", "R0457"];
 
 sessions_to_ignore = {'R0378_20210507a', 'R0425_20220728a', 'R0427_20220920a'}; % R0425_20220728a debugging because the intan side was left on for 15 hours; 
 % R0427_20220920a does not have an 'info.rhd' file

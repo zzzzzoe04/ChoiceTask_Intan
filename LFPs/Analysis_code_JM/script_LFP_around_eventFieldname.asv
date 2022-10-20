@@ -34,7 +34,7 @@ ASSY156 = ["R0411", "R0419"];
 ASSY236 = ["R0420", "R0425", "R0427", "R0457"];
 
 intan_ignore = {'R0378_20210507a', 'R0326_20191107a'}; % still troubleshooting these two lines to avoid looping through irrelevant data files (e.g. files with no info.rhd file.
-sessions_to_ignore = {'R0378_20210507a', 'R0326_20191107a', 'R0427_20220920a'};
+sessions_to_ignore = {'R0378_20210507a', 'R0326_20191107a','R0425_20220728a', 'R0427_20220920a'};
 
 naming_convention; % for labeling graphs
 
@@ -75,10 +75,10 @@ for i_rat = 1 : length(rats_with_intan_sessions)
             % existing at this point in analysis would be rare but putting in
             % as a catch here)
 
-        processed_graphFolder = [parentFolder(1:end-9) 'processed-graphs'];
-            if ~exist(processed_graphFolder, 'dir')
-                mkdir(processed_graphFolder);
-            end 
+        processed_graphFolder_LFP_eventFieldname = [parentFolder(1:end-9) 'LFP-eventFieldname-graphs'];
+            if ~exist(processed_graphFolder_LFP_eventFieldname, 'dir')
+                mkdir(processed_graphFolder_LFP_eventFieldname);
+            end % Wait these files are being saved in the processed folder. 
         
         [session_folder, ~, ~] = fileparts(intan_folders{i_sessionfolder});
         session_log = find_session_log(session_folder);
@@ -86,9 +86,9 @@ for i_rat = 1 : length(rats_with_intan_sessions)
         if isempty(session_log)
             sprintf('no log file found for %s', session_folder)
         end
+
         logData = readLogData(session_log); %gathing logData information
         
-       
         % calculate nexData, need digital input and analog input files
         digin_fname = fullfile(intan_folders{i_sessionfolder}, 'digitalin.dat');
         analogin_fname = fullfile(intan_folders{i_sessionfolder}, 'analogin.dat');
@@ -171,14 +171,15 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                    
                    % create a filename to save the plots 
                    fname_to_save = char(strcat(session_name(1:end-13), eventFieldnames{i_event}, '_', trialType, '_', 'channel_lfps', '.pdf')); % add in ''_', sprintf('trial%u.pdf', trial_idx)' should you want to save files individually
-                   full_name = fullfile(pd_folder, fname_to_save);
+                   full_name = fullfile(processed_graphFolder_LFP_eventFieldname, fname_to_save);
                     
                    % creating a catch here for now while troubleshooting
                    % the data to NOT run through all of the folders and
                    % create the data if the plots are already made. (Remove
                    % once code is sufficient to rewrite the files as edits
                    % are made to graphs)
-                    if exist(full_name,'file')
+                    
+                   if exist(full_name,'file')
                         continue;
                     end
 
@@ -253,7 +254,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                             end
                         set(gcf, 'WindowState', 'maximize'); % maximizes the window so that it exports the graphics with appropriate font size
                         
-                         A=cell(1,4);
+                         A=cell(1,5);
                          A{1} = ['Subject: ' ratID];
                          A{2} = ['Session: ' session_name(1:end-14)];
                          A{3} = ['Task Level: ' choiceRTdifficulty{logData.taskLevel+1}];
