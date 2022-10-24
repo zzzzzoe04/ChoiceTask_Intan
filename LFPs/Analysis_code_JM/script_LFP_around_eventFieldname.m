@@ -12,7 +12,7 @@ num_trials_to_plot = 5;
 % get the trial structure for that session
 % run this analysis
 
-trialType = ('allGo'); % to pull out trIdx of the trials structure (all trials)
+trialType = ('correctgo'); % to pull out trIdx of the trials structure (all trials)
 
 switch lower(trialType)
     case 'allgo'
@@ -33,8 +33,10 @@ NN8x8 = ["R0326", "R0327", "R0372", "R0379", "R0374", "R0376", "R0378", "R0394",
 ASSY156 = ["R0411", "R0419"];
 ASSY236 = ["R0420", "R0425", "R0427", "R0457"];
 
-intan_ignore = {'R0378_20210507a', 'R0326_20191107a'}; % still troubleshooting these two lines to avoid looping through irrelevant data files (e.g. files with no info.rhd file.
-sessions_to_ignore = {'R0378_20210507a', 'R0326_20191107a','R0425_20220728a', 'R0427_20220920a'};
+sessions_to_ignore = {'R0378_20210507a', 'R0326_20191107a', 'R0425_20220728a', 'R0427_20220920a'};
+sessions_to_ignore1 = {'R0425_20220728_ChVE_220728_112601', 'R0427_20220920_Testing_220920_150255'}; 
+% Trying this as a workaround. Code wouldn't skip these two trials. R0425 - 15 hour session and R0427 no data (files didn't save correctly)?
+
 
 naming_convention; % for labeling graphs
 
@@ -63,10 +65,18 @@ for i_rat = 1 : length(rats_with_intan_sessions)
         ratID = pd_processed_data.ratID;
         session_name = pd_processed_data.session_name;
         
-        if any(strcmp(session_name, sessions_to_ignore)) % can't quite get this to debug but seems ok (if it worked it would run through the code quicker?)
+        if any(strcmp(session_path, sessions_to_ignore)) % can't quite get this to debug but seems ok - it keeps running these sessions and catching errors (hence the need to skip them!)
             continue;
         end        
         
+%          if contains(ratID, NN8x8) || contains(ratID, ASSY156) || contains(ratID, 'R0420') % just trying to skip some lines of data to get to the last set to debug. Uncomment out to run more trialTypes
+%              continue;
+%          end
+         
+        if contains(session_name, sessions_to_ignore1) || contains(ratID, 'R0328') || contains(ratID, 'R0425') || contains(ratID, 'R0427')  % the first style it wouldn't skip these sessions so trying it as the 'intan' name instead of just the rawdata folder name.
+             continue; % Just skip R0425 bc it has bad sessions, check with Dan if need to include. % R0328 has no actual ephys; using these lines to skip unneeded data.
+        end
+
         parentFolder = fullfile(intan_parent_directory, ...
             ratID, ...
             [ratID '-processed']);
@@ -231,7 +241,18 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                                 plot_num = (plot_row-1) * 8 + plot_col;
 
                                 subplot(LFPs_per_shank,8,plot_num);
-                                plot_channel_lfps = plot(channel_lfps(i_row, :)); % change to log10 -- plot(f, 10*log10(power_lfps(:,1)))
+                                switch is_valid_lfp(i_row)   % make sure is_valid_lfp is a boolean with true if it's a good channel; make sure this is in the same order as channel_lfps
+                                    case 0
+                                        plot_color = 'r';
+                                    case 1
+                                        plot_color = 'k';
+                                    case 2
+                                        plot_color = 'b';
+                                    otherwise
+                                        plot_color = 'b';
+                                end
+
+                                plot_channel_lfps = plot(channel_lfps(i_row, :), plot_color); % change to log10 -- plot(f, 10*log10(power_lfps(:,1)))
                                 set(gca, 'ylim',y_lim);
                                 grid on
 

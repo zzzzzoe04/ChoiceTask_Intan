@@ -63,9 +63,9 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         % LFP file needs to be loaded before the [power_lfps,f] function
         lfp_fname = fullfile(lfp_file.folder, lfp_file.name);
                 
-        if exist(power_fn, 'file') && exist(diff_power_fn, 'file')
-            continue
-        end
+%         if exist(power_fn, 'file') && exist(diff_power_fn, 'file')
+%             continue
+%         end
         
         lfp_data = load(lfp_fname);
         Fs = lfp_data.actual_Fs;

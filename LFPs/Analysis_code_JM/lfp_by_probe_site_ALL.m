@@ -44,7 +44,7 @@ if strcmpi(probe_type, 'nn8x8')
    intan_amplifier = lfp_data([49:56,...%shank1, nn sites 1-8
             57:64,...%shank2
             33:35, 37:39, 41:42,...%shank3
-            35,40,43:48,...%shank4
+            36,40,43:48,...%shank4  --- This was wrong on 10/24/22, 35 was listed twice - once for shank 3 and once for shank 4. -- Changed to 36 and is now accurate 10/24/22
             17:22,26,30,...%shank5
             23:25, 27:29, 31:32,...%shank6
             1:8,...%shank7
