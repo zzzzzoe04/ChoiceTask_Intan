@@ -6,6 +6,8 @@
 intan_parent_directory = 'X:\Neuro-Leventhal\data\ChoiceTask';
 rats_with_intan_sessions = find_rawdata_folders(intan_parent_directory);
 
+%%
+fname = 'X:\Neuro-Leventhal\data\ChoiceTask\Probe Histology Summary\Rat_Information_channels_to_discard.xlsx'; % for channels etc
 num_trials_to_plot = 5;
 
 % start with an LFP file
@@ -62,9 +64,10 @@ for i_rat = 1 : length(rats_with_intan_sessions)
         % extract the ratID and session name from the LFP file
         session_path = intan_folders{i_sessionfolder};
         pd_processed_data = parse_processed_folder(session_path);
+        rd_metadata = parse_rawdata_folder(intan_folders{i_sessionfolder});
         ratID = pd_processed_data.ratID;
         intan_session_name = pd_processed_data.session_name;
-        session_name = rd_metadata.session_name;
+        session_name = rd_metadata.session_name;    % need to define pd_metadata above here
         
         if any(strcmp(session_path, sessions_to_ignore)) % can't quite get this to debug but seems ok - it keeps running these sessions and catching errors (hence the need to skip them!)
             continue;
@@ -148,7 +151,6 @@ for i_rat = 1 : length(rats_with_intan_sessions)
         
         
         %Getting the LFP-fname
-        rd_metadata = parse_rawdata_folder(intan_folders{i_sessionfolder});
         pd_folder = create_processed_data_folder(rd_metadata, intan_parent_directory);
         
         lfp_fname = fullfile(pd_folder, create_lfp_fname(rd_metadata));
@@ -179,14 +181,15 @@ for i_rat = 1 : length(rats_with_intan_sessions)
         % 2 = variable for data in each channel for each session_name for
         % each rat_ID
         sheetname = ratID;
-        fname = 'X:\Neuro-Leventhal\data\ChoiceTask\Probe Histology Summary\Rat_Information_channels_to_discard.xlsx';
+       
         probe_channel_info = load_channel_information(fname, sheetname);
         [channel_information, intan_site_order, site_order] = channel_by_probe_site_ALL(probe_channel_info, probe_type);
         
         %find the column header that matches session_name (session_name and
         %the column headers should match for each session to pull in the
         %info for probe site health
-        channel_descriptions = find(probe_channel_info.Properties.VariableNames, session_name);
+        valid_sites_reordered = probe_channel_info.(session_name);
+        %channel_descriptions = find(probe_channel_info.Properties.VariableNames, session_name);
 
         % Generate event triggered LFPs
         for i_event = 1 : num_events
@@ -255,7 +258,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                                 plot_num = (plot_row-1) * 8 + plot_col;
 
                                 subplot(LFPs_per_shank,8,plot_num);
-                                switch is_valid_lfp(i_row)   % make sure is_valid_lfp is a boolean with true if it's a good channel; make sure this is in the same order as channel_lfps
+                                switch valid_sites_reordered(i_row)   % make sure is_valid_lfp is a boolean with true if it's a good channel; make sure this is in the same order as channel_lfps
                                     case 0
                                         plot_color = 'r';
                                     case 1
