@@ -63,7 +63,8 @@ for i_rat = 1 : length(rats_with_intan_sessions)
         session_path = intan_folders{i_sessionfolder};
         pd_processed_data = parse_processed_folder(session_path);
         ratID = pd_processed_data.ratID;
-        session_name = pd_processed_data.session_name;
+        intan_session_name = pd_processed_data.session_name;
+        session_name = rd_metadata.session_name;
         
         if any(strcmp(session_path, sessions_to_ignore)) % can't quite get this to debug but seems ok - it keeps running these sessions and catching errors (hence the need to skip them!)
             continue;
@@ -73,7 +74,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
 %              continue;
 %          end
          
-        if contains(session_name, sessions_to_ignore1) || contains(ratID, 'R0328') || contains(ratID, 'R0425') || contains(ratID, 'R0427')  % the first style it wouldn't skip these sessions so trying it as the 'intan' name instead of just the rawdata folder name.
+        if contains(session_name, sessions_to_ignore) || contains(intan_session_name, sessions_to_ignore1) || contains(ratID, 'R0328') || contains(ratID, 'ASSY236')  % the first style it wouldn't skip these sessions so trying it as the 'intan' name instead of just the rawdata folder name.
              continue; % Just skip R0425 bc it has bad sessions, check with Dan if need to include. % R0328 has no actual ephys; using these lines to skip unneeded data.
         end
 
@@ -174,13 +175,26 @@ for i_rat = 1 : length(rats_with_intan_sessions)
         [ordered_lfp, intan_site_order, site_order] = lfp_by_probe_site_ALL(lfp_data, probe_type); 
                 % Orders the lfps by probe site mapping (double check the single file to remove catches for loading in single data)
         
+        % load_channel_information - this file is coded 0 = bad, 1 = good,
+        % 2 = variable for data in each channel for each session_name for
+        % each rat_ID
+        sheetname = ratID;
+        fname = 'X:\Neuro-Leventhal\data\ChoiceTask\Probe Histology Summary\Rat_Information_channels_to_discard.xlsx';
+        probe_channel_info = load_channel_information(fname, sheetname);
+        [channel_information, intan_site_order, site_order] = channel_by_probe_site_ALL(probe_channel_info, probe_type);
+        
+        %find the column header that matches session_name (session_name and
+        %the column headers should match for each session to pull in the
+        %info for probe site health
+        channel_descriptions = find(probe_channel_info.Properties.VariableNames, session_name);
+
         % Generate event triggered LFPs
         for i_event = 1 : num_events
                     % write code here to get event_triggered_lfps_ordered
                     % for each separate event
                    
                    % create a filename to save the plots 
-                   fname_to_save = char(strcat(session_name(1:end-13), eventFieldnames{i_event}, '_', trialType, '_', 'channel_lfps', '.pdf')); % add in ''_', sprintf('trial%u.pdf', trial_idx)' should you want to save files individually
+                   fname_to_save = char(strcat(intan_session_name(1:end-13), eventFieldnames{i_event}, '_', trialType, '_', 'channel_lfps', '.pdf')); % add in ''_', sprintf('trial%u.pdf', trial_idx)' should you want to save files individually
                    full_name = fullfile(processed_graphFolder_LFP_eventFieldname, fname_to_save);
                     
                    % creating a catch here for now while troubleshooting
@@ -278,7 +292,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                         
                          A=cell(1,5);
                          A{1} = ['Subject: ' ratID];
-                         A{2} = ['Session: ' session_name(1:end-14)];
+                         A{2} = ['Session: ' intan_session_name(1:end-14)];
                          A{3} = ['Task Level: ' choiceRTdifficulty{logData.taskLevel+1}];
                          A{4} = ['Trial Number: ' num2str(trial_idx)];
                          A{5} = ['EventFieldname and Trial Type: ' eventFieldnames{i_event} '_' trialType];
