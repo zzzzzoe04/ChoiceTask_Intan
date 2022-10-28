@@ -77,20 +77,18 @@ for i_rat = 1 : length(rats_with_intan_sessions)
 %              continue;
 %          end
          
-         if contains(ratID, 'R0326') % just trying to skip some lines of data to get to the last set to debug. Uncomment out to run more trialTypes
+         if contains(ratID, 'R0326') || contains(ratID, 'R0372') || contains(ratID, 'R0376') % just trying to skip some lines of data to get to the last set to debug. Uncomment out to run more trialTypes
              continue;
          end
 
-        if contains(session_name, sessions_to_ignore) || contains(intan_session_name, sessions_to_ignore1) || contains(ratID, 'R0328') || contains(ratID, 'ASSY236')  % the first style it wouldn't skip these sessions so trying it as the 'intan' name instead of just the rawdata folder name.
-             continue; % Just skip R0425 bc it has bad sessions, check with Dan if need to include. % R0328 has no actual ephys; using these lines to skip unneeded data.
+        if contains(session_name, sessions_to_ignore) || contains(intan_session_name, sessions_to_ignore1) || contains(ratID, 'R0328') || contains(ratID, 'R0327') || contains(ratID, 'ASSY236')  % the first style it wouldn't skip these sessions so trying it as the 'intan' name instead of just the rawdata folder name.
+             continue; % Just skip R0425 bc it has bad sessions, check with Dan if need to include. % R0328 has no actual ephys; using these lines to skip unneeded data. R0327 data lacks a start signal? Can't create trials struct
         end
 
         parentFolder = fullfile(intan_parent_directory, ...
             ratID, ...
             [ratID '-processed']);
         
-
-
         if contains(ratID, NN8x8) % if the ratID is in the list, it'll assign it the correct probe_type for ordering the LFP data correctly
             probe_type = 'NN8x8'; 
         elseif contains(ratID, ASSY156)
@@ -208,46 +206,17 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                 continue;
             end
 
-        if contains(ratID, NN8x8) % if the ratID is in the list, it'll assign it the correct probe_type for ordering the LFP data correctly
-            probe_type = 'NN8x8'; 
-        elseif contains(ratID, ASSY156)
-            probe_type = 'ASSY156';
-        elseif contains(ratID, ASSY236)
-            probe_type = 'ASSY236';
-        end
+%         if contains(ratID, NN8x8) % if the ratID is in the list, it'll assign it the correct probe_type for ordering the LFP data correctly
+%             probe_type = 'NN8x8'; 
+%         elseif contains(ratID, ASSY156)
+%             probe_type = 'ASSY156';
+%         elseif contains(ratID, ASSY236)
+%             probe_type = 'ASSY236';
+%         end
         
         % Order the lfps here        
         [ordered_lfp, intan_site_order, site_order] = lfp_by_probe_site_ALL(lfp_data, probe_type); 
                 % Orders the lfps by probe site mapping (double check the single file to remove catches for loading in single data)
-        
-% %         load_channel_information - this file is coded 0 = bad, 1 = good,
-% %         2 = variable for data in each channel for each session_name for
-% %         each rat_ID. Use the opts.VariableNamesRange for eat ratID to
-% %         detectImportOptions otherwise there's an error due to different
-% %         session number for each rat
-% %         sheetname = ratID;
-% %         if contains(ratID, 'R0326')
-% %             opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:H1', 'datarange', 'A2:H65', 'sheet', sheetname);
-% %         elseif contains(ratID, 'R0327') || contains(ratID, 'R0374')
-% %             opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:E1', 'datarange', 'A2:E65', 'sheet', sheetname);
-% %         elseif contains(ratID, 'R0372') || contains(ratID, 'R0378')|| contains(ratID, 'R0396')
-% %             opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:J1', 'datarange', 'A2:J65', 'sheet', sheetname);
-% %         elseif contains(ratID, 'R0379') || contains(ratID, 'R0413')
-% %             opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:L1', 'datarange', 'A2:L65', 'sheet', sheetname);
-% %         elseif contains(ratID, 'R0376')
-% %             opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:O1', 'datarange', 'A2:O65', 'sheet', sheetname);
-% %         elseif contains(ratID, 'R0394')
-% %             opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:G1', 'datarange', 'A2:G65', 'sheet', sheetname);            
-% %         elseif contains(ratID, 'R0395')
-% %             opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:K1', 'datarange', 'A2:K65', 'sheet', sheetname);
-% %         elseif contains(ratID, 'R0412')
-% %             opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:M1', 'datarange', 'A2:M65', 'sheet', sheetname);
-% %         elseif contains(ratID, 'R0419')
-% %             opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:P1', 'datarange', 'A2:P65', 'sheet', sheetname);
-% %         end
-% % 
-% %         probe_channel_info = load_channel_information(fname, sheetname);
-% %         [channel_information, intan_site_order, site_order] = channel_by_probe_site_ALL(probe_channel_info, probe_type);
         
         %find the column header that matches session_name (session_name and
         %the column headers should match for each session to pull in the
