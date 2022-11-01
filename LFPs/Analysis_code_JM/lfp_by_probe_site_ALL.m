@@ -57,7 +57,7 @@ if strcmpi(probe_type, 'nn8x8')
             42,47,41,48,43,46,45,44,...%shank6
             49,56,50,55,51,54,52,53,...%shank7
             57,64,58,63,59,62,60,61];  %shank8
-   site_order = [1,8,2,7,3,6,4,5,...%shank1 % These are literal site numbers for the NN probes
+   site_order = [1,8,2,7,3,6,4,5,...%shank1 % These are literal site numbers for the NN probes % using this to name the sites in graphs
             9,16,10,15,11,14,12,13,...%shank2
             17,24,18,23,19,22,20,21,...%shank3
             25,32,26,31,27,30,28,29,...%shank4

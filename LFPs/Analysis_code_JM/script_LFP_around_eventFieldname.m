@@ -73,16 +73,21 @@ for i_rat = 1 : length(rats_with_intan_sessions)
             continue;
         end        
         
-%          if contains(ratID, NN8x8) || contains(ratID, ASSY156) || contains(ratID, 'R0420') % just trying to skip some lines of data to get to the last set to debug. Uncomment out to run more trialTypes
+%          if contains(ratID, NN8x8) || contains(ratID, ASSY156) || contains(ratID, ASSY236) % just trying to skip some lines of data to get to the last set to debug. Uncomment out to run more trialTypes
 %              continue;
 %          end
          
-         if contains(ratID, 'R0326') || contains(ratID, 'R0372') || contains(ratID, 'R0376') % just trying to skip some lines of data to get to the last set to debug. Uncomment out to run more trialTypes
+         if contains(ratID, 'R0326') || contains(ratID, 'R0372') || contains(ratID, 'R0376')...
+                 || contains(ratID, 'R0374') || contains(ratID, 'R0378') || contains(ratID, 'R0379') % just trying to skip some lines of data to get to the last set to debug. Uncomment out to run more trialTypes
              continue;
          end
 
-        if contains(session_name, sessions_to_ignore) || contains(intan_session_name, sessions_to_ignore1) || contains(ratID, 'R0328') || contains(ratID, 'R0327') || contains(ratID, 'ASSY236')  % the first style it wouldn't skip these sessions so trying it as the 'intan' name instead of just the rawdata folder name.
+        if  contains(ratID, 'R0328') || contains(ratID, 'R0327') || contains(ratID, 'R0420') % the first style it wouldn't skip these sessions so trying it as the 'intan' name instead of just the rawdata folder name.
              continue; % Just skip R0425 bc it has bad sessions, check with Dan if need to include. % R0328 has no actual ephys; using these lines to skip unneeded data. R0327 data lacks a start signal? Can't create trials struct
+        end
+
+        if contains(session_name, sessions_to_ignore) || contains(intan_session_name, sessions_to_ignore1) || contains(ratID, 'DigiInputTest') || contains(ratID, 'R0411') % Just always ignore these sessions. R0411 no data, DigitInputTest is t est files
+            continue;
         end
 
         parentFolder = fullfile(intan_parent_directory, ...
@@ -230,7 +235,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                     % for each separate event
                    
                    % create a filename to save the plots 
-                   fname_to_save = char(strcat(intan_session_name(1:end-13), eventFieldnames{i_event}, '_', trialType, '_', 'channel_lfps', '.pdf')); % add in ''_', sprintf('trial%u.pdf', trial_idx)' should you want to save files individually
+                   fname_to_save = char(strcat(session_name, '_', eventFieldnames{i_event}, '_', trialType, '_', 'channel_lfps', '.pdf')); % add in ''_', sprintf('trial%u.pdf', trial_idx)' should you want to save files individually
                    full_name = fullfile(processed_graphFolder_LFP_eventFieldname, fname_to_save);
                     
                    % creating a catch here for now while troubleshooting
@@ -328,7 +333,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                         
                          A=cell(1,5);
                          A{1} = ['Subject: ' ratID];
-                         A{2} = ['Session: ' intan_session_name(1:end-14)];
+                         A{2} = ['Session: ' session_name];
                          A{3} = ['Task Level: ' choiceRTdifficulty{logData.taskLevel+1}];
                          A{4} = ['Trial Number: ' num2str(trial_idx)];
                          A{5} = ['EventFieldname and Trial Type: ' eventFieldnames{i_event} '_' trialType];
