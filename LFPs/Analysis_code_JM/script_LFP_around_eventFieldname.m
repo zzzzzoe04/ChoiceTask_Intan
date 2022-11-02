@@ -35,7 +35,7 @@ NN8x8 = ["R0326", "R0327", "R0372", "R0379", "R0374", "R0376", "R0378", "R0394",
 ASSY156 = ["R0411", "R0419"];
 ASSY236 = ["R0420", "R0425", "R0427", "R0457"];
 
-sessions_to_ignore = {'R0378_20210507a', 'R0326_20191107a', 'R0425_20220728a', 'R0427_20220920a'};
+sessions_to_ignore = {'R0378_20210507a', 'R0326_20191107a', 'R0425_20220728a', 'R0427_20220920a', 'R0326_20200220a','R0326_20200221a', 'R0326_20200225a','R0326_20200226a'};
 sessions_to_ignore1 = {'R0425_20220728_ChVE_220728_112601', 'R0427_20220920_Testing_220920_150255'}; 
 % Trying this as a workaround. Code wouldn't skip these two trials. R0425 - 15 hour session and R0427 no data (files didn't save correctly)?
 
@@ -77,13 +77,18 @@ for i_rat = 1 : length(rats_with_intan_sessions)
 %              continue;
 %          end
          
-         if contains(ratID, 'R0326') || contains(ratID, 'R0372') || contains(ratID, 'R0376')...
-                 || contains(ratID, 'R0374') || contains(ratID, 'R0378') || contains(ratID, 'R0379') % just trying to skip some lines of data to get to the last set to debug. Uncomment out to run more trialTypes
+%          if contains(ratID, 'R0326') || contains(ratID, 'R0372') || contains(ratID, 'R0376')...
+%                  || contains(ratID, 'R0374') || contains(ratID, 'R0378') || contains(ratID, 'R0379') % just trying to skip some lines of data to get to the last set to debug. Uncomment out to run more trialTypes
+%              continue;
+%          end
+
+         if contains(ratID, 'R0394') || contains(ratID, 'R0395') || contains(ratID, 'R0396')...
+                 || contains(ratID, 'R0412') || contains(ratID, 'R0413') || contains(ratID, 'R0419') % just trying to skip some lines of data to get to the last set to debug. Uncomment out to run more trialTypes
              continue;
          end
 
-        if  contains(ratID, 'R0328') || contains(ratID, 'R0327') || contains(ratID, 'R0420') % the first style it wouldn't skip these sessions so trying it as the 'intan' name instead of just the rawdata folder name.
-             continue; % Just skip R0425 bc it has bad sessions, check with Dan if need to include. % R0328 has no actual ephys; using these lines to skip unneeded data. R0327 data lacks a start signal? Can't create trials struct
+        if  contains(ratID, 'R0328') || contains(ratID, 'R0327') || contains(ratID, 'R0420')|| contains(ratID, 'R0425') % the first style it wouldn't skip these sessions so trying it as the 'intan' name instead of just the rawdata folder name.
+             continue; % Just skip R0425 bc it has bad sessions, check with Dan if need to include. % R0328 has no actual ephys; using these lines to skip unneeded data. R0327 Can't create trials struct; R0420 I haven't added lines for
         end
 
         if contains(session_name, sessions_to_ignore) || contains(intan_session_name, sessions_to_ignore1) || contains(ratID, 'DigiInputTest') || contains(ratID, 'R0411') % Just always ignore these sessions. R0411 no data, DigitInputTest is t est files
@@ -211,14 +216,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                 continue;
             end
 
-%         if contains(ratID, NN8x8) % if the ratID is in the list, it'll assign it the correct probe_type for ordering the LFP data correctly
-%             probe_type = 'NN8x8'; 
-%         elseif contains(ratID, ASSY156)
-%             probe_type = 'ASSY156';
-%         elseif contains(ratID, ASSY236)
-%             probe_type = 'ASSY236';
-%         end
-        
+      
         % Order the lfps here        
         [ordered_lfp, intan_site_order, site_order] = lfp_by_probe_site_ALL(lfp_data, probe_type); 
                 % Orders the lfps by probe site mapping (double check the single file to remove catches for loading in single data)
@@ -312,11 +310,11 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                                 grid on
 
                                 if contains(ratID, NN8x8) % if the ratID is in the list, it'll assign it the correct probe_type for ordering the LFP data correctly
-                                    caption = sprintf('NN8x8 #%d', NNsite_order(i_row));
+                                    caption = sprintf('NN8x8 #%d', site_order(i_row));
                                 elseif contains(ratID, ASSY156)
-                                    caption = sprintf('ASSY156 #%d', ASSY156_order(i_row));
+                                    caption = sprintf('ASSY156 #%d', site_order(i_row));
                                 elseif contains(ratID, ASSY236)
-                                    caption = sprintf('ASSY236 #%d', ASSY236_order(i_row));
+                                    caption = sprintf('ASSY236 #%d', site_order(i_row));
                                 end 
                                 title(caption, 'FontSize', 8);
 

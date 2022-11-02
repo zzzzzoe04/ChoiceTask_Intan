@@ -2,11 +2,11 @@
 % lfp_original = load('R0372_20201125a_lfp.mat'); - sample line of code to
 % load in the lfp_mat file
 
-function [channel_information, intan_site_order, site_order] = channel_by_probe_site_ALL(probe_channel_info, probe_type)
+function [ordered_lfp, intan_site_order, site_order] = lfp_by_probe_site_ALL(lfp_data, probe_type)
 
 % INPUTS - 
-%   channel_excel_input - array containing good sites vs bad sites from the
-%       excel sheet
+%   lfp_data - num_sites x num_points array containing the original lfp data 
+%       ordered as recorded in the amplifier.dat file.
 %   probe_type - probe type
 %       'NN8x8' - Neuronexus 8x8 array
 %       'ASSY156' - Cambridge Omnetics Connector H6 style probe 2 shank @ 4 column/shank @ 16 site/column
@@ -14,7 +14,7 @@ function [channel_information, intan_site_order, site_order] = channel_by_probe_
 %       OTHER PROBE TYPE LABELS GO HERE
 %
 % OUTPUTS -
-%   channel_information - m x n array of *_lfp.mat file rearranged by shank #
+%   ordered_lfp - m x n array of *_lfp.mat file rearranged by shank #
 %       and site # along the shank. That is, first 8 rows should be the 
 %       lfp at each site on shank 1, ordered from ventral to dorsal
 %   intan_site_order - order of electrode sites by shank from ventral to
@@ -29,7 +29,19 @@ function [channel_information, intan_site_order, site_order] = channel_by_probe_
 % data in single files.
 
 if strcmpi(probe_type, 'nn8x8')
-   intan_amplifier = probe_channel_info([49:56,...%shank1, nn sites 1-8
+    if isstring(lfp_data)
+        if exist(lfp_data, 'file')
+            lfp = load(lfp_data);
+            lfp_data = lfp.lfp;
+        else
+            intan_site_order = [];
+            return
+        end
+    else
+       lfp_data = lfp_data.lfp;
+    end
+
+   intan_amplifier = lfp_data([49:56,...%shank1, nn sites 1-8
             57:64,...%shank2
             33:35, 37:39, 41:42,...%shank3
             36,40,43:48,...%shank4  --- This was wrong on 10/24/22, 35 was listed twice - once for shank 3 and once for shank 4. -- Changed to 36 and is now accurate 10/24/22
@@ -73,10 +85,21 @@ if strcmpi(probe_type, 'nn8x8')
 %             49,56,50,55,51,54,52,53,...%shank7
 %             57,64,58,63,59,62,60,61]; %shank8
         
-channel_information = intan_amplifier(intan_site_order, :);
+ordered_lfp = intan_amplifier(intan_site_order, :);
 
 elseif strcmpi(probe_type, 'ASSY156')
-      intan_amplifier = probe_channel_info([1:17,19:32,63,...% Shank A
+    if isstring(lfp_data)
+        if exist(lfp_data, 'file')
+            lfp = load(lfp_data);
+            lfp_data = lfp.lfp;
+        else
+            intan_site_order = [];
+            return
+        end
+    else
+       lfp_data = lfp_data.lfp;
+    end
+     intan_amplifier = lfp_data([1:17,19:32,63,...% Shank A
         18,33:62, 64],:); % Shank B
     
      intan_site_order = [5,29,17,2,32,19,9,21,... % Shank A
@@ -96,8 +119,7 @@ elseif strcmpi(probe_type, 'ASSY156')
          64,60,9,5,55,59,10,63,...
          61,8,54,56,13,52,2,16];
         
-% this was the original order but changed it for A to be left probe and B
-% to be right.
+
 %      intan_site_order = [39,43,52,56,57,44,64,33,... % Shank B
 %         49,35,47,63,36,46,61,38,...
 %         50,54,41,45,59,55,40,51,...
@@ -115,10 +137,21 @@ elseif strcmpi(probe_type, 'ASSY156')
 %          42,46,18,48,17,45,20,30,...
 %          43,22,21,34,25,38,36,23];
 
-channel_information = intan_amplifier(intan_site_order, :);   
+ordered_lfp = intan_amplifier(intan_site_order, :);   
 
 elseif strcmpi(probe_type, 'ASSY236')
-    intan_amplifier = probe_channel_info([1:17,19:32,63,...% Shank A
+    if isstring(lfp_data)
+        if exist(lfp_data, 'file')
+            lfp = load(lfp_data);
+            lfp_data = lfp.lfp;
+        else
+            intan_site_order = [];
+            return
+        end
+    else
+       lfp_data = lfp_data.lfp;
+    end
+    intan_amplifier = lfp_data([1:17,19:32,63,...% Shank A
         18,33:62, 64],:); % Shank B
     intan_site_order = [12,13,8,30,32,16,15,6,...% Shank A
             27,20,5,26,4,21,9,1,...
@@ -156,8 +189,7 @@ elseif strcmpi(probe_type, 'ASSY236')
 %         11,28,43,25,26,10,27,58,...
 %         30,46,63,15,62,31,14,47];
     
-    
-channel_information = intan_amplifier(intan_site_order, :);
+ordered_lfp = intan_amplifier(intan_site_order, :);
 end
 
 end
