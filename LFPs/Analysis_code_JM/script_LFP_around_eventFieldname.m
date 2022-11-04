@@ -1,6 +1,5 @@
 % script to write field potentials around each trial
 
-
 % probe_mapping_fname = '/Volumes/SharedX/Neuro-Leventhal/data/ChoiceTask/Probe Histology Summary/ProbeSite_Mapping.xlsx';
 
 intan_parent_directory = 'X:\Neuro-Leventhal\data\ChoiceTask';
@@ -38,7 +37,6 @@ ASSY236 = ["R0420", "R0425", "R0427", "R0457"];
 sessions_to_ignore = {'R0378_20210507a', 'R0326_20191107a', 'R0425_20220728a', 'R0427_20220920a', 'R0326_20200220a','R0326_20200221a', 'R0326_20200225a','R0326_20200226a'};
 sessions_to_ignore1 = {'R0425_20220728_ChVE_220728_112601', 'R0427_20220920_Testing_220920_150255'}; 
 % Trying this as a workaround. Code wouldn't skip these two trials. R0425 - 15 hour session and R0427 no data (files didn't save correctly)?
-
 
 naming_convention; % for labeling graphs
 
@@ -82,16 +80,16 @@ for i_rat = 1 : length(rats_with_intan_sessions)
 %              continue;
 %          end
 
-         if contains(ratID, 'R0394') || contains(ratID, 'R0395') || contains(ratID, 'R0396')...
-                 || contains(ratID, 'R0412') || contains(ratID, 'R0413') || contains(ratID, 'R0419') % just trying to skip some lines of data to get to the last set to debug. Uncomment out to run more trialTypes
-             continue;
-         end
 
-        if  contains(ratID, 'R0328') || contains(ratID, 'R0327') || contains(ratID, 'R0420')|| contains(ratID, 'R0425') % the first style it wouldn't skip these sessions so trying it as the 'intan' name instead of just the rawdata folder name.
+        if  contains(ratID, 'R0328') || contains(ratID, 'R0327') || contains(ratID, 'R0411') || contains(ratID, 'R0419') || contains(ratID, 'R0425') || contains(ratID, 'R0420')% the first style it wouldn't skip these sessions so trying it as the 'intan' name instead of just the rawdata folder name.
              continue; % Just skip R0425 bc it has bad sessions, check with Dan if need to include. % R0328 has no actual ephys; using these lines to skip unneeded data. R0327 Can't create trials struct; R0420 I haven't added lines for
         end
 
-        if contains(session_name, sessions_to_ignore) || contains(intan_session_name, sessions_to_ignore1) || contains(ratID, 'DigiInputTest') || contains(ratID, 'R0411') % Just always ignore these sessions. R0411 no data, DigitInputTest is t est files
+        if contains(session_name, sessions_to_ignore) || contains(intan_session_name, sessions_to_ignore1) || contains(ratID, 'DigiInputTest') % Just always ignore these sessions. R0411 no data, DigitInputTest is t est files
+            continue;
+        end
+
+        if contains(ratID, NN8x8)
             continue;
         end
 
