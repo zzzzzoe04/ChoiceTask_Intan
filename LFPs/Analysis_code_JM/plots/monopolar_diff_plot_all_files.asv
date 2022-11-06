@@ -35,7 +35,7 @@ NN8x8 = ["R0326", "R0327", "R0372", "R0379", "R0374", "R0378", "R0394", "R0395",
 ASSY156 = ["R0411", "R0419"];
 ASSY236 = ["R0420", "R0425", "R0427"];
 
-fname = 'X:\Neuro-Leventhal\data\ChoiceTask\Probe Histology Summary\Rat_Information_channels_to_discard.xlsx'; % for channels etc
+
 %%
 for i_ratfolder = 1 : length(valid_rat_folders)
     
@@ -66,37 +66,6 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         A{3} = ['Task Level: ' choiceRTdifficulty{logData.taskLevel+1}];   
         
         
-        % load_channel_information - this file is coded 0 = bad, 1 = good,
-        % 2 = variable for data in each channel for each session_name for
-        % each rat_ID. Use the opts.VariableNamesRange for eat ratID to
-        % detectImportOptions otherwise there's an error due to different
-        % session number for each rat
-        
-        sheetname = ratID;
-        if contains(ratID, 'R0326')
-            opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:H1', 'datarange', 'A2:H65', 'sheet', sheetname);
-        elseif contains(ratID, 'R0327') || contains(ratID, 'R0374')
-            opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:E1', 'datarange', 'A2:E65', 'sheet', sheetname);
-        elseif contains(ratID, 'R0372') || contains(ratID, 'R0378')|| contains(ratID, 'R0396')
-            opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:J1', 'datarange', 'A2:J65', 'sheet', sheetname);
-        elseif contains(ratID, 'R0379') || contains(ratID, 'R0413')
-            opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:L1', 'datarange', 'A2:L65', 'sheet', sheetname);
-        elseif contains(ratID, 'R0376')
-            opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:O1', 'datarange', 'A2:O65', 'sheet', sheetname);
-        elseif contains(ratID, 'R0394')
-            opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:G1', 'datarange', 'A2:G65', 'sheet', sheetname);            
-        elseif contains(ratID, 'R0395') || contains(ratID, 'R0427')
-            opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:K1', 'datarange', 'A2:K65', 'sheet', sheetname);
-        elseif contains(ratID, 'R0412')
-            opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:M1', 'datarange', 'A2:M65', 'sheet', sheetname);
-        elseif contains(ratID, 'R0419')
-            opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:P1', 'datarange', 'A2:P65', 'sheet', sheetname);
-        elseif contains(ratID, 'R0420')
-            opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:N1', 'datarange', 'A2:N65', 'sheet', sheetname);
-        elseif contains(ratID, 'R0425')
-            opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:V1', 'datarange', 'A2:V65', 'sheet', sheetname);
-        end
-
         % make a folder for the processed data graphs (monopolar and diff
         % graphs)        
         processed_graphFolder = [parentFolder(1:end-9) 'processed-graphs'];

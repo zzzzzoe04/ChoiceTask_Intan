@@ -55,7 +55,7 @@ choiceRTdifficulty{10} = 'testing';
 
 %%
 for i_rat = 1 : length(rats_with_intan_sessions)
-    
+    l
     intan_folders = rats_with_intan_sessions(i_rat).intan_folders;
     
     for i_sessionfolder = 1 : length(intan_folders)
@@ -81,7 +81,11 @@ for i_rat = 1 : length(rats_with_intan_sessions)
 %          end
 
 
-        if  contains(ratID, 'R0328') || contains(ratID, 'R0327') || contains(ratID, 'R0411') || contains(ratID, 'R0419') || contains(ratID, 'R0425') || contains(ratID, 'R0420')% the first style it wouldn't skip these sessions so trying it as the 'intan' name instead of just the rawdata folder name.
+        if contains(ratID, NN8x8)
+            continue;
+        end
+
+        if  contains(ratID, 'R0328') || contains(ratID, 'R0327') || contains(ratID, 'R0411') % the first style it wouldn't skip these sessions so trying it as the 'intan' name instead of just the rawdata folder name.
              continue; % Just skip R0425 bc it has bad sessions, check with Dan if need to include. % R0328 has no actual ephys; using these lines to skip unneeded data. R0327 Can't create trials struct; R0420 I haven't added lines for
         end
 
@@ -89,9 +93,9 @@ for i_rat = 1 : length(rats_with_intan_sessions)
             continue;
         end
 
-        if contains(ratID, NN8x8)
-            continue;
-        end
+%         if contains(ratID, ASSY156) || contains(ratID, ASSY236)
+%             continue;
+%         end
 
         parentFolder = fullfile(intan_parent_directory, ...
             ratID, ...
@@ -122,12 +126,16 @@ for i_rat = 1 : length(rats_with_intan_sessions)
             opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:O1', 'datarange', 'A2:O65', 'sheet', sheetname);
         elseif contains(ratID, 'R0394')
             opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:G1', 'datarange', 'A2:G65', 'sheet', sheetname);            
-        elseif contains(ratID, 'R0395')
+        elseif contains(ratID, 'R0395') || contains(ratID, 'R0427')
             opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:K1', 'datarange', 'A2:K65', 'sheet', sheetname);
         elseif contains(ratID, 'R0412')
             opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:M1', 'datarange', 'A2:M65', 'sheet', sheetname);
         elseif contains(ratID, 'R0419')
             opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:P1', 'datarange', 'A2:P65', 'sheet', sheetname);
+        elseif contains(ratID, 'R0420')
+            opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:N1', 'datarange', 'A2:N65', 'sheet', sheetname);
+        elseif contains(ratID, 'R0425')
+            opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:V1', 'datarange', 'A2:V65', 'sheet', sheetname);
         end
 
         probe_channel_info = load_channel_information(fname, sheetname);

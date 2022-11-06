@@ -80,7 +80,7 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         end
         
               
-       % if ~exist(power_fn, 'file')
+       if ~exist(power_fn, 'file')
             [ordered_lfp, intan_site_order, site_order] = lfp_by_probe_site_ALL(lfp_data, probe_type); % lfp_by_probe_site_ALL has the three probe types listed. 
                 % Working on changing probe_type to a list of rats with
                 % each probe_type so it runs and writes the diff/monopolars
@@ -88,9 +88,9 @@ for i_ratfolder = 1 : length(valid_rat_folders)
             % lfp_NNsite_order = lfp_by_probe_site(lfp_data, probe_type); % grandfathered code
             [power_lfps, f] = extract_power(ordered_lfp,Fs); % in the original code (LFP, Fs); 
             save(power_fn, 'power_lfps', 'f', 'Fs');
-      %  end
+       end
         
-       % if ~exist(diff_power_fn, 'file')
+       if ~exist(diff_power_fn, 'file')
             % Reorganize by site and calculate the diffs; specify
             % probe_type so it reorganzies the lfp files based on sites
             if strcmpi(probe_type, 'nn8x8')
@@ -106,7 +106,7 @@ for i_ratfolder = 1 : length(valid_rat_folders)
                 [power_lfps_diff, f] = extract_power(diff_lfps,Fs);
                 save(diff_power_fn, 'power_lfps_diff', 'f', 'Fs');
             end
-      %  end
+       end
             
     end
     
