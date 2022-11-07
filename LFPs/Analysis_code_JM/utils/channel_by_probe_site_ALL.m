@@ -137,8 +137,6 @@ elseif strcmpi(probe_type, 'ASSY236')
         41,55,20,36,6,29,49,19,...
         1,35,4,21,53,33,37,2];
 
-
-
 % this was the original order but changed it for A to be left probe and B
 % to be right.
 %     intan_site_order = [63,62,39,47,36,61,33,57,...%shankB 

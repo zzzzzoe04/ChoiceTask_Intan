@@ -36,6 +36,7 @@ ASSY236 = ["R0420", "R0425", "R0427", "R0457"];
 
 sessions_to_ignore = {'R0378_20210507a', 'R0326_20191107a', 'R0425_20220728a', 'R0427_20220920a', 'R0326_20200220a','R0326_20200221a', 'R0326_20200225a','R0326_20200226a'};
 sessions_to_ignore1 = {'R0425_20220728_ChVE_220728_112601', 'R0427_20220920_Testing_220920_150255'}; 
+% sessions_to_ignore2 = {'R0427_20220909a', 'R0427_20220912a','R0427_20220913a', 'R0427_20220914a', 'R0427_20220915a', 'R0427_20220916a'};
 % Trying this as a workaround. Code wouldn't skip these two trials. R0425 - 15 hour session and R0427 no data (files didn't save correctly)?
 
 naming_convention; % for labeling graphs
@@ -89,7 +90,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
              continue; % Just skip R0425 bc it has bad sessions, check with Dan if need to include. % R0328 has no actual ephys; using these lines to skip unneeded data. R0327 Can't create trials struct; R0420 I haven't added lines for
         end
 
-        if contains(session_name, sessions_to_ignore) || contains(intan_session_name, sessions_to_ignore1) || contains(ratID, 'DigiInputTest') % Just always ignore these sessions. R0411 no data, DigitInputTest is t est files
+        if contains(session_name, sessions_to_ignore) || contains(intan_session_name, sessions_to_ignore1)|| contains(session_name, sessions_to_ignore2) || contains(ratID, 'DigiInputTest') % Just always ignore these sessions. R0411 no data, DigitInputTest is t est files
             continue;
         end
 
