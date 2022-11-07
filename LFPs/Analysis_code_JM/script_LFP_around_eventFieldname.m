@@ -55,7 +55,7 @@ choiceRTdifficulty{10} = 'testing';
 
 %%
 for i_rat = 1 : length(rats_with_intan_sessions)
-    l
+    
     intan_folders = rats_with_intan_sessions(i_rat).intan_folders;
     
     for i_sessionfolder = 1 : length(intan_folders)
@@ -81,7 +81,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
 %          end
 
 
-        if contains(ratID, NN8x8)
+        if contains(ratID, NN8x8)|| contains(ratID, ASSY156)|| contains(ratID, 'R0420')|| contains(ratID, 'R0425')
             continue;
         end
 
