@@ -12,11 +12,11 @@ function event_triggered_lfps = extract_event_related_LFPs(ordered_lfp, trials, 
 %   Fs
 %   twin
 
-
 if ~iscell(eventFieldnames)
     eventFieldnames = {eventFieldnames};
 end
 
+% default values for varargs
 twin = [-2.5 2.5];
 Fs = 500;
 

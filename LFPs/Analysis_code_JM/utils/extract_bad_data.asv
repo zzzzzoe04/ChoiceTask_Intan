@@ -1,5 +1,10 @@
-% function excluded_trials = extract_bad_data(~)
+function excluded_trials = extract_bad_data(trials)
 
+% INPUTS
+% Trials - trials structure generated from choicetask_intan_workflow
+
+%OUTPUT
+%  - adds a variable to the trials structure with 
 
 % Run Choice_Task_Workflow
 % Run getTrialEventParams.m (allgo)
@@ -23,7 +28,7 @@ t_win = [-2.5 2.5];
 trialEventParams = getTrialEventParams('allgo');
 trIdx = extractTrials(trials, trialEventParams);
 num_trials = length(trIdx);
-num_channels = size(lfp, 1);
+num_channels = size(ordered_ .lfp, 1);
 
 % set all trials to have all valid channels, which will be updated inside
 % the i_taskevent loop. There, the code will check if there are

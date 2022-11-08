@@ -159,7 +159,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
             sprintf('no log file found for %s', session_folder)
         end
 
-        logData = readLogData(session_log); %gathing logData information
+        logData = readLogData(session_log); %gathersing logData information
         
         % calculate nexData, need digital input and analog input files
         digin_fname = fullfile(intan_folders{i_sessionfolder}, 'digitalin.dat');
