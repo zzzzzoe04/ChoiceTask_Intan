@@ -1,4 +1,9 @@
-% function excluded_trials = extract_bad_data(~)
+function excluded_trials = extract_bad_data(lfp, trials, Fs)
+
+%INPUTS
+% lfp - m x n data containing un-ordered lfp data
+% Fs - frequency of decimated LFP data - typically 500
+% trials - trials structure generated from createTrialsStruct_simpleChoice_Intan
 
 
 % Run Choice_Task_Workflow
@@ -6,10 +11,9 @@
 % Run extractTrials.m
 % Create Variable trials_to_run = trials(trIdx) (maybe not needed)
 % load lfp data in an 'ordered' format based on probe type
-
-% load(lfp_data);
-% Fs = lfp_data.actual_Fs;
-% lfp = lfp_data.lfp;
+    % load(lfp_data);
+    % Fs = lfp_data.actual_Fs;
+    % lfp = lfp_data.lfp;
 
 outlier_thresh = 1500;    % in mV
 
@@ -36,6 +40,7 @@ end
 
 for i_taskevent = 1 : length(eventFieldnames)
 %     trial_ts = extract_trial_ts(trials(trIdx), eventFieldnames{i_taskevent});
+    
     event_triggered_lfps = extract_event_related_LFPs(lfp, trials(trIdx), eventFieldnames{i_taskevent}, 'fs', Fs, 'twin', t_win);
 
     lfp_invalid = abs(event_triggered_lfps) > outlier_thresh;   % need to check, but pretty sure NaNs will get flagged as false in this test (this is good)
@@ -46,7 +51,7 @@ for i_taskevent = 1 : length(eventFieldnames)
         is_trial_invalid = any(invalid_trial_data, 2);   % check if there are any values out of range in each row
         trials(trIdx(i_trial)).is_channel_valid = trials(trIdx(i_trial)).is_channel_valid & ~is_trial_invalid;
     end
-    % save('trials_struct', trials, '-.mat')
+    save('trials', '*_.mat')
 end
 
 
