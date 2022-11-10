@@ -18,7 +18,7 @@ function event_triggered_lfps = extract_LFP_around_timestamps(ordered_lfp, trial
 
 num_channels = size(ordered_lfp, 1);
 num_samples = size(ordered_lfp, 2);
-max_t = Fs * num_samples;
+max_t = num_samples / 500;
 valid_ts = trial_ts((trial_ts > -t_win(1)) | isnan(trial_ts));
 valid_ts = valid_ts((valid_ts < max_t - t_win(2)) | isnan(trial_ts));
 

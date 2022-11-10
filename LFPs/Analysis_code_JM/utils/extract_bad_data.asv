@@ -1,7 +1,8 @@
 function excluded_trials = extract_bad_data(lfp_data, trials, probe_type)
 
 %INPUTS
-% lfp_data - m x n data containing un-ordered lfp data (NOT ordered) and Fs.
+% lfp_data - m x n data containing un-ordered lfp data
+% Fs - frequency of decimated LFP data - typically 500
 % trials - trials structure generated from createTrialsStruct_simpleChoice_Intan
 % probe_type - the implanted probe (NN8x8, ASSY156, ASSY236)
 
@@ -33,7 +34,6 @@ trialEventParams = getTrialEventParams('allgo');
 trIdx = extractTrials(trials, trialEventParams);
 num_trials = length(trIdx);
 num_channels = size(lfp, 1);
-num_channels_ordered = size(ordered_lfp, 1);
 
 % set all trials to have all valid channels, which will be updated inside
 % the i_taskevent loop. There, the code will check if there are
@@ -42,28 +42,25 @@ num_channels_ordered = size(ordered_lfp, 1);
 % that trial.
 for i_trial = 1 : num_trials
     trials(trIdx(i_trial)).is_channel_valid = true(num_channels, 1);
-    trials(trIdx(i_trial)).is_channel_valid_ordered = true(num_channels_ordered, 1);
 end
 
 for i_taskevent = 1 : length(eventFieldnames)
 %     trial_ts = extract_trial_ts(trials(trIdx), eventFieldnames{i_taskevent});
     
     event_triggered_lfps = extract_event_related_LFPs(lfp, trials(trIdx), eventFieldnames{i_taskevent}, 'fs', Fs, 'twin', t_win);
-    event_triggered_lfps_ordered = extract_event_related_LFPs(ordered_lfp, trials(trIdx), eventFieldnames{i_taskevent}, 'fs', Fs, 'twin', t_win);
+    event_triggered_lfps_ordered = extract_event_related_LFPs(ordered_lfp, trials(trIdx), eventFieldnames{i_taskevent}, 'fs', FS, 'twin', t_win);
 
     lfp_invalid = abs(event_triggered_lfps) > outlier_thresh; % need to check, but pretty sure NaNs will get flagged as false in this test (this is good)
-    lfp_invalid_ordered = abs(event_triggered_lfps_ordered) > outlier_thresh; % this has the sites ordered
+    lfp_invalid_ordered = abs(event_triggered_lfps_ordered)
 
     for i_trial = 1 : num_trials
         invalid_trial_data = squeeze(lfp_invalid(i_trial, :, :));
+
         is_trial_invalid = any(invalid_trial_data, 2);   % check if there are any values out of range in each row
         trials(trIdx(i_trial)).is_channel_valid = trials(trIdx(i_trial)).is_channel_valid & ~is_trial_invalid;
-        
-        invalid_trial_data_ordered = squeeze(lfp_invalid_ordered(i_trial,:,:));
-        is_trial_invalid_ordered = any(invalid_trial_data_ordered, 2);
-        trials(trIdx(i_trial)).is_channel_valid_ordered = trials(trIdx(i_trial)).is_channel_valid_ordered & ~is_trial_invalid_ordered;
-        
         excluded_trials = trials;
     end
     save('excluded_trials.mat', 'excluded_trials');
 end
+
+

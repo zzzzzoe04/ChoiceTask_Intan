@@ -156,7 +156,6 @@ elseif strcmpi(probe_type, 'ASSY236')
 %         11,28,43,25,26,10,27,58,...
 %         30,46,63,15,62,31,14,47];
     
-    
 channel_information = intan_amplifier(intan_site_order, :);
 end
 

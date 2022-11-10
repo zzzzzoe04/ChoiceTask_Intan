@@ -577,6 +577,7 @@ else
         end
     end
     
+            
     % check to see if the rat poked the wrong center port
     if trialData.centerNP ~= NoseInID(1)
         % wrong start trial
@@ -589,7 +590,13 @@ else
         % a bit of caution extracting the centerOut time, as this may
         % actually occur after the next trial has started
         noseOut = events{NoseOutidx(NoseInID(1))}.timestamps - trialInterval(1);
-        trialData.timestamps.centerOut = min(noseOut(noseOut > 0));
+        trialData.timestamps.centerOut = min(events{NoseOutidx(NoseInID(1))}.timestamps(noseOut > 0));
+%         trialData.timestamps.centerOut = min(noseOut(noseOut > 0));     % old version that indexes the wrong variable. 
+        % noseOut is the timestamps for all noseOut events at the port that the rat started in MINUS the trial start time
+        % instead, use noseOut to find the first noseOut event in this port
+        % after the rat poked its nose in, then extract the timestamp at
+        % that index from events{NoseOutidx(NoseInID(1))}.timestamps
+
         % I don't know what this is, it throws an error -Matt 20160110
 %         trialData.timing.wrongAnswerDelay = trialEvents{HLidx}.timestamps(1) - ...
 %             trialData.timestamps.centerIn;
