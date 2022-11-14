@@ -1,4 +1,4 @@
-function trials_validchannels_marked = identify_bad_data(lfp_data, trials, intan_site_order, probe_type)
+function trials_validchannels_marked = identify_bad_data(lfp_data, trials, intan_site_order, probe_type, trialEventParams, eventFieldnames)
 
 %INPUTS
 % lfp_data - m x n data containing un-ordered lfp data (NOT ordered) and Fs.
@@ -35,8 +35,8 @@ t_win = [-2.5 2.5];
 % eventFieldnames = {'cueOn', 'centerIn', 'centerOut', 'tone', 'sideIn', 'sideOut', 'foodClick', 'foodRetrievel'};
 
 % trialEventParams = getTrialEventParams('allgo');
-% trIdx = extractTrials(trials, trialEventParams);
-% num_trials = length(trIdx);
+trIdx = extractTrials(trials, trialEventParams);
+num_trials = length(trIdx);
 % I don't think we need to enter in eventFieldnames or to get trialEventParams in the code if we run it as part of the full script
 
 num_channels = size(lfp, 1);
@@ -63,7 +63,11 @@ for i_taskevent = 1 : length(eventFieldnames)
 
     for i_trial = 1 : num_trials
         % generating a list of good and bad sites 'un-ordered'
+        try
         invalid_trial_data = squeeze(lfp_invalid(i_trial, :, :));
+        catch
+            keyboard;
+        end
         is_trial_invalid = any(invalid_trial_data, 2);   % check if there are any values out of range in each row
         trials(trIdx(i_trial)).is_channel_valid = trials(trIdx(i_trial)).is_channel_valid & ~is_trial_invalid; 
         

@@ -27,16 +27,18 @@ Fs = lfp_data.actual_Fs;
 lfp = lfp_data.lfp;
 
 outlier_thresh = 1500;    % in mV
+t_win = [-2.5 2.5];
 
 % threshold = 1.5; % data is input into matrices with a multiplication factor of 1.0e+03 so need to account for this when selecting datapoints that are outliers
 
 % eventFieldnames = {'cueOn'};
-eventFieldnames = {'cueOn', 'centerIn', 'centerOut', 'tone', 'sideIn', 'sideOut', 'foodClick', 'foodRetrievel'};
-t_win = [-2.5 2.5];
+% eventFieldnames = {'cueOn', 'centerIn', 'centerOut', 'tone', 'sideIn', 'sideOut', 'foodClick', 'foodRetrievel'};
 
-trialEventParams = getTrialEventParams('allgo');
+% trialEventParams = getTrialEventParams('allgo');
 trIdx = extractTrials(trials, trialEventParams);
 num_trials = length(trIdx);
+% I don't think we need to enter in eventFieldnames or to get trialEventParams in the code if we run it as part of the full script
+
 num_channels = size(lfp, 1);
 % num_channels_ordered = size(ordered_lfp, 1);
 
@@ -87,4 +89,6 @@ end
 % [trials.is_channel_valid_ordered] = trials.name; trials = orderfields(trials,[1:16,18,17:17]); trials = rmfield(trials,'name');
 trials_validchannels_marked = trials;
 % save('trials_with_valid_channels_marked.mat', 'trials_validchannels_marked'); % saves the trials structure within the folder. 
-% within the script there will be a save 
+% within the script there will be a save line with a formal naming
+% convention. For this individual function, can add in to check individual
+% sessions.
