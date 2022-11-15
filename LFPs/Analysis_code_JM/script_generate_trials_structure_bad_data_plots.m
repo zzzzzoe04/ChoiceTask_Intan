@@ -243,13 +243,14 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                     % write code here to get event_triggered_lfps_ordered
                     % for each separate event
                    
-                   % create a filename to save the trials_structure 
-                   trials_fname_to_save = char(strcat(session_name, '_', eventFieldnames{i_event}, '_', trialType, '_', 'trials', '.mat')); % add in ''_', sprintf('trial%u.pdf', trial_idx)' should you want to save files individually
-                   trials_full_name = fullfile(trials_structure, trials_fname_to_save);
-                   
-                   if exist(trials_full_name, 'file')
-                        continue
-                   end
+%                    % create a filename to save the trials_structure 
+%                    trials_fname_to_save = char(strcat(session_name, '_', eventFieldnames{i_event}, '_', trialType, '_', 'trials', '.mat')); % add in ''_', sprintf('trial%u.pdf', trial_idx)' should you want to save files individually
+%                    trials_full_name = fullfile(trials_structure, trials_fname_to_save);
+%                    
+%                    if exist(trials_full_name, 'file')
+%                         continue
+%                    end
+
                    % creating a catch here for now while troubleshooting
                    % the data to NOT run through all of the folders and
                    % create the data if the plots are already made. (Remove
@@ -257,13 +258,12 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                    % are made to graphs)
                    
                    % this function adds 2 fields to the trials structure to identify bad sites
-                    
                     trial_ts = extract_trial_ts(trials(trIdx), eventFieldnames{i_event}); % This is actually pulled in from the extract_event_related_LFPs script so do we need it here? 
                    
                     event_triggered_lfps = extract_event_related_LFPs(ordered_lfp, trials(trIdx), eventFieldnames{i_event}, 'fs', Fs, 'twin', t_win); % made this using ordered_lfp data
                     
                     trials_validchannels_marked = identify_bad_data(lfp_data, trials(trIdx), intan_site_order, probe_type, trialEventParams, eventFieldnames);
-                    save(trials_full_name, 'trials_validchannels_marked');
+%                     save(trials_full_name, 'trials_validchannels_marked');
 
 %                     % at this point, event_triggered_lfps_ordered is an m x n x p array where
 %                     % m is the number of events (i.e., all the cueon OR nosein OR other...
@@ -274,8 +274,8 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                     % above here, the lfp file, trial structure never change
                     
                      % create a filename to save the plots 
-                   fname_to_save = char(strcat(session_name, '_', eventFieldnames{i_event}, '_', trialType, '_', 'channel_lfps', '.pdf')); % add in ''_', sprintf('trial%u.pdf', trial_idx)' should you want to save files individually
-                   full_name = fullfile(processed_graphFolder_LFP_eventFieldname, fname_to_save);
+                   trials_plot_fname_to_save = char(strcat(session_name, '_', eventFieldnames{i_event}, '_', trialType, '_', 'trials', '.pdf')); % add in ''_', sprintf('trial%u.pdf', trial_idx)' should you want to save files individually
+                   trials_plot_full_name = fullfile(trials_structure, trials_plot_fname_to_save);
         
 % %                     pts_per_event = size(event_triggered_lfps,3); % I think these lines need to go into the for loop for whenever a set of data is loaded into the workspace.
 % %                     num_channels = size(event_triggered_lfps,2);
@@ -286,79 +286,92 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                         continue;
                     end
 %                      
-%                    for i_trial = 1:num_trials_to_plot
-%                         trial_idx = trial_idx_to_plot(i_trial);
-%                         % get rid of trial number as part of file name
-% 
-%                             channel_lfps = squeeze(event_triggered_lfps(trial_idx,:, :)); 
-%                             % trials, create a 64channel graph for each trial?
-%                         
-%                             % Plot the data
-%                             figure;
-%                             num_rows = size(event_triggered_lfps,2);
-%                             LFPs_per_shank = num_rows/ 8;   % will be 8 for 64 channels, 7 for 56 channels (diff)
-% 
-%                             for i_row = 1 : num_rows
-% 
-%                                 y_lim = [-1500, 1500];
-%                                 plot_col = ceil(i_row / LFPs_per_shank);
-%                                 plot_row = i_row - LFPs_per_shank * (plot_col-1);
-%                                 plot_num = (plot_row-1) * 8 + plot_col;
-% 
-%                                 subplot(LFPs_per_shank,8,plot_num);
-%                                 switch valid_sites_reordered(i_row)   % make sure is_valid_lfp is a boolean with true if it's a good channel; make sure this is in the same order as channel_lfps
-%                                     case 0
-%                                         plot_color = 'r';
-%                                     case 1
-%                                         plot_color = 'k';
-%                                     case 2
-%                                         plot_color = 'b';
-%                                     otherwise
-%                                         plot_color = 'b';
-%                                 end
-% 
-%                                 plot_channel_lfps = plot(channel_lfps(i_row, :), plot_color); % change to log10 -- plot(f, 10*log10(power_lfps(:,1)))
-%                                 set(gca, 'ylim',y_lim);
-%                                 grid on
-% 
-%                                 if contains(ratID, NN8x8) % if the ratID is in the list, it'll assign it the correct probe_type for ordering the LFP data correctly
-%                                     caption = sprintf('NN8x8 #%d', site_order(i_row));
-%                                 elseif contains(ratID, ASSY156)
-%                                     caption = sprintf('ASSY156 #%d', site_order(i_row));
-%                                 elseif contains(ratID, ASSY236)
-%                                     caption = sprintf('ASSY236 #%d', site_order(i_row));
-%                                 end 
-%                                 title(caption, 'FontSize', 8);
-% 
-%                                 if plot_row < LFPs_per_shank
-%                                     set(gca,'xticklabels',[])
-%                                 end
-% 
-%                                 if plot_col > 1
-%                                     set(gca,'yticklabels',[])
-%                                 end
-%         
-%                             end
-%                         set(gcf, 'WindowState', 'maximize'); % maximizes the window so that it exports the graphics with appropriate font size
-%                         
-%                          A=cell(1,5);
-%                          A{1} = ['Subject: ' ratID];
-%                          A{2} = ['Session: ' session_name];
-%                          A{3} = ['Task Level: ' choiceRTdifficulty{logData.taskLevel+1}];
-%                          A{4} = ['Trial Number: ' num2str(trial_idx)];
-%                          A{5} = ['EventFieldname and Trial Type: ' eventFieldnames{i_event} '_' trialType];
-%                         
-%                         sgtitle(A, 'Interpreter','none');
-%                         
-%                         if i_trial == 1
-%                             exportgraphics(gcf, full_name);
-%                         else
-%                             exportgraphics(gcf, full_name, 'append', true);   %ADD APPEND FLAG HERE
-%                         end
-%                         close; 
-%                    end
-        end
-                      
-   end
-    
+                    for i_trial = 1:num_trials_to_plot
+                    trial_idx = trial_idx_to_plot(i_trial);
+                    channel_lfps = squeeze(event_triggered_lfps(trial_idx,:, :)); 
+                        % trials, create a 64channel graph for each trial?
+                    
+                        % Plot the data
+                        figure;
+                        num_rows = size(event_triggered_lfps,2);
+                        LFPs_per_shank = num_rows/ 8;   % will be 8 for 64 channels, 7 for 56 channels (diff)
+                        for i_row = 1 : num_rows
+                    
+                            y_lim = [-1500, 1500];
+                            plot_col = ceil(i_row / LFPs_per_shank);
+                            plot_row = i_row - LFPs_per_shank * (plot_col-1);
+                            plot_num = (plot_row-1) * 8 + plot_col;
+                    
+                            subplot(LFPs_per_shank,8,plot_num);
+                              
+                            switch trials_validchannels_marked(i_trial).is_channel_valid_ordered(i_row)   % make sure is_valid_lfp is a boolean with true if it's a good channel; make sure this is in the same order as channel_lfps
+                                case 0
+                                    plot_color = 'r';
+                                case 1
+                                    plot_color = 'k';
+                                otherwise
+                                    plot_color = 'b';
+                            end
+                    
+                            plot_channel_lfps = plot(channel_lfps(i_row, :), plot_color); % change to log10 -- plot(f, 10*log10(power_lfps(:,1)))
+                            set(gca, 'ylim',y_lim);
+                            grid on
+                            
+                            if contains(ratID, NN8x8) % if the ratID is in the list, it'll assign it the correct probe_type for ordering the LFP data correctly
+                                caption = sprintf('NN8x8 #%d', site_order(i_row));
+                            elseif contains(ratID, ASSY156)
+                                caption = sprintf('ASSY156 #%d', site_order(i_row));
+                            elseif contains(ratID, ASSY236)
+                                caption = sprintf('ASSY236 #%d', site_order(i_row));
+                            end 
+                            title(caption, 'FontSize', 8);
+                    
+                            if plot_row < LFPs_per_shank
+                                set(gca,'xticklabels',[])
+                            end
+                    
+                            if plot_col > 1
+                                set(gca,'yticklabels',[])
+                            end
+                    
+                            ax = gca;
+                            switch valid_sites_reordered(i_row)   % make sure is_valid_lfp is a boolean with true if it's a good channel; make sure this is in the same order as channel_lfps
+                                case 0
+                                    ax.XColor = 'r'; % Red
+                                    ax.YColor = 'r'; % Red
+                                    % ax.ylabel = 'k';
+                                case 1
+                                    ax.XColor = 'k'; % black
+                                    ax.YColor = 'k'; % black
+                                    % ax.ylabel = 'k';
+                                case 2
+                                    ax.XColor = 'b'; % blue
+                                    ax.YColor = 'b';
+                                    % ax.ylabel = 'k';
+                                otherwise
+                                    ax.XColor = 'b'; % blue
+                                    ax.YColor = 'b';
+                                    %  ax.ylabel = 'k';
+                            end
+                        end
+                            set(gcf, 'WindowState', 'maximize'); % maximizes the window so that it exports the graphics with appropriate font size
+                            
+                             A=cell(1,5);
+                             A{1} = ['Subject: ' ratID];
+                             A{2} = ['Session: ' session_name];
+                             A{3} = ['Task Level: ' choiceRTdifficulty{logData.taskLevel+1}];
+                             A{4} = ['Trial Number: ' num2str(trial_idx)];
+                             A{5} = ['EventFieldname and Trial Type: ' eventFieldnames{i_event} '_' trialType];
+                            
+                            sgtitle(A, 'Interpreter','none');
+                            
+                            if i_trial == 1
+                                exportgraphics(gcf, trials_plot_full_name);
+                            else
+                                exportgraphics(gcf, trials_plot_full_name, 'append', true);   %ADD APPEND FLAG HERE
+                            end
+                            close; 
+                    end
+                  end
+            end
 end
