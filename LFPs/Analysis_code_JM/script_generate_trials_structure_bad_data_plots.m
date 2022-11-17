@@ -34,7 +34,7 @@ NN8x8 = ["R0326", "R0327", "R0372", "R0379", "R0374", "R0376", "R0378", "R0394",
 ASSY156 = ["R0411", "R0419"];
 ASSY236 = ["R0420", "R0425", "R0427", "R0457"];
 
-sessions_to_ignore = {'R0378_20210507a', 'R0326_20191107a', 'R0425_20220728a', 'R0427_20220920a'};
+sessions_to_ignore = {'R0378_20210507a', 'R0326_20191107a', 'R0425_20220728a', 'R0425_20220816b', 'R0427_20220920a'};
 sessions_to_ignore1 = {'R0425_20220728_ChVE_220728_112601', 'R0427_20220920_Testing_220920_150255'}; 
 sessions_to_ignore2 = {'R0427_20220908a', 'R0427_20220909a', 'R0427_20220912a','R0427_20220913a', 'R0427_20220914a', 'R0427_20220915a', 'R0427_20220916a'};
 % Trying this as a workaround. Code wouldn't skip these two trials. R0425 - 15 hour session and R0427 no data (files didn't save correctly)?
@@ -72,9 +72,9 @@ for i_rat = 1 : length(rats_with_intan_sessions)
             continue;
         end        
         
-%          if contains(ratID, NN8x8) || contains(ratID, ASSY156) % just trying to skip some lines of data to get to the last set to debug. Uncomment out to run more trialTypes
-%              continue;
-%          end
+         if contains(ratID, NN8x8) || contains(ratID, ASSY156) % just trying to skip some lines of data to get to the last set to debug. Uncomment out to run more trialTypes
+             continue;
+         end
          
 %          if contains(ratID, 'R0326') || contains(ratID, 'R0372') || contains(ratID, 'R0376')...
 %                  || contains(ratID, 'R0374') || contains(ratID, 'R0378') || contains(ratID, 'R0379') % just trying to skip some lines of data to get to the last set to debug. Uncomment out to run more trialTypes
@@ -86,7 +86,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
 %             continue;
 %         end
 
-        if  contains(ratID, 'R0328') || contains(ratID, 'R0327') || contains(ratID, 'R0411') % the first style it wouldn't skip these sessions so trying it as the 'intan' name instead of just the rawdata folder name.
+        if  contains(ratID, 'R0328') || contains(ratID, 'R0327') || contains(ratID, 'R0411') || contains(ratID, 'R0420') % the first style it wouldn't skip these sessions so trying it as the 'intan' name instead of just the rawdata folder name.
              continue;  % R0328 has no actual ephys; using these lines to skip unneeded data. R0327 Can't create trials struct; R0420 I haven't added lines for
         end
 
