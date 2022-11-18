@@ -94,10 +94,6 @@ for i_rat = 1 : length(rats_with_intan_sessions)
             continue;
         end
 
-%         if contains(ratID, ASSY156) || contains(ratID, ASSY236)
-%             continue;
-%         end
-
         parentFolder = fullfile(intan_parent_directory, ...
             ratID, ...
             [ratID '-processed']);
@@ -147,9 +143,9 @@ for i_rat = 1 : length(rats_with_intan_sessions)
             % existing at this point in analysis would be rare but putting in
             % as a catch here)
 
-        trials_structure = [parentFolder(1:end-9) 'LFP-trials-structures'];
-            if ~exist(trials_structure, 'dir')
-                mkdir(trials_structure);
+        trials_structure_plots = [parentFolder(1:end-9) 'LFP-trials-structures-graphs'];
+            if ~exist(trials_structure_plots, 'dir')
+                mkdir(trials_structure_plots);
             end % Wait these files are being saved in the processed folder. 
         
         processed_graphFolder_LFP_eventFieldname = [parentFolder(1:end-9) 'LFP-eventFieldname-graphs'];
@@ -247,15 +243,14 @@ for i_rat = 1 : length(rats_with_intan_sessions)
 %                    trials_fname_to_save = char(strcat(session_name, '_', eventFieldnames{i_event}, '_', trialType, '_', 'trials', '.mat')); % add in ''_', sprintf('trial%u.pdf', trial_idx)' should you want to save files individually
 %                    trials_full_name = fullfile(trials_structure, trials_fname_to_save);
 %                    
+
 %                    if exist(trials_full_name, 'file')
 %                         continue
 %                    end
 
-                   % creating a catch here for now while troubleshooting
-                   % the data to NOT run through all of the folders and
-                   % create the data if the plots are already made. (Remove
-                   % once code is sufficient to rewrite the files as edits
-                   % are made to graphs)
+                   % Cath for troubleshooting the data to NOT run through all of the folders and
+                   % create the data if the plots are already made. This will not create 5 pages of 5 different random trials.
+                   % It will simply generate one trial per session.
                    
                    % this function adds 2 fields to the trials structure to identify bad sites
                     trial_ts = extract_trial_ts(trials(trIdx), eventFieldnames{i_event}); % This is actually pulled in from the extract_event_related_LFPs script so do we need it here? 
@@ -275,7 +270,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                     
                      % create a filename to save the plots 
                    trials_plot_fname_to_save = char(strcat(session_name, '_', eventFieldnames{i_event}, '_', trialType, '_', 'trials', '.pdf')); % add in ''_', sprintf('trial%u.pdf', trial_idx)' should you want to save files individually
-                   trials_plot_full_name = fullfile(trials_structure, trials_plot_fname_to_save);
+                   trials_plot_full_name = fullfile(trials_structure_plots, trials_plot_fname_to_save);
         
 % %                     pts_per_event = size(event_triggered_lfps,3); % I think these lines need to go into the for loop for whenever a set of data is loaded into the workspace.
 % %                     num_channels = size(event_triggered_lfps,2);
@@ -306,20 +301,25 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                             plot_num = (plot_row-1) * 8 + plot_col;
                     
                             subplot(LFPs_per_shank,8,plot_num);
-                              
+                            
+                            % sue the trials structure data
+                            % (trials_validchannels_marked.is_channel_valid_ordered)
+                            % to color the actual plots based on good or
+                            % bad sites above the specified threshold (1500mV, check the script to verify)
                             switch trials_validchannels_marked(i_trial).is_channel_valid_ordered(i_row)   % make sure is_valid_lfp is a boolean with true if it's a good channel; make sure this is in the same order as channel_lfps
                                 case 0
-                                    plot_color = 'r';
+                                    plot_color = 'r'; % marks bad channels within specified trial
                                 case 1
-                                    plot_color = 'k';
+                                    plot_color = 'k'; % marks good channels within specified trial
                                 otherwise
-                                    plot_color = 'b';
+                                    plot_color = 'b'; % catch in case the data was not input into the structure
                             end
                     
                             plot_channel_lfps = plot(channel_lfps(i_row, :), plot_color); % change to log10 -- plot(f, 10*log10(power_lfps(:,1)))
                             set(gca, 'ylim',y_lim);
                             grid on
                             
+                            % give titles to each subplot
                             if contains(ratID, NN8x8) % if the ratID is in the list, it'll assign it the correct probe_type for ordering the LFP data correctly
                                 caption = sprintf('NN8x8 #%d', site_order(i_row));
                             elseif contains(ratID, ASSY156)
@@ -338,27 +338,31 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                             end
                     
                             ax = gca;
+                            % This section is coded to color the axes of
+                            % the plots when checking the amplifier.dat
+                            % files 'by eye' using Neuroscope
                             switch valid_sites_reordered(i_row)   % make sure is_valid_lfp is a boolean with true if it's a good channel; make sure this is in the same order as channel_lfps
                                 case 0
-                                    ax.XColor = 'r'; % Red
+                                    ax.XColor = 'r'; % Red % marks bad channels within specified trial
                                     ax.YColor = 'r'; % Red
                                     % ax.ylabel = 'k';
                                 case 1
-                                    ax.XColor = 'k'; % black
+                                    ax.XColor = 'k'; % black % marks good channels within specified trial
                                     ax.YColor = 'k'; % black
                                     % ax.ylabel = 'k';
                                 case 2
-                                    ax.XColor = 'b'; % blue
+                                    ax.XColor = 'b'; % blue % marks channels as 'variable' and could be good for portions of the whole amplifier.dat file but bad for others. Thus some channels may be good for only some trials, not all.
                                     ax.YColor = 'b';
                                     % ax.ylabel = 'k';
                                 otherwise
-                                    ax.XColor = 'b'; % blue
+                                    ax.XColor = 'b'; % blue % catch in case the data was not input into the structure
                                     ax.YColor = 'b';
                                     %  ax.ylabel = 'k';
                             end
                         end
                             set(gcf, 'WindowState', 'maximize'); % maximizes the window so that it exports the graphics with appropriate font size
                             
+                            % Gives the whole plot page a name
                              A=cell(1,5);
                              A{1} = ['Subject: ' ratID];
                              A{2} = ['Session: ' session_name];

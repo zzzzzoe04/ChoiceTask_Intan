@@ -44,12 +44,6 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         end
 
         % create filenames to hold mono- and diff-LFPs
-%         mono_power_fn = [session_name, '_monopolar_power.mat'];
-%         mono_power_fn = fullfile(session_path, mono_power_fn);
-% 
-%         diff_power_fn = [session_name, '_diff_power.mat'];
-%         diff_power_fn = fullfile(session_path, diff_power_fn);
-        
         power_fn = [session_name, '_monopolarpower.mat'];
         power_fn = fullfile(session_path, power_fn);
         
@@ -78,8 +72,7 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         if num_rows < 64
             continue
         end
-        
-              
+               
        if ~exist(power_fn, 'file')
             [ordered_lfp, intan_site_order, site_order] = lfp_by_probe_site_ALL(lfp_data, probe_type); % lfp_by_probe_site_ALL has the three probe types listed. 
                 % Working on changing probe_type to a list of rats with
