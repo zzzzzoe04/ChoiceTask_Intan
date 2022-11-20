@@ -18,7 +18,7 @@ for i_folder = 1 : length(potential_rat_folders)
         
 end
 
-num_rat_folders_with_processed_data = 0;
+num_rat_folders_with_trials_data = 0;
 for i_ratfolder = 1 : num_valid_rat_folders
     
     [root_path, cur_ratID, ext] = fileparts(rat_folders{i_ratfolder});
@@ -57,7 +57,7 @@ for i_ratfolder = 1 : num_valid_rat_folders
 % %                     continue
 % %                 end
             
-            trials_datafolder = is_intan_processed_datafolder(full_pd_path);
+            trials_datafolder = is_intan_trials_structure_datafolder(full_pd_path);
             if ~isempty(trials_datafolder)
                 num_trials_sessionfolders = num_trials_sessionfolders + 1;
                 trials_datafolders{num_trials_sessionfolders} = trials_datafolder;

@@ -1,7 +1,5 @@
 % script to write field potentials around each trial
 
-% probe_mapping_fname = '/Volumes/SharedX/Neuro-Leventhal/data/ChoiceTask/Probe Histology Summary/ProbeSite_Mapping.xlsx';
-
 intan_parent_directory = 'X:\Neuro-Leventhal\data\ChoiceTask';
 rats_with_intan_sessions = find_rawdata_folders(intan_parent_directory);
 
@@ -62,11 +60,10 @@ for i_rat = 1 : length(rats_with_intan_sessions)
     for i_sessionfolder = 1 : length(intan_folders)
         % extract the ratID and session name from the LFP file
         session_path = intan_folders{i_sessionfolder};
-        pd_processed_data = parse_processed_folder(session_path);
         rd_metadata = parse_rawdata_folder(intan_folders{i_sessionfolder});
-        ratID = pd_processed_data.ratID;
-        intan_session_name = pd_processed_data.session_name;
-        session_name = rd_metadata.session_name;    % need to define pd_metadata above here
+        ratID = rd_metadata.ratID;
+        intan_session_name = rd_metadata.session_name;
+        session_name = rd_metadata.session_name;
         
         if any(strcmp(session_path, sessions_to_ignore)) % can't quite get this to debug but seems ok - it keeps running these sessions and catching errors (hence the need to skip them!)
             continue;
@@ -145,12 +142,12 @@ for i_rat = 1 : length(rats_with_intan_sessions)
         trials_structure = [parentFolder(1:end-9) 'LFP-trials-structures'];
             if ~exist(trials_structure, 'dir')
                 mkdir(trials_structure);
-            end % Wait these files are being saved in the processed folder. 
+            end 
         
         processed_graphFolder_LFP_eventFieldname = [parentFolder(1:end-9) 'LFP-eventFieldname-graphs'];
             if ~exist(processed_graphFolder_LFP_eventFieldname, 'dir')
                 mkdir(processed_graphFolder_LFP_eventFieldname);
-            end % Wait these files are being saved in the processed folder. 
+            end  
 
         [session_folder, ~, ~] = fileparts(intan_folders{i_sessionfolder});
         session_log = find_session_log(session_folder);
@@ -224,7 +221,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
             end 
 
         % Order the lfps here       
-        [ordered_lfp, intan_site_order, site_order] = lfp_by_probe_site_ALL(lfp_data, probe_type); 
+        [ordered_lfp, intan_site_order, intan_site_order_for_trials_struct, site_order] = lfp_by_probe_site_ALL(lfp_data, probe_type); 
                 % Orders the lfps by probe site mapping (double check the single file to remove catches for loading in single data)
                    
         %find the column header that matches session_name (session_name and
@@ -257,7 +254,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                    
                     event_triggered_lfps = extract_event_related_LFPs(ordered_lfp, trials(trIdx), eventFieldnames{i_event}, 'fs', Fs, 'twin', t_win); % made this using ordered_lfp data
                     
-                    trials_validchannels_marked = identify_bad_data(lfp_data, trials(trIdx), intan_site_order, probe_type, trialEventParams, eventFieldnames);
+                    trials_validchannels_marked = identify_bad_data(lfp_data, trials(trIdx), intan_site_order_for_trials_struct, probe_type, trialEventParams, eventFieldnames);
                     save(trials_full_name, 'trials_validchannels_marked');
 
 %                     % at this point, event_triggered_lfps_ordered is an m x n x p array where
