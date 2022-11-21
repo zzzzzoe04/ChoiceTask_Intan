@@ -16,7 +16,7 @@ sheetname = ratID;
 probe_type = 'NN8x8';
 NN8x8 = ["R0326", "R0327", "R0372", "R0379", "R0374", "R0376", "R0378", "R0394", "R0395", "R0396", "R0412", "R0413"]; % Specify list of ratID associated with each probe_type; again comment this out.
 probe_channel_info = load_channel_information(fname, sheetname);
-[channel_information, intan_site_order, site_order] = channel_by_probe_site_ALL(probe_channel_info, probe_type);
+[channel_information, intan_site_order, intan_site_order_for_trials_struct, site_order] = channel_by_probe_site_ALL(probe_channel_info, probe_type);
 
 for i_trial = 1:num_trials_to_plot
     trial_idx = trial_idx_to_plot(i_trial);

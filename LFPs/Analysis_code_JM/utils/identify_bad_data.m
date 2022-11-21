@@ -1,4 +1,4 @@
-function trials_validchannels_marked = identify_bad_data(lfp_data, trials, intan_site_order_for_trials_struct, probe_type, trialEventParams, eventFieldnames)
+function trials_validchannels_marked_B = identify_bad_data(lfp_data, trials, intan_site_order_for_trials_struct, probe_type, trialEventParams, eventFieldnames)
 
 %INPUTS
 % lfp_data - m x n data containing un-ordered lfp data (NOT ordered) and Fs.
@@ -18,9 +18,10 @@ function trials_validchannels_marked = identify_bad_data(lfp_data, trials, intan
 
 Fs = lfp_data.actual_Fs;
 
-% [ordered_lfp, intan_site_order, site_order] = lfp_by_probe_site_ALL(lfp_data, probe_type);
+% [ordered_lfp, intan_site_order, intan_site_order_for_trials_struct, site_order] = lfp_by_probe_site_ALL(lfp_data, probe_type);
  % this orders the lfp data -
-% not needed for the entire script to run but if you're debugging an
+
+ % not needed for the entire script to run but if you're debugging an
 % individual session, need to run this function to get 'intan_site_order'
 % prior to running this function.
 
@@ -47,17 +48,17 @@ num_channels = size(lfp, 1);
 % that trial.
 for i_trial = 1 : num_trials
     trials(trIdx(i_trial)).is_channel_valid = true(num_channels, 1); % generates an 'unordered' list of bad sites per trial (64x1)
-  %  trials(trIdx(i_trial)).is_channel_valid_ordered = true(num_channels_ordered, 1); % generates an 'ordered' list of bad sites per trial - will use the ordered_lfp data! (64x1)
+  % trials(trIdx(i_trial)).is_channel_valid_ordered = true(num_channels_ordered, 1); % generates an 'ordered' list of bad sites per trial - will use the ordered_lfp data! (64x1)
 end
 
 for i_taskevent = 1 : length(eventFieldnames)
 %     trial_ts = extract_trial_ts(trials(trIdx), eventFieldnames{i_taskevent});
     
     event_triggered_lfps = extract_event_related_LFPs(lfp, trials(trIdx), eventFieldnames{i_taskevent}, 'fs', Fs, 'twin', t_win); % un-ordered lfp data
-  % event_triggered_lfps_ordered = extract_event_related_LFPs(ordered_lfp, trials(trIdx), eventFieldnames{i_taskevent}, 'fs', Fs, 'twin', t_win); % ordered LFP data
+ %  event_triggered_lfps_ordered = extract_event_related_LFPs(ordered_lfp, trials(trIdx), eventFieldnames{i_taskevent}, 'fs', Fs, 'twin', t_win); % ordered LFP data
 
     lfp_invalid = abs(event_triggered_lfps) > outlier_thresh; % need to check, but pretty sure NaNs will get flagged as false in this test (this is good)
-  % lfp_invalid_ordered = abs(event_triggered_lfps_ordered) > outlier_thresh; % this has the sites ordered
+%   lfp_invalid_ordered = abs(event_triggered_lfps_ordered) > outlier_thresh; % this has the sites ordered
 
     for i_trial = 1 : num_trials
         % generating a list of good and bad sites 'un-ordered'
@@ -78,7 +79,6 @@ for i_taskevent = 1 : length(eventFieldnames)
         % ordered list (based on ordered_lfps)
         trials(trIdx(i_trial)).name = trials(i_trial).is_channel_valid;
         
-        % trials(trIdx(i_trial)).is_channel_valid_ordered = trials(trIdx(i_trial)).is_channel_valid(intan_site_order_for_trials_struct);
     end
 
 end
@@ -90,7 +90,7 @@ for i_trial = 1 : num_trials
 end
 
 % [trials.is_channel_valid_ordered] = trials.name; trials = orderfields(trials,[1:16,18,17:17]); trials = rmfield(trials,'name');
-trials_validchannels_marked = trials;
+trials_validchannels_marked_B = trials;
 % save('trials_with_valid_channels_marked.mat', 'trials_validchannels_marked'); % saves the trials structure within the folder. 
 % within the script there will be a save line with a formal naming
 % convention. For this individual function, can add in to check individual
