@@ -1,6 +1,7 @@
 % script to write field potentials around each trial
 
 intan_parent_directory = 'X:\Neuro-Leventhal\data\ChoiceTask';
+valid_trials_folder = find_trials_struct_folders(intan_parent_directory);
 rats_with_intan_sessions = find_rawdata_folders(intan_parent_directory);
 
 %%
