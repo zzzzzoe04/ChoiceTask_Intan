@@ -28,7 +28,7 @@ Fs = lfp_data.actual_Fs;
 lfp = lfp_data.lfp;
 
 outlier_thresh = 1500;    % in mV
-t_win = [-2.5 2.5];
+t_win = [-2.5 5];
 
 % eventFieldnames = {'cueOn'};
 % eventFieldnames = {'cueOn', 'centerIn', 'centerOut', 'tone', 'sideIn', 'sideOut', 'foodClick', 'foodRetrievel'};
