@@ -8,7 +8,7 @@ rats_with_intan_sessions = find_rawdata_folders(intan_parent_directory);
 % cd(test_folder);
 
 
-sessions_to_ignore = {'R0378_20210507a', 'R0326_20191107a', 'R0425_20220728a', 'R0425_20220816b','R0427_20220920a'}; % R0425_20220728a debugging because the intan side was left on for 15 hours;
+sessions_to_ignore = {'R0378_20210507a', 'R0326_20191107a', 'R0425_20220728a', 'R0425_20220816b', 'R0427_20220920a', 'R0427_20220920a'}; % R0425_20220728a debugging because the intan side was left on for 15 hours;
 sessions_to_ignore1 = {'R0425_20220728_ChVE_220728_112601', 'R0427_20220920_Testing_220920_150255', 'R0427_20220920a'}; 
 sessions_to_ignore2 = {'R0427_20220908a', 'R0427_20220909a', 'R0427_20220912a','R0427_20220913a', 'R0427_20220914a', 'R0427_20220915a', 'R0427_20220916a'}; % R0427_20220920a does not have an 'info.rhd' file
 

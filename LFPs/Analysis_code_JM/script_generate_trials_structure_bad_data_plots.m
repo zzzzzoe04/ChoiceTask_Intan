@@ -6,7 +6,7 @@ intan_parent_directory = 'X:\Neuro-Leventhal\data\ChoiceTask';
 rats_with_intan_sessions = find_rawdata_folders(intan_parent_directory);
 
 %%
-fname = 'X:\Neuro-Leventhal\data\ChoiceTask\Probe Histology Summary\Rat_Information_channels_to_discard.xlsx'; % for channels etc
+fname = 'X:\Neuro-Leventhal\data\ChoiceTask\Probe Histology Summary\Rat_Information_channels_to_discard.xlsx'; % for channels to ignore based on visualizing in Neuroscope etc
 num_trials_to_plot = 5;
 
 % start with an LFP file
@@ -34,7 +34,7 @@ NN8x8 = ["R0326", "R0327", "R0372", "R0379", "R0374", "R0376", "R0378", "R0394",
 ASSY156 = ["R0411", "R0419"];
 ASSY236 = ["R0420", "R0425", "R0427", "R0457"];
 
-sessions_to_ignore = {'R0378_20210507a', 'R0326_20191107a', 'R0425_20220728a', 'R0425_20220816b', 'R0427_20220920a'};
+sessions_to_ignore = {'R0378_20210507a', 'R0326_20191107a', 'R0425_20220728a', 'R0425_20220816b', 'R0427_20220920a', 'R0427_20220920a'};
 sessions_to_ignore1 = {'R0425_20220728_ChVE_220728_112601', 'R0427_20220920_Testing_220920_150255'}; 
 sessions_to_ignore2 = {'R0427_20220908a', 'R0427_20220909a', 'R0427_20220912a','R0427_20220913a', 'R0427_20220914a', 'R0427_20220915a', 'R0427_20220916a'};
 % Trying this as a workaround. Code wouldn't skip these two trials. R0425 - 15 hour session and R0427 no data (files didn't save correctly)?
@@ -63,6 +63,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
         % extract the ratID and session name from the LFP file
         session_path = intan_folders{i_sessionfolder};
         rd_metadata = parse_rawdata_folder(intan_folders{i_sessionfolder});
+        session_trials_folder = create_trials_structure_data_folder(rd_metadata, intan_parent_directory);
         ratID = rd_metadata.ratID;
         intan_session_name = rd_metadata.session_name;
         session_name = rd_metadata.session_name;
@@ -75,17 +76,17 @@ for i_rat = 1 : length(rats_with_intan_sessions)
 %              continue;
 %          end
          
-         if contains(ratID, 'R0326') || contains(ratID, 'R0372') || contains(ratID, 'R0376')...
-                 || contains(ratID, 'R0374') || contains(ratID, 'R0378') || contains(ratID, 'R0379') % just trying to skip some lines of data to get to the last set to debug. Uncomment out to run more trialTypes
-             continue;
-         end
+%          if contains(ratID, 'R0326') || contains(ratID, 'R0372') || contains(ratID, 'R0376')...
+%                  || contains(ratID, 'R0374') || contains(ratID, 'R0378') || contains(ratID, 'R0379') % just trying to skip some lines of data to get to the last set to debug. Uncomment out to run more trialTypes
+%              continue;
+%          end
 
 
-%         if contains(ratID, NN8x8)|| contains(ratID, ASSY156)|| contains(ratID, 'R0420')|| contains(ratID, 'R0425')
-%             continue;
-%         end
+        if contains(ratID, NN8x8)|| contains(ratID, ASSY156)|| contains(ratID, 'R0420')|| contains(ratID, 'R0425')
+            continue;
+        end
 
-        if  contains(ratID, 'R0328') || contains(ratID, 'R0327') || contains(ratID, 'R0411') || contains(ratID, 'R0420') % the first style it wouldn't skip these sessions so trying it as the 'intan' name instead of just the rawdata folder name.
+        if  contains(ratID, 'R0328') || contains(ratID, 'R0327') || contains(ratID, 'R0411') || contains(ratID, 'R0456') % the first style it wouldn't skip these sessions so trying it as the 'intan' name instead of just the rawdata folder name.
              continue;  % R0328 has no actual ephys; using these lines to skip unneeded data. R0327 Can't create trials struct; R0420 I haven't added lines for
         end
 
@@ -142,10 +143,10 @@ for i_rat = 1 : length(rats_with_intan_sessions)
             % existing at this point in analysis would be rare but putting in
             % as a catch here)
 
-        trials_structure = [parentFolder(1:end-9) 'LFP-trials-structures'];
-            if ~exist(trials_structure, 'dir')
-                mkdir(trials_structure);
-            end 
+%         trials_structure = [parentFolder(1:end-9) 'LFP-trials-structures'];
+%             if ~exist(trials_structure, 'dir')
+%                 mkdir(trials_structure);
+%             end 
 
         trials_structure_plots = [parentFolder(1:end-9) 'LFP-trials-structures-graphs'];
             if ~exist(trials_structure_plots, 'dir')
@@ -245,7 +246,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                    
 %                    % create a filename to save the trials_structure 
                    trials_fname_to_save = char(strcat(session_name, '_', eventFieldnames{i_event}, '_', trialType, '_', 'trials', '.mat')); % add in ''_', sprintf('trial%u.pdf', trial_idx)' should you want to save files individually
-                   trials_full_name = fullfile(trials_structure, trials_fname_to_save);
+                   trials_full_name = fullfile(session_trials_folder, trials_fname_to_save);
                    
 
 %                    if exist(trials_full_name, 'file')

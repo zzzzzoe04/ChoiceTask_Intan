@@ -77,7 +77,7 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         for i_trialsfolder = 1:length(session_trials_struct_folders)
           
             session_trials_structure = fullfile(intan_choicetask_parent, ratID, [ratID '-LFP-trials-structures'], session_name);
-            session_trials = find_session_log(session_trials_structure);
+            session_trials = find_trials_mat(session_trials_struct_folders);
             trials_structure_file = dir(fullfile(session_trials, '**', '*_trials.mat'));
             trials_structure_fname = fullfile(trials_structure_file.folder, trials_structure_file.name); 
             trials_structure = load(trials_structure_fname);

@@ -23,11 +23,11 @@ sessions_to_ignore = {'R0378_20210507a', 'R0425_20220728a', 'R0427_20220920a'}; 
 for i_ratfolder = 1 : length(valid_rat_folders)
     
     session_folders = valid_rat_folders(i_ratfolder).processed_folders;
-    
+
     for i_sessionfolder = 1 : length(session_folders)
     % extract the ratID and session name from the LFP file
-        session_path = session_folders{i_sessionfolder};
-        pd_processed_data = parse_processed_folder(session_path);
+        session_path_processed = session_folders{i_sessionfolder};
+        pd_processed_data = parse_processed_folder(session_path_processed);
         ratID = pd_processed_data.ratID;
         session_name = pd_processed_data.session_name;
              
@@ -45,16 +45,16 @@ for i_ratfolder = 1 : length(valid_rat_folders)
 
         % create filenames to hold mono- and diff-LFPs
         power_fn = [session_name, '_monopolarpower.mat'];
-        power_fn = fullfile(session_path, power_fn);
+        power_fn = fullfile(session_path_processed, power_fn);
         
         diff_power_fn = [session_name, '_diffpower.mat'];
-        diff_power_fn = fullfile(session_path, diff_power_fn);
+        diff_power_fn = fullfile(session_path_processed, diff_power_fn);
 
         % Might be good to add a check here to see if mono_power_fn and/or diff_power_fn
         % exists, if exists skip reading in the data to save time.
  
-        lfp_file = dir(fullfile(session_path, '**', '*_lfp.mat'));
-        cd(session_path);
+        lfp_file = dir(fullfile(session_path_processed, '**', '*_lfp.mat'));
+        cd(session_path_processed);
         % lfp = load(lfp_fname.name); % I think the lfp needs to be loaded
         % in the lfp_NNsite_order script in the next line of this fxn.
        
