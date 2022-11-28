@@ -1,6 +1,8 @@
 function trials_structure_fname = find_trials_mat(session_folder)
 
-trials_struct_files = dir(fullfile(session_folder, '_trials.mat'));
+% This function has NOT been validated
+
+trials_struct_files = dir(fullfile(session_folder, '*.mat'));
 
 if isempty(trials_struct_files)
     trials_structure_fname = '';

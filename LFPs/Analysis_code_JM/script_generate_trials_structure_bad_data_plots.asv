@@ -82,9 +82,9 @@ for i_rat = 1 : length(rats_with_intan_sessions)
 %          end
 
 
-%         if contains(ratID, NN8x8)|| contains(ratID, ASSY156)|| contains(ratID, 'R0420')|| contains(ratID, 'R0425')
-%             continue;
-%         end
+        if contains(ratID, NN8x8)|| contains(ratID, ASSY156)|| contains(ratID, 'R0420')|| contains(ratID, 'R0425')
+            continue;
+        end
 
         if  contains(ratID, 'R0328') || contains(ratID, 'R0327') || contains(ratID, 'R0411') || contains(ratID, 'R0456') % the first style it wouldn't skip these sessions so trying it as the 'intan' name instead of just the rawdata folder name.
              continue;  % R0328 has no actual ephys; using these lines to skip unneeded data. R0327 Can't create trials struct; R0420 I haven't added lines for
@@ -324,7 +324,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                                     plot_color = 'b'; % catch in case the data was not input into the structure
                             end
                     
-                            plot_channel_lfps = plot(t, channel_lfps(i_row, :), plot_color); % change to log10 -- plot(f, 10*log10(power_lfps(:,1)))
+                            plot_channel_lfps = plot(channel_lfps(i_row, :), plot_color); % change to log10 -- plot(f, 10*log10(power_lfps(:,1)))
                             set(gca, 'ylim',y_lim);
                             grid on
                             
