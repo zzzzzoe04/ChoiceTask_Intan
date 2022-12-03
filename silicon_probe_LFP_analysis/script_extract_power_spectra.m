@@ -4,6 +4,7 @@ intan_choicetask_parent = 'X:\Neuro-Leventhal\data\ChoiceTask';
 
 % loop through all the processed data folders here, load the lfp file
 valid_rat_folders = find_processed_folders(intan_choicetask_parent);
+valid_trials_folder = find_trials_struct_folders(intan_choicetask_parent);
 
 %%
 % probe_type = 'NN8x8'; % Need to edit this to reflect different probe types per ratID

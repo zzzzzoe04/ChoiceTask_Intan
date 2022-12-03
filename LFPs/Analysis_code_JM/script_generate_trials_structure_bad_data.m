@@ -82,9 +82,9 @@ for i_rat = 1 : length(rats_with_intan_sessions)
 %          end
 
 
-        if contains(ratID, NN8x8)|| contains(ratID, ASSY156)|| contains(ratID, 'R0420')|| contains(ratID, 'R0425')
-            continue;
-        end
+%         if contains(ratID, NN8x8)|| contains(ratID, ASSY156)|| contains(ratID, 'R0420')|| contains(ratID, 'R0425')
+%             continue;
+%         end
 
         if  contains(ratID, 'R0328') || contains(ratID, 'R0327') || contains(ratID, 'R0411') || contains(ratID, 'R0456') % the first style it wouldn't skip these sessions so trying it as the 'intan' name instead of just the rawdata folder name.
              continue;  % R0328 has no actual ephys; using these lines to skip unneeded data. R0327 Can't create trials struct; R0420 I haven't added lines for
@@ -138,10 +138,6 @@ for i_rat = 1 : length(rats_with_intan_sessions)
 
         probe_channel_info = load_channel_information(fname, sheetname);
         [channel_information, intan_site_order, site_order] = channel_by_probe_site_ALL(probe_channel_info, probe_type);
-
-        % Create Processed_graphFolder if it doesn't exist (the folder not
-            % existing at this point in analysis would be rare but putting in
-            % as a catch here)
 
 %         trials_structure = [parentFolder(1:end-9) 'LFP-trials-structures'];
 %             if ~exist(trials_structure, 'dir')
@@ -284,110 +280,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
 %                      num_trials = size(event_triggered_lfps, 1);
 %                     
                     % catch for num_trials_to_plot < num_trials (this is specifically for R0420_20220714 since it did only 3 trials so can't graph 5 random trials).
-                    if num_trials < num_trials_to_plot
-                        continue;
-                    end
                     
-                    % select trials for plotting at random
-                    trial_idx_to_plot = randperm(num_trials, num_trials_to_plot); % create a catch if num_trials_to_plot < num_trials, continue.                   
-
-                    for i_trial = 1:num_trials_to_plot
-                    trial_idx = trial_idx_to_plot(i_trial);
-                    channel_lfps = squeeze(event_triggered_lfps(trial_idx,:, :)); 
-                        % trials, create a 64channel graph for each trial?
-                    
-                        % Plot the data
-                        figure;
-                        num_rows = size(event_triggered_lfps,2);
-                        LFPs_per_shank = num_rows/ 8;   % will be 8 for 64 channels, 7 for 56 channels (diff)
-                        for i_row = 1 : num_rows
-                    
-                            y_lim = [-1500, 1500];
-                            plot_col = ceil(i_row / LFPs_per_shank);
-                            plot_row = i_row - LFPs_per_shank * (plot_col-1);
-                            plot_num = (plot_row-1) * 8 + plot_col;
-                    
-                            subplot(LFPs_per_shank,8,plot_num);
-                            
-                            % sue the trials structure data
-                            % (trials_validchannels_marked.is_channel_valid_ordered)
-                            % to color the actual plots based on good or
-                            % bad sites above the specified threshold (1500mV, check the script to verify)
-%                             switch trials_validchannels_marked(i_trial).is_channel_valid_ordered(i_row) 
-                            switch trials_validchannels_marked(trial_idx).is_channel_valid_ordered(i_row) 
-                                % make sure is_valid_lfp is a boolean with true if it's a good channel; make sure this is in the same order as channel_lfps
-                                case 0
-                                    plot_color = 'r'; % marks bad channels within specified trial
-                                case 1
-                                    plot_color = 'k'; % marks good channels within specified trial
-                                otherwise
-                                    plot_color = 'b'; % catch in case the data was not input into the structure
-                            end
-                    
-                            plot_channel_lfps = plot(channel_lfps(i_row, :), plot_color); % change to log10 -- plot(f, 10*log10(power_lfps(:,1)))
-                            set(gca, 'ylim',y_lim);
-                            grid on
-                            
-                            % give titles to each subplot
-                            if contains(ratID, NN8x8) % if the ratID is in the list, it'll assign it the correct probe_type for ordering the LFP data correctly
-                                caption = sprintf('NN8x8 #%d', site_order(i_row));
-                            elseif contains(ratID, ASSY156)
-                                caption = sprintf('ASSY156 #%d', site_order(i_row));
-                            elseif contains(ratID, ASSY236)
-                                caption = sprintf('ASSY236 #%d', site_order(i_row));
-                            end 
-                            title(caption, 'FontSize', 8);
-                    
-                            if plot_row < LFPs_per_shank
-                                set(gca,'xticklabels',[])
-                            end
-                    
-                            if plot_col > 1
-                                set(gca,'yticklabels',[])
-                            end
-                    
-                            ax = gca;
-                            % This section is coded to color the axes of
-                            % the plots when checking the amplifier.dat
-                            % files 'by eye' using Neuroscope
-                            switch valid_sites_reordered(i_row)   % make sure is_valid_lfp is a boolean with true if it's a good channel; make sure this is in the same order as channel_lfps
-                                case 0
-                                    ax.XColor = 'r'; % Red % marks bad channels within specified trial
-                                    ax.YColor = 'r'; % Red
-                                    % ax.ylabel = 'k';
-                                case 1
-                                    ax.XColor = 'k'; % black % marks good channels within specified trial
-                                    ax.YColor = 'k'; % black
-                                    % ax.ylabel = 'k';
-                                case 2
-                                    ax.XColor = 'b'; % blue % marks channels as 'variable' and could be good for portions of the whole amplifier.dat file but bad for others. Thus some channels may be good for only some trials, not all.
-                                    ax.YColor = 'b';
-                                    % ax.ylabel = 'k';
-                                otherwise
-                                    ax.XColor = 'b'; % blue % catch in case the data was not input into the structure
-                                    ax.YColor = 'b';
-                                    %  ax.ylabel = 'k';
-                            end
-                        end
-                            set(gcf, 'WindowState', 'maximize'); % maximizes the window so that it exports the graphics with appropriate font size
-                            
-                            % Gives the whole plot page a name
-                             A=cell(1,5);
-                             A{1} = ['Subject: ' ratID];
-                             A{2} = ['Session: ' session_name];
-                             A{3} = ['Task Level: ' choiceRTdifficulty{logData.taskLevel+1}];
-                             A{4} = ['Trial Number: ' num2str(trial_idx)];
-                             A{5} = ['EventFieldname and Trial Type: ' eventFieldnames{i_event} '_' trialType];
-                            
-                            sgtitle(A, 'Interpreter','none');
-                            
-                            if i_trial == 1
-                                exportgraphics(gcf, trials_plot_full_name);
-                            else
-                                exportgraphics(gcf, trials_plot_full_name, 'append', true);   %ADD APPEND FLAG HERE
-                            end
-                            close; 
-                    end
         end
      end
 end

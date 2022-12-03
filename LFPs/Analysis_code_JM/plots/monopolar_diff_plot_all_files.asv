@@ -148,41 +148,59 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         num_rows = size(power_lfps,1); % for now, skipping R0378_20210507a because the session only recorded 63 channels instead of 64. Need to rewrite lfp_NNsite_order and diff functions to fix this issue by determining which channel was not recorded. 
         
         if contains(ratID, NN8x8)
-            probe_type = 'NN8x8';
+            probe_type = 'NN8x8'
             probe_channel_info = load_channel_information(fname, sheetname);
             [channel_information, intan_site_order, site_order] = channel_by_probe_site_ALL(probe_channel_info, probe_type);
             valid_sites_reordered = channel_information.(session_name);
-        elseif contains(ratID, ASSY156)
-            probe_type = 'ASSY156';
-            probe_channel_info = load_channel_information(fname, sheetname);
-            [channel_information, intan_site_order, site_order] = channel_by_probe_site_ALL(probe_channel_info, probe_type);
-            valid_sites_reordered = channel_information.(session_name);
-        elseif contains(ratID, ASSY236)
-            probe_type = 'ASSY236'
-            probe_channel_info = load_channel_information(fname, sheetname);
-            [channel_information, intan_site_order, site_order] = channel_by_probe_site_ALL(probe_channel_info, probe_type);
-            valid_sites_reordered = channel_information.(session_name);
-        end
+        elsi
 
         % The actual plot section
         
         if contains(ratID, NN8x8)
             probe_type = 'NN8x8';
-            plot_monopolar = plot_monopolar_power_single_plot_NNsite(power_lfps_fname, valid_sites_reordered);   % include info for making a title, etc. in the single_plot function
+
+            probe_channel_info = load_channel_information(fname, sheetname);
+            [channel_information, intan_site_order, site_order] = channel_by_probe_site_ALL(probe_channel_info, probe_type);
+            valid_sites_reordered = channel_information.(session_name);
+
+            ax = gca;
+            % This section is coded to color the axes of
+            % the plots when checking the amplifier.dat
+            % files 'by eye' using Neuroscope
+            switch valid_sites_reordered   % make sure is_valid_lfp is a boolean with true if it's a good channel; make sure this is in the same order as channel_lfps
+                case 0
+                    ax.XColor = 'r'; % Red % marks bad channels within specified trial
+                    ax.YColor = 'r'; % Red
+                    % ax.ylabel = 'k';
+                case 1
+                    ax.XColor = 'k'; % black % marks good channels within specified trial
+                    ax.YColor = 'k'; % black
+                    % ax.ylabel = 'k';
+                case 2
+                    ax.XColor = 'b'; % blue % marks channels as 'variable' and could be good for portions of the whole amplifier.dat file but bad for others. Thus some channels may be good for only some trials, not all.
+                    ax.YColor = 'b';
+                    % ax.ylabel = 'k';
+                otherwise
+                    ax.XColor = 'b'; % blue % catch in case the data was not input into the structure
+                    ax.YColor = 'b';
+                    %  ax.ylabel = 'k';
+            end
+
+            plot_monopolar = plot_monopolar_power_single_plot_NNsite(power_lfps_fname);   % include info for making a title, etc. in the single_plot function
             sgtitle(A, 'Interpreter','none'); % 'Interpreter', 'none'  --- allows the title to have an underscore instead of a subscript
             set(gcf, 'WindowState', 'maximize'); % maximizes the window so that it exports the graphics with appropriate font size
             exportgraphics(gcf, mono_power_plot);
             close;
         elseif contains(ratID, ASSY156)
             probe_type = 'ASSY156';
-            plot_monopolar = plot_monopolar_power_single_plot_ASSY156(power_lfps_fname, valid_sites_reordered);  % include info for making a title, etc. in the single_plot function
+            plot_monopolar = plot_monopolar_power_single_plot_ASSY156(power_lfps_fname);  % include info for making a title, etc. in the single_plot function
             sgtitle(A, 'Interpreter','none'); % 'Interpreter', 'none'  --- allows the title to have an underscore instead of a subscript
             set(gcf, 'WindowState', 'maximize'); % maximizes the window so that it exports the graphics with appropriate font size
             exportgraphics(gcf, mono_power_plot);
             close;
         elseif contains(ratID, ASSY236)
             probe_type = 'ASSY236';
-            plot_monopolar = plot_monopolar_power_single_plot_ASSY236(power_lfps_fname, valid_sites_reordered);   % include info for making a title, etc. in the single_plot function
+            plot_monopolar = plot_monopolar_power_single_plot_ASSY236(power_lfps_fname);   % include info for making a title, etc. in the single_plot function
             sgtitle(A, 'Interpreter','none'); % 'Interpreter', 'none'  --- allows the title to have an underscore instead of a subscript
             set(gcf, 'WindowState', 'maximize'); % maximizes the window so that it exports the graphics with appropriate font size
             exportgraphics(gcf, mono_power_plot);
@@ -204,19 +222,19 @@ for i_ratfolder = 1 : length(valid_rat_folders)
 
         % The actual plot section
         if contains(ratID, NN8x8)
-            plot_diff = plot_diff_power_single_plot_NNsite(power_lfps_diff_fname, valid_sites_reordered);
+            plot_diff = plot_diff_power_single_plot_NNsite(power_lfps_diff_fname);
             set(gcf, 'WindowState', 'maximize'); % maximizes the window so that it exports the graphics with appropriate font size
             sgtitle(A, 'Interpreter','none');
             exportgraphics(gcf, diff_power_plot);
             close;
         elseif contains(ratID, ASSY156)
-            plot_diff = plot_diff_power_single_plot_Cambridge(power_lfps_diff_fname, valid_sites_reordered);
+            plot_diff = plot_diff_power_single_plot_Cambridge(power_lfps_diff_fname);
             set(gcf, 'WindowState', 'maximize'); % maximizes the window so that it exports the graphics with appropriate font size
             sgtitle(A, 'Interpreter','none');
             exportgraphics(gcf, diff_power_plot);
             close;
         elseif contains(ratID, ASSY236)
-            plot_diff = plot_diff_power_single_plot_Cambridge(power_lfps_diff_fname, valid_sites_reordered);
+            plot_diff = plot_diff_power_single_plot_Cambridge(power_lfps_diff_fname);
             set(gcf, 'WindowState', 'maximize'); % maximizes the window so that it exports the graphics with appropriate font size
             sgtitle(A, 'Interpreter','none');
             exportgraphics(gcf, diff_power_plot);

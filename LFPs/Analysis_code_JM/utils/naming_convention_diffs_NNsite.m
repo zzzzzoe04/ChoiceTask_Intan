@@ -1,4 +1,4 @@
-NNsite_order_diffs_NNsite = [7, 6, 5, 4, 3, 2, 1,...%shank1
+NNsite_order_diffs = [7, 6, 5, 4, 3, 2, 1,...%shank1
             14, 13, 12, 11, 10, 9, 8,...%shank2 -- USE THIS FOR DIFFS
             21, 20, 19, 18, 17, 16, 15,...%shank3
             28, 27, 26, 25, 24, 23, 22,...%shank4

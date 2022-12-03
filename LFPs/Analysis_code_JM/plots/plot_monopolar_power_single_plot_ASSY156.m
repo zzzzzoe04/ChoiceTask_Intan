@@ -2,7 +2,7 @@
 % lfp_NNsite_order, NNsite_order = lfp_by_probe_site(lfp_fname, probe_type);
 % [power_lfps, f] = extract_power(LFP,Fs);
 
-function plot_monopolar = plot_monopolar_power_single_plot_ASSY156(power_lfps_fname)
+function plot_monopolar = plot_monopolar_power_single_plot_ASSY156(power_lfps_fname, valid_sites_reordered)
 
 % INPUTS
 %       monopolar_fname - filename of the file to plot
@@ -60,6 +60,30 @@ for i_row = 1 : num_rows
     plot_monopolar = plot(f, 10*log10(power_lfps(i_row, :))); % change to log10 -- plot(f, 10*log10(power_lfps(:,1)))
     set(gca,'xlim', x_lim, 'ylim',y_lim);
     grid on
+
+    ax = gca;
+    % This section is coded to color the axes of
+    % the plots when checking the amplifier.dat
+    % files 'by eye' using Neuroscope
+    switch valid_sites_reordered(i_row)   % make sure is_valid_lfp is a boolean with true if it's a good channel; make sure this is in the same order as channel_lfps
+        case 0
+            ax.XColor = 'r'; % Red % marks bad channels within specified trial
+            ax.YColor = 'r'; % Red
+            % ax.ylabel = 'k';
+        case 1
+            ax.XColor = 'k'; % black % marks good channels within specified trial
+            ax.YColor = 'k'; % black
+            % ax.ylabel = 'k';
+        case 2
+            ax.XColor = 'b'; % blue % marks channels as 'variable' and could be good for portions of the whole amplifier.dat file but bad for others. Thus some channels may be good for only some trials, not all.
+            ax.YColor = 'b';
+            % ax.ylabel = 'k';
+        otherwise
+            ax.XColor = 'b'; % blue % catch in case the data was not input into the structure
+            ax.YColor = 'b';
+            %  ax.ylabel = 'k';
+    end
+
     caption = sprintf('ASSY156 #%d', ASSY156_order(i_row)); % Make a catch so this doesn't need to be edited every graph
     title(caption, 'FontSize', 8);
     

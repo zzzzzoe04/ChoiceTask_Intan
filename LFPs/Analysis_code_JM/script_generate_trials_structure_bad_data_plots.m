@@ -139,10 +139,6 @@ for i_rat = 1 : length(rats_with_intan_sessions)
         probe_channel_info = load_channel_information(fname, sheetname);
         [channel_information, intan_site_order, site_order] = channel_by_probe_site_ALL(probe_channel_info, probe_type);
 
-        % Create Processed_graphFolder if it doesn't exist (the folder not
-            % existing at this point in analysis would be rare but putting in
-            % as a catch here)
-
 %         trials_structure = [parentFolder(1:end-9) 'LFP-trials-structures'];
 %             if ~exist(trials_structure, 'dir')
 %                 mkdir(trials_structure);
