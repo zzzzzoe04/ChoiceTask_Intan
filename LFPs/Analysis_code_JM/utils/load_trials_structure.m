@@ -1,27 +1,21 @@
 % script to load in trials structure
 intan_choicetask_parent = 'X:\Neuro-Leventhal\data\ChoiceTask';
 
-% loop through all the processed data folders here, load the lfp file
-valid_rat_folders = find_processed_folders(intan_choicetask_parent);
-rats_with_intan_sessions = find_rawdata_folders(intan_choicetask_parent);
 valid_trials_folder = find_trials_struct_folders(intan_choicetask_parent); % find the folders with the trials structures to lab each lfp with data calculated as 'bad'; % need to match this with the loaded in lfp data
 
 fname = 'X:\Neuro-Leventhal\data\ChoiceTask\Probe Histology Summary\Rat_Information_channels_to_discard.xlsx'; % for channels to ignore based on visualizing in Neuroscope etc
 
 %%
-for i_ratfolder = 1 : length(valid_rat_folders)
+for i_ratfolder = 1 : length(valid_trials_folder)
         
-    session_processed_folders = valid_rat_folders(i_ratfolder).processed_folders;
     session_trials_struct_folders = valid_trials_folder(i_ratfolder).trials_folders;
     
-    for i_sessionfolder = 1 : length(session_processed_folders)
+    for i_sessionfolder = 1 : length(session_trials_struct_folders)
         % extract the ratID and session name from the LFP file
             session_path = session_trials_struct_folders{i_sessionfolder};
-            pd_processed_data = parse_processed_folder(session_path);
-            ratID = pd_processed_data.ratID;
-            session_name = pd_processed_data.session_name;
-
-
+            pd_trials_data = parse_trials_struct_folder(session_path);
+            ratID = pd_trials_data.ratID;
+            session_name = pd_trials_data.session_name;
 
             % Load trials structure
         for i_trialsfolder = 1:length(session_trials_struct_folders)
