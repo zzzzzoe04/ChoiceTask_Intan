@@ -18,7 +18,7 @@ intan_choicetask_parent = 'X:\Neuro-Leventhal\data\ChoiceTask';
 % loop through all the processed data folders here, load the lfp file
 valid_rat_folders = find_processed_folders(intan_choicetask_parent);
 rats_with_intan_sessions = find_rawdata_folders(intan_choicetask_parent);
-valid_trials_folder = find_trials_struct_folders(intan_choicetask_parent); % find the folders with the trials structures to lab each lfp with data calculated as 'bad'; % need to match this with the loaded in lfp data
+
 
 %%
 
@@ -39,7 +39,7 @@ ASSY236 = ["R0420", "R0425", "R0427", "R0457"];
 
 fname = 'X:\Neuro-Leventhal\data\ChoiceTask\Probe Histology Summary\Rat_Information_channels_to_discard.xlsx'; % for channels to ignore based on visualizing in Neuroscope etc
 
-sessions_to_ignore = {'R0378_20210507a', 'R0326_20191107a', 'R0425_20220728a', 'R0425_20220816b', 'R0427_20220920a'};
+sessions_to_ignore = {'R0327_20191111a','R0327_20191015a','R0376_20210115a', 'R0378_20210507a', 'R0326_20191107a', 'R0425_20220728a', 'R0425_20220816b', 'R0427_20220920a'};
 sessions_to_ignore1 = {'R0425_20220728_ChVE_220728_112601', 'R0427_20220920_Testing_220920_150255'}; 
 sessions_to_ignore2 = {'R0427_20220908a', 'R0427_20220909a', 'R0427_20220912a','R0427_20220913a', 'R0427_20220914a', 'R0427_20220915a', 'R0427_20220916a'};
 % Trying this as a workaround. Code wouldn't skip these two trials. R0425 - 15 hour session and R0427 no data (files didn't save correctly)?
@@ -47,8 +47,7 @@ sessions_to_ignore2 = {'R0427_20220908a', 'R0427_20220909a', 'R0427_20220912a','
 for i_ratfolder = 1 : length(valid_rat_folders)
     
     session_processed_folders = valid_rat_folders(i_ratfolder).processed_folders;
-    session_trials_struct_folders = valid_trials_folder(i_ratfolder).trials_folders;
-
+    
     for i_sessionfolder = 1 : length(session_processed_folders)
     % extract the ratID and session name from the LFP file
         session_path = session_processed_folders{i_sessionfolder};
@@ -56,8 +55,16 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         ratID = pd_processed_data.ratID;
         session_name = pd_processed_data.session_name;
         
-        if any(strcmp(session_name, sessions_to_ignore))
+        if any(strcmp(session_name, sessions_to_ignore)) 
             continue;
+        end
+
+        if  contains(ratID, 'R0328') || contains(ratID, 'R0326') || contains(ratID, 'R0327') || contains(ratID, 'R0411') % skip over 326 and 327 since they're done with updated images
+             continue;  % R0328 has no actual ephys; using these lines to skip unneeded data. R0327 Can't create trials struct; R0420 I haven't added lines for
+        end
+
+        if contains(ratID, NN8x8) % just trying to skip some lines of data to get to the last set to debug. Uncomment out to run more trialTypes
+             continue;
         end
 
         parentFolder = fullfile(intan_choicetask_parent, ...
@@ -72,16 +79,6 @@ for i_ratfolder = 1 : length(valid_rat_folders)
         session_log = find_session_log(session_rawfolder);
         logData = readLogData(session_log);
         A{3} = ['Task Level: ' choiceRTdifficulty{logData.taskLevel+1}]; 
-
-        % Load trials structure
-        for i_trialsfolder = 1:length(session_trials_struct_folders)
-            session_trials_structure = fullfile(intan_choicetask_parent, ratID, [ratID '-LFP-trials-structures'], session_name);
-            session_trials = find_trials_mat(session_trials_structure);
-            trials_structure_file = dir(fullfile(session_trials));
-            trials_structure_fname = fullfile(trials_structure_file.folder, trials_structure_file.name); 
-            trials_structure = load(trials_structure_fname);
-            trials_validchannels_marked = trials_structure.trials_validchannels_marked;
-        end
 
         % load_channel_information - this file is coded 0 = bad, 1 = good,
         % 2 = variable for data in each channel for each session_name for
@@ -158,7 +155,7 @@ for i_ratfolder = 1 : length(valid_rat_folders)
             [channel_information, intan_site_order, site_order] = channel_by_probe_site_ALL(probe_channel_info, probe_type);
             valid_sites_reordered = channel_information.(session_name);
         elseif contains(ratID, ASSY236)
-            probe_type = 'ASSY236'
+            probe_type = 'ASSY236';
             probe_channel_info = load_channel_information(fname, sheetname);
             [channel_information, intan_site_order, site_order] = channel_by_probe_site_ALL(probe_channel_info, probe_type);
             valid_sites_reordered = channel_information.(session_name);

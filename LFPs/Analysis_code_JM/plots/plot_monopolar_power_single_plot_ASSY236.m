@@ -2,7 +2,7 @@
 % lfp_NNsite_order, NNsite_order = lfp_by_probe_site(lfp_fname, probe_type);
 % [power_lfps, f] = extract_power(LFP,Fs);
 
-function plot_monopolar = plot_monopolar_power_single_plot_ASSY236(power_lfps_fname)
+function plot_monopolar = plot_monopolar_power_single_plot_ASSY236(power_lfps_fname, valid_sites_reordered)
 
 % INPUTS
 %       monopolar_fname - filename of the file to plot
