@@ -1,0 +1,10 @@
+% script to calculate scalograms for all of Jen's rats; store in files in
+% the processed data folders
+
+parent_directory = 'Z:\data\ChoiceTask\';
+
+[rat_nums, ratIDs, ratIDs_goodhisto] = get_rat_list();
+
+rat_folders = dir(fullfile(parent_directory, 'R*'));
+
+num_rat_fo

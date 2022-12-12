@@ -1,0 +1,45 @@
+function session_path = find_rawdata_folder(input1, varargin)
+%UNTITLED Summary of this function goes here
+%   Detailed explanation goes here
+
+parent_directory = 'Z:\data\ChoiceTask';
+
+if nargin == 1
+    % assume the full session name was given - i.e., 'RXXXX_YYYYMMDDz'
+
+    str_parts = split(input1, '_');
+    ratID = str_parts{1};
+
+    
+    rat_rd_folder = find_rat_rawdata_folder(rat_folder);
+
+    if isfolder(fullfile(rat_rd_folder, input1))
+        session_path = fullfile(rat_rd_folder, input1);
+    else
+        session_path = '';
+    end
+
+    return
+
+elseif nargin == 2
+    % assume the first argument is the rat number or ratID, the second
+    % argument is the date string or date (if date, assume it's session a)
+
+    if isinteger(input1)
+        ratID = sprintf('R%04d', input1);
+    elseif ischar(input1)
+        ratID = input1;
+    end
+
+    end
+
+end
+
+function rat_rd_folder = find_rat_rawdata_folder(ratID)
+
+rat_folder = fullfile(parent_directory, ratID);
+
+[~, ratID, ~] = fileparts(rat_folder);
+rat_rd_folder = fullfile(rat_folder, strcat(ratID, '-rawdata'));
+
+end
