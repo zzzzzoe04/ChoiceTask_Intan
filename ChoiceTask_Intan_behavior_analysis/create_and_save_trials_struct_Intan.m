@@ -28,7 +28,7 @@ for i_rat = 1 : num_rats
         
         session_name = session_dirs(i_session).name;
         cur_processed_dir = fullfile(session_dirs(i_session).folder, session_name);
-        cur_rawdata_dir = fullfile(rawdata_folder, ratID, session_name);
+        cur_rawdata_dir = fullfile(rawdata_folder, session_name);
         cd(cur_processed_dir)
 
         lfp_fname = strcat(session_name, '_lfp.mat');
