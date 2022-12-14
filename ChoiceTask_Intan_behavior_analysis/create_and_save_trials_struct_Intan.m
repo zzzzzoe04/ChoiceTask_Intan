@@ -36,6 +36,9 @@ for i_rat = 1 : num_rats
             sprintf('%s not found, skipping', lfp_file)
             continue
         end
+        rawdata_ephys_folder = get_rawdata_ephys_folder(rawdata_folder,session_name)
+%         rawdata_ephys_folder = fullfile(rawdata_folder, session_name);
+        nexData = extractEventsFromIntanSystem(rawdata_ephys_folder);
 
     end
 
