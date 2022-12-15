@@ -72,10 +72,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
             continue;
         end        
         
-%          if contains(ratID, NN8x8) || contains(ratID, ASSY156) % just trying to skip some lines of data to get to the last set to debug. Uncomment out to run more trialTypes
-%              continue;
-%          end
-         
+       
 %          if contains(ratID, 'R0326') || contains(ratID, 'R0372') || contains(ratID, 'R0376')...
 %                  || contains(ratID, 'R0374') || contains(ratID, 'R0378') || contains(ratID, 'R0379') % just trying to skip some lines of data to get to the last set to debug. Uncomment out to run more trialTypes
 %              continue;

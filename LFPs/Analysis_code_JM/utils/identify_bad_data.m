@@ -27,7 +27,7 @@ Fs = lfp_data.actual_Fs;
 
 lfp = lfp_data.lfp;
 
-outlier_thresh = 1500;    % in mV
+outlier_thresh = 2000;    % in mV
 t_win = [-2.5 5];
 
 % eventFieldnames = {'cueOn'};

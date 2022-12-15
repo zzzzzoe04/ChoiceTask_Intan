@@ -298,7 +298,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                         LFPs_per_shank = num_rows/ 8;   % will be 8 for 64 channels, 7 for 56 channels (diff)
                         for i_row = 1 : num_rows
                     
-                            y_lim = [-1500, 1500];
+                            y_lim = [-2500, 2500];
                             plot_col = ceil(i_row / LFPs_per_shank);
                             plot_row = i_row - LFPs_per_shank * (plot_col-1);
                             plot_num = (plot_row-1) * 8 + plot_col;
