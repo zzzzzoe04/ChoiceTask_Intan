@@ -39,8 +39,8 @@ for i_rat = 1 : num_rats
 
         trials_name = sprintf('%s_trials.mat', session_name);
         trials_name = fullfile(cur_processed_dir, trials_name);
-        if exist(trials_name, 'file')
-            % skip if already calculated
+        if exist(trial_name, 'file')
+            
             continue
         end
 
@@ -54,7 +54,7 @@ for i_rat = 1 : num_rats
 
         trials = createTrialsStruct_simpleChoice_Intan( logData, nexData );
 
-        save(trials_name, 'trials');
+        
 
     end
 
