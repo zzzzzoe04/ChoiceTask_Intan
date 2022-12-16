@@ -45,8 +45,22 @@ for i_rat = 1 : num_rats
         end
 
         rawdata_ephys_folder = get_rawdata_ephys_folder(rawdata_folder,session_name);
-        nexData = extractEventsFromIntanSystem(rawdata_ephys_folder);
+        % check that the digitalIn file exists - was missing from some
+        % early sessions
+        digitalin_fname = fullfile(rawdata_ephys_folder, 'digitalin.dat');
+        if ~exist(digitalin_fname, 'file')
+            sprintf('no digital input file found for %s', session_name)
+            continue
+        end
 
+        nexData = extractEventsFromIntanSystem(rawdata_ephys_folder);
+        if isempty(nexData)
+            % something was wrong with the analog/digital input files from
+            % the intan system
+            sprintf('nexData could not be generated for %s', session_name)
+            continue
+        end
+        
         log_file = find_log_file(session_name, parent_directory);
         logData = readLogData(log_file);
 

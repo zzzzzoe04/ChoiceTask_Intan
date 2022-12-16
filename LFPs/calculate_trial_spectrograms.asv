@@ -52,9 +52,7 @@ for i_rat = 1 : num_rats
         trials_name = fullfile(cur_dir, trials_name);
 
         if ~exist(trials_name)
-            sprintf('no trials structure found for %s', session_name)
-            continue
-        end
+            sprintf('no trials structure fo')
 
     end
 
