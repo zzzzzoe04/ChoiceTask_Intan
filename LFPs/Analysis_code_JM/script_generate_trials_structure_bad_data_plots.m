@@ -4,6 +4,8 @@
 
 intan_parent_directory = 'X:\Neuro-Leventhal\data\ChoiceTask';
 rats_with_intan_sessions = find_rawdata_folders(intan_parent_directory);
+valid_trials_folder = find_trials_struct_folders(intan_parent_directory); % find the folders with the trials structures to lab each lfp with data calculated as 'bad'; % need to match this with the loaded in lfp data
+
 
 %%
 fname = 'X:\Neuro-Leventhal\data\ChoiceTask\Probe Histology Summary\Rat_Information_channels_to_discard.xlsx'; % for channels to ignore based on visualizing in Neuroscope etc
@@ -144,12 +146,14 @@ for i_rat = 1 : length(rats_with_intan_sessions)
 %                 mkdir(trials_structure);
 %             end 
 
+        % Graphs in this folder are WITH calculating an outlier threshold.
         trials_structure_plots = [parentFolder(1:end-9) 'LFP-trials-structures-graphs'];
             if ~exist(trials_structure_plots, 'dir')
                 mkdir(trials_structure_plots);
             end 
         
-        processed_graphFolder_LFP_eventFieldname = [parentFolder(1:end-9) 'LFP-eventFieldname-graphs'];
+        % Graphs in this folder are grandfathered in BEFORE I calculated a specific outlier threshold and just using by eye on Neuroscope.
+        processed_graphFolder_LFP_eventFieldname = [parentFolder(1:end-9) 'LFP-eventFieldname-graphs']; 
             if ~exist(processed_graphFolder_LFP_eventFieldname, 'dir')
                 mkdir(processed_graphFolder_LFP_eventFieldname);
             end
@@ -161,7 +165,9 @@ for i_rat = 1 : length(rats_with_intan_sessions)
             sprintf('no log file found for %s', session_folder)
         end
 
-        logData = readLogData(session_log); %gathersing logData information
+        
+        % Start of generation of trials structure
+        logData = readLogData(session_log); %gathering logData information
         
         % calculate nexData, need digital input and analog input files
         digin_fname = fullfile(intan_folders{i_sessionfolder}, 'digitalin.dat');
@@ -203,7 +209,9 @@ for i_rat = 1 : length(rats_with_intan_sessions)
             sprintf('could not generate trials structure for %s', session_folder)
             continue
         end
-        
+        % End of calculating trials structure (original without threshold info)
+       
+
         % extract Trial Type (e.g. correctGo)
         % Set trialType at beginning of file
         [ trialEventParams ] = getTrialEventParams(trialType); % Need to verify this section. Working Here
@@ -244,10 +252,6 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                    trials_fname_to_save = char(strcat(session_name, '_', eventFieldnames{i_event}, '_', trialType, '_', 'trials', '.mat')); % add in ''_', sprintf('trial%u.pdf', trial_idx)' should you want to save files individually
                    trials_full_name = fullfile(session_trials_folder, trials_fname_to_save);
                    
-
-%                    if exist(trials_full_name, 'file')
-%                         continue
-%                    end
 
                    % Cath for troubleshooting the data to NOT run through all of the folders and
                    % create the data if the plots are already made. This will not create 5 pages of 5 different random trials.
@@ -386,4 +390,5 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                     end
         end
      end
+
 end
