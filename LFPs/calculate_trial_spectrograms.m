@@ -88,11 +88,14 @@ for i_rat = 1 : num_rats
 
             scalo_folder = sprintf('%s_scalos_%s', session_name, event_name);
             scalo_folder = fullfile(cur_dir, scalo_folder);
+            if ~exist(scalo_folder, 'dir')
+                mkdir(scalo_folder)
+            end
     
             for i_channel = 1 : num_channels
                 [shank_num, site_num] = get_shank_and_site_num(probe_lfp_type, i_channel);
     
-                scalo_name = sprintf('%s_scalos_%s_sh%02d_site%02d.mat',session_name, event_name, shank_num, site_num);
+                scalo_name = sprintf('%s_scalos_%s_shank%02d_site%02d.mat',session_name, event_name, shank_num, site_num);
                 scalo_name = fullfile(scalo_folder, scalo_name);
     
                 if exist(scalo_name, 'file')
