@@ -41,6 +41,7 @@ for i_rat = 1 : num_rats
         trials_name = fullfile(cur_processed_dir, trials_name);
         if exist(trials_name, 'file')
             % skip if already calculated
+            sprintf('trials structure already calculated for %s', session_name)
             continue
         end
 
@@ -60,13 +61,20 @@ for i_rat = 1 : num_rats
             sprintf('nexData could not be generated for %s', session_name)
             continue
         end
-        
+
         log_file = find_log_file(session_name, parent_directory);
         logData = readLogData(log_file);
 
         sprintf('loaded logData and nexData for %s', session_name)
 
-        trials = createTrialsStruct_simpleChoice_Intan( logData, nexData );
+        try
+            trials = createTrialsStruct_simpleChoice_Intan( logData, nexData );
+        catch ME
+            if strcmp(ME.identifier, 'lognexmerge:lognexmismatch')
+                sprintf('mismatch between log and nex files for %s', session_name)
+                continue
+            end
+        end
 
         save(trials_name, 'trials');
 

@@ -52,7 +52,13 @@ for i_rat = 1 : num_rats
         trials_name = fullfile(cur_dir, trials_name);
 
         if ~exist(trials_name)
-            sprintf('no trials structure fo')
+            sprintf('no trials structure found for %s', session_name)
+            continue
+        end
+
+        load(trials_name)
+
+        extract_perievent_data(ephys_data, ts, t_window, Fs)
 
     end
 

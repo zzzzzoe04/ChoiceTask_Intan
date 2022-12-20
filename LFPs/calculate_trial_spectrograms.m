@@ -56,6 +56,11 @@ for i_rat = 1 : num_rats
             continue
         end
 
+        load(trials_name)
+        
+        selected_trials = 
+        extract_perievent_data(ephys_data, ts, t_window, Fs)
+
     end
 
 end
