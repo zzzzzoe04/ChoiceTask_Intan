@@ -1,7 +1,7 @@
-function valid_trials_folder = find_trials_struct_folders(intan_parent_directory)
+function valid_trials_original_folder = find_trials_struct_original_folders(intan_parent_directory)
 
 potential_rat_folders = dir(intan_parent_directory);
-valid_trials_folder = struct('name',[], 'trials_structure_folders', []);
+valid_trials_original_folder = struct('name',[], 'trials_structure_folders', []);
 
 num_valid_rat_folders = 0;
 for i_folder = 1 : length(potential_rat_folders)
@@ -23,7 +23,7 @@ for i_ratfolder = 1 : num_valid_rat_folders
     
     [root_path, cur_ratID, ext] = fileparts(rat_folders{i_ratfolder});
     
-    cur_trials_folder = fullfile(rat_folders{i_ratfolder}, strcat(cur_ratID, '-LFP-trials-structures'));
+    cur_trials_folder = fullfile(rat_folders{i_ratfolder}, strcat(cur_ratID, '-LFP-trials-structures-original'));
     
     if ~isfolder(cur_trials_folder)
         continue
@@ -70,8 +70,8 @@ for i_ratfolder = 1 : num_valid_rat_folders
     
     if found_trials_data
         num_rat_folders_with_trials_data = num_rat_folders_with_trials_data + 1;
-        valid_trials_folder(num_rat_folders_with_trials_data).name = rat_folders{i_ratfolder};
-        valid_trials_folder(num_rat_folders_with_trials_data).trials_folders = trials_datafolders;
+        valid_trials_original_folder(num_rat_folders_with_trials_data).name = rat_folders{i_ratfolder};
+        valid_trials_original_folder(num_rat_folders_with_trials_data).trials_folders = trials_datafolders;
     end
     
 end

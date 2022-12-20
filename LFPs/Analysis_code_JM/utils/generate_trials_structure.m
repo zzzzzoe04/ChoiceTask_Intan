@@ -78,6 +78,13 @@ for i_rat = 1 : length(rats_with_intan_sessions)
         [session_folder, ~, ~] = fileparts(intan_folders{i_sessionfolder});
         session_log = find_session_log(session_folder);
         
+        trials_fname_to_save = char(strcat(session_name, '_', 'trials', '.mat')); % add in ''_', sprintf('trial%u.pdf', trial_idx)' should you want to save files individually
+        trials_original_full_name = fullfile(session_trials_folder_original, trials_fname_to_save);
+        
+        if exist(trials_original_full_name, 'file')
+            continue;
+        end
+
         if isempty(session_log)
             sprintf('no log file found for %s', session_folder)
         end
@@ -125,8 +132,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
             continue
         end
 
-        trials_fname_to_save = char(strcat(session_name, '_', 'trials', '.mat')); % add in ''_', sprintf('trial%u.pdf', trial_idx)' should you want to save files individually
-        trials_original_full_name = fullfile(session_trials_folder_original, trials_fname_to_save);
+        
         save(trials_original_full_name, 'trials');
     end
 end
