@@ -12,7 +12,7 @@ trials_to_analyze = 'correct';
 lfp_type = 'monopolar';
 % trials_to_analyze = 'all';
 
-t_window = [-5, 5];
+t_window = [-2.5, 2.5];
 event_list = {'cueOn', 'centerIn', 'tone', 'centerOut' 'sideIn', 'sideOut', 'foodClick', 'foodRetrieval'};
 
 probe_type_sheet = 'probe_type';
@@ -37,6 +37,8 @@ for i_rat = 1 : num_rats
     session_dirs = dir(fullfile(processed_folder, strcat(ratID, '*')));
     num_sessions = length(session_dirs);
 
+    probe_lfp_type = sprintf('%s_%s', probe_type, lfp_type);
+
     for i_session = 1 : num_sessions
         
         session_name = session_dirs(i_session).name;
@@ -45,13 +47,20 @@ for i_rat = 1 : num_rats
 
         lfp_fname = strcat(session_name, '_lfp.mat');
         if ~isfile(lfp_fname)
-            sprintf('%s not found, skipping', lfp_file)
+            sprintf('%s not found, skipping', lfp_fname)
             continue
         end
 
         lfp_data = load(lfp_fname);
 
         Fs = lfp_data.actual_Fs;
+        samp_window = round(t_window * Fs);
+        samples_per_event = range(samp_window) + 1;
+        fb = cwtfilterbank('signallength', samples_per_event, ...
+                'samplingfrequency', Fs, ...
+                'wavelet','amor',...
+                'frequencylimits', [1, 100]);
+
         [ordered_lfp, intan_site_order, intan_site_order_for_trials_struct, site_order] = lfp_by_probe_site_ALL(lfp_data, probe_type);
         if strcmpi(lfp_type, 'bipolar')
             % CODE HERE TO EXTRACT BIPOLAR LFP
@@ -71,36 +80,33 @@ for i_rat = 1 : num_rats
         
         selected_trials = extract_trials_by_features(trials, trials_to_analyze);
 
-        event_name = event_list{4};
-        perievent_data = extract_perievent_data(ordered_lfp, selected_trials, event_list{4}, t_window, Fs);
+        for i_event = 1 : length(event_list)
+            event_name = event_list{i_event};
+            sprintf('working on session %s, event %s', session_name, event_name)
 
-        samples_per_event = size(perievent_data, 3);
-        fb = cwtfilterbank('signallength', samples_per_event, ...
-            'samplingfrequency', Fs, ...
-            'wavelet','amor',...
-            'frequencylimits', [1, 100]);
+            perievent_data = extract_perievent_data(ordered_lfp, selected_trials, event_list{4}, t_window, Fs);
 
-        for i_channel = 1 : num_channels
-            [shank_num, site_num] = get_shank_and_site_num(i_channel);
             scalo_folder = sprintf('%s_scalos_%s', session_name, event_name);
             scalo_folder = fullfile(cur_dir, scalo_folder);
-            scalo_name = sprintf('%s_scalos_%s_sh%02d_site%02d.mat',session_name, event_name, shank_num, site_num);
-            scalo_name = fullfile(scalo_folder, scalo_name);
-
-            if exist(scalo_name, 'file')
-                continue
+    
+            for i_channel = 1 : num_channels
+                [shank_num, site_num] = get_shank_and_site_num(probe_lfp_type, i_channel);
+    
+                scalo_name = sprintf('%s_scalos_%s_sh%02d_site%02d.mat',session_name, event_name, shank_num, site_num);
+                scalo_name = fullfile(scalo_folder, scalo_name);
+    
+                if exist(scalo_name, 'file')
+                    continue
+                end
+    
+                event_triggered_lfps = squeeze(perievent_data(:, i_channel, :));
+    
+                [event_related_scalos, ~, coi] = trial_scalograms(event_triggered_lfps, fb);
+    
+                save(scalo_name, 'event_related_scalos', 'event_triggered_lfps', 'fb', 'coi', 't_window');
+    
             end
-
-            event_triggered_lfps = squeeze(perievent_data(:, i_channel, :));
-
-            tic
-            event_related_scalos = trial_scalograms(event_triggered_lfps, fb);
-            toc
-
-            save(scalo_name, 'event_related_scalos', 'fb');
-
         end
-
     end
 
 end
