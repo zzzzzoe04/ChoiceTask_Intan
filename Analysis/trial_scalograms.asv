@@ -1,4 +1,4 @@
-function event_related_scalos = trial_scalograms(event_triggered_lfps, fb)
+function event_related_scalos = trial_scalograms(event_triggered_lfps, Fs)
 %UNTITLED2 Summary of this function goes here
 % INPUTS
 %   event_triggered_lfps - num_trials x samples_per_event array
@@ -6,6 +6,11 @@ function event_related_scalos = trial_scalograms(event_triggered_lfps, fb)
 
 num_trials = size(event_triggered_lfps, 1);
 samples_per_event = size(event_triggered_lfps, 3);
+
+fb = cwtfilterbank('signallength', samples_per_event, ...
+    'samplingfrequency', Fs, ...
+    'wavelet','amor',...
+    'frequencylimits', [1, 100]);
 
 f = centerFrequencies(fb);
 num_freqs = length(f);

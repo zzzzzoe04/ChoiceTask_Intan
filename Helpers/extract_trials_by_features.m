@@ -1,7 +1,18 @@
 function [valid_trials, valid_trial_flags] = extract_trials_by_features(trials, trialfeatures)
 % INPUTS
 %   trials
-%   trialfeatures
+%   trialfeatures - string containing trial features to extract. If any of
+%       the following strings are containes in 'trialfeatures', the
+%       following will be extracted. Can do this in any combination
+%           'correct' - extracts correct trials
+%           'wrong' - extracts incorrect trials
+%           'moveright' - extracts trials in which rat moved right
+%           'moveleft' - extracts trials in which rat moved left
+%           'cuedleft' - extracts trials in which tone prompted rat to move
+%               left
+%           'cuedright' - extracts trials in which tone prompted rat to move
+%               right
+%           'falsestart' - extracts false start trials
 %   Detailed explanation goes here
 
 num_trials = length(trials);

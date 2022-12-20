@@ -6,6 +6,15 @@ summary_xls = 'ProbeSite_Mapping_MATLAB.xlsx';
 summary_xls_dir = 'Z:\data\ChoiceTask\Probe Histology Summary';
 summary_xls = fullfile(summary_xls_dir, summary_xls);
 
+% change the line below to allow looping through multiple trial types,
+% extract left vs right, etc.
+trials_to_analyze = 'correct';
+lfp_type = 'monopolar';
+% trials_to_analyze = 'all';
+
+t_window = [-5, 5];
+event_list = {'cueOn', 'centerIn', 'tone', 'centerOut' 'sideIn', 'sideOut', 'foodClick', 'foodRetrieval'};
+
 probe_type_sheet = 'probe_type';
 probe_types = read_Jen_xls_summary(summary_xls, probe_type_sheet);
 % NOTE - UPDATE FUNCTION read_Jen_xls_summary WHEN WE NEED OTHER
@@ -28,8 +37,6 @@ for i_rat = 1 : num_rats
     session_dirs = dir(fullfile(processed_folder, strcat(ratID, '*')));
     num_sessions = length(session_dirs);
 
-    % WORKING HERE-NOW LOOP THROUGH, ORGANIZE DATA, CALCULATE SCALOGRAMS
-
     for i_session = 1 : num_sessions
         
         session_name = session_dirs(i_session).name;
@@ -46,6 +53,10 @@ for i_rat = 1 : num_rats
 
         Fs = lfp_data.actual_Fs;
         [ordered_lfp, intan_site_order, intan_site_order_for_trials_struct, site_order] = lfp_by_probe_site_ALL(lfp_data, probe_type);
+        if strcmpi(lfp_type, 'bipolar')
+            % CODE HERE TO EXTRACT BIPOLAR LFP
+        end
+        num_channels = size(ordered_lfp, 1);
 
         % load trials structure
         trials_name = sprintf('%s_trials.mat', session_name);
@@ -57,8 +68,21 @@ for i_rat = 1 : num_rats
         end
 
         load(trials_name)
+        
+        selected_trials = extract_trials_by_features(trials, trials_to_analyze);
 
-        extract_perievent_data(ephys_data, ts, t_window, Fs)
+        event_name = event_list{4};
+        perievent_data = extract_perievent_data(ordered_lfp, selected_trials, event_list{4}, t_window, Fs);
+
+        for i_channel = 1 : num_channels
+            [shank_num, site_num] = get_shank_and_site_num(i_channel);
+            scalo_folder = sprintf('%s_scalos_%s', session_name, event_name);
+            scalo_folder = fullfile(cur_dir, scalo_folder);
+            scalo_name = sprintf('%s_scalos_%s  sh%02d', ...  , session_name, event_name, shank_num, site_num, 
+                sprintf('_sh%02d', shank_num), ...
+                sprintf('_site%02d', site_num), ...
+                sprintf('_%s', event_name);
+            scalo_name = fullfile(cur_dir, )
 
     end
 
