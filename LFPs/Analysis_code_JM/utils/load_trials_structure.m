@@ -3,8 +3,6 @@ intan_parent_directory = 'X:\Neuro-Leventhal\data\ChoiceTask';
 
 valid_trials_original_folder = find_trials_struct_original_folders(intan_parent_directory); % find the folders with the trials structures to lab each lfp with data calculated as 'bad'; % need to match this with the loaded in lfp data
 
-fname = 'X:\Neuro-Leventhal\data\ChoiceTask\Probe Histology Summary\Rat_Information_channels_to_discard.xlsx'; % for channels to ignore based on visualizing in Neuroscope etc
-
 %%
         for i_ratfolder = 1 : length(valid_trials_original_folder)
                 
@@ -24,7 +22,7 @@ fname = 'X:\Neuro-Leventhal\data\ChoiceTask\Probe Histology Summary\Rat_Informat
                     trials_structure_file = dir(fullfile(session_trials));
                     trials_structure_fname = fullfile(trials_structure_file.folder, trials_structure_file.name); 
                     trials_structure = load(trials_structure_fname);
-                    trials_validchannels_marked = trials_structure.trials_validchannels_marked;
+                    trials = trials_structure.trials;
                 end
             end
         end

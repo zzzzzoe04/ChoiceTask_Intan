@@ -60,32 +60,27 @@ choiceRTdifficulty{10} = 'testing';
        
 for i_ratfolder = 1 : length(valid_trials_original_folder)
                 
-    session_trials_struct_folders = valid_trials_original_folder(i_ratfolder).trials_folders;
-    intan_folders = rats_with_intan_sessions(i_ratfolder).intan_folders;
-
-    for i_session_folder = 1 : length(intan_folders)
+            session_trials_struct_folders = valid_trials_original_folder(i_ratfolder).trials_folders;
+            
+    for i_trials_folder = 1 : length(session_trials_struct_folders)
         % extract the ratID and session name from the LFP file
-            session_path = session_trials_struct_folders{i_session_folder};
-            rd_metadata = parse_rawdata_folder(intan_folders{i_session_folder});
-            session_trials_folder = create_trials_structure_data_folder(rd_metadata, intan_parent_directory);
+            session_path = session_trials_struct_folders{i_trials_folder};
             pd_trials_data = parse_trials_struct_folder(session_path);
             ratID = pd_trials_data.ratID;
-            intan_session_name = rd_metadata.session_name;
-            trial_session_name = pd_trials_data.session_name;
-            session_name = rd_metadata.session_name;
+            session_name = pd_trials_data.session_name;
 
             % Load trials structure
         for i_trialsfolder = 1:length(session_trials_struct_folders)
-            session_trials_structure = fullfile(intan_parent_directory, ratID, [ratID '-LFP-trials-structures-original'], trial_session_name);
+            session_trials_structure = fullfile(intan_parent_directory, ratID, [ratID '-LFP-trials-structures-original'], session_name);
             session_trials = find_trials_mat(session_trials_structure);
             trials_structure_file = dir(fullfile(session_trials));
             trials_structure_fname = fullfile(trials_structure_file.folder, trials_structure_file.name); 
             trials_structure = load(trials_structure_fname);
             trials = trials_structure.trials;
 
-            if any(strcmp(session_path, sessions_to_ignore)) % can't quite get this to debug but seems ok - it keeps running these sessions and catching errors (hence the need to skip them!)
-                continue;
-            end        
+        if any(strcmp(session_path, sessions_to_ignore)) % can't quite get this to debug but seems ok - it keeps running these sessions and catching errors (hence the need to skip them!)
+            continue;
+        end        
         
 %          if contains(ratID, NN8x8) || contains(ratID, ASSY156) % just trying to skip some lines of data to get to the last set to debug. Uncomment out to run more trialTypes
 %              continue;
@@ -101,55 +96,55 @@ for i_ratfolder = 1 : length(valid_trials_original_folder)
 %             continue;
 %         end
 
-            if  contains(ratID, 'R0328') || contains(ratID, 'R0327') || contains(ratID, 'R0411') || contains(ratID, 'R0456') % the first style it wouldn't skip these sessions so trying it as the 'intan' name instead of just the rawdata folder name.
-                 continue;  % R0328 has no actual ephys; using these lines to skip unneeded data. R0327 Can't create trials struct; R0420 I haven't added lines for
-            end
-    
-            if contains(session_name, sessions_to_ignore) || contains(session_name, sessions_to_ignore1) || contains(ratID, 'DigiInputTest') % Just always ignore these sessions. R0411 no data, DigitInputTest is t est files
-                continue;
-            end
-    
-            parentFolder = fullfile(intan_parent_directory, ...
-                ratID, ...
-                [ratID '-processed']);
-            
-            if contains(ratID, NN8x8) % if the ratID is in the list, it'll assign it the correct probe_type for ordering the LFP data correctly
-                probe_type = 'NN8x8'; 
-            elseif contains(ratID, ASSY156)
-                probe_type = 'ASSY156';
-            elseif contains(ratID, ASSY236)
-                probe_type = 'ASSY236';
-            end
-    
-            % load_channel_information - this file is coded 0 = bad, 1 = good,
-            % 2 = variable for data in each channel for each session_name for
-            % each rat_ID. Use the opts.VariableNamesRange for eat ratID to
-            % detectImportOptions otherwise there's an error due to different
-            % session number for each rat
-            sheetname = ratID;
-            if contains(ratID, 'R0326')
-                opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:H1', 'datarange', 'A2:H65', 'sheet', sheetname);
-            elseif contains(ratID, 'R0327') || contains(ratID, 'R0374')
-                opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:E1', 'datarange', 'A2:E65', 'sheet', sheetname);
-            elseif contains(ratID, 'R0372') || contains(ratID, 'R0378')|| contains(ratID, 'R0396')
-                opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:J1', 'datarange', 'A2:J65', 'sheet', sheetname);
-            elseif contains(ratID, 'R0379') || contains(ratID, 'R0413')
-                opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:L1', 'datarange', 'A2:L65', 'sheet', sheetname);
-            elseif contains(ratID, 'R0376')
-                opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:O1', 'datarange', 'A2:O65', 'sheet', sheetname);
-            elseif contains(ratID, 'R0394')
-                opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:G1', 'datarange', 'A2:G65', 'sheet', sheetname);            
-            elseif contains(ratID, 'R0395') || contains(ratID, 'R0427')
-                opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:K1', 'datarange', 'A2:K65', 'sheet', sheetname);
-            elseif contains(ratID, 'R0412')
-                opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:M1', 'datarange', 'A2:M65', 'sheet', sheetname);
-            elseif contains(ratID, 'R0419')
-                opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:P1', 'datarange', 'A2:P65', 'sheet', sheetname);
-            elseif contains(ratID, 'R0420')
-                opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:N1', 'datarange', 'A2:N65', 'sheet', sheetname);
-            elseif contains(ratID, 'R0425')
-                opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:V1', 'datarange', 'A2:V65', 'sheet', sheetname);
-            end
+        if  contains(ratID, 'R0328') || contains(ratID, 'R0327') || contains(ratID, 'R0411') || contains(ratID, 'R0456') % the first style it wouldn't skip these sessions so trying it as the 'intan' name instead of just the rawdata folder name.
+             continue;  % R0328 has no actual ephys; using these lines to skip unneeded data. R0327 Can't create trials struct; R0420 I haven't added lines for
+        end
+
+        if contains(session_name, sessions_to_ignore) || contains(session_name, sessions_to_ignore1)|| contains(ratID, 'DigiInputTest') % Just always ignore these sessions. R0411 no data, DigitInputTest is t est files
+            continue;
+        end
+
+        parentFolder = fullfile(intan_parent_directory, ...
+            ratID, ...
+            [ratID '-processed']);
+        
+        if contains(ratID, NN8x8) % if the ratID is in the list, it'll assign it the correct probe_type for ordering the LFP data correctly
+            probe_type = 'NN8x8'; 
+        elseif contains(ratID, ASSY156)
+            probe_type = 'ASSY156';
+        elseif contains(ratID, ASSY236)
+            probe_type = 'ASSY236';
+        end
+
+        % load_channel_information - this file is coded 0 = bad, 1 = good,
+        % 2 = variable for data in each channel for each session_name for
+        % each rat_ID. Use the opts.VariableNamesRange for eat ratID to
+        % detectImportOptions otherwise there's an error due to different
+        % session number for each rat
+        sheetname = ratID;
+        if contains(ratID, 'R0326')
+            opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:H1', 'datarange', 'A2:H65', 'sheet', sheetname);
+        elseif contains(ratID, 'R0327') || contains(ratID, 'R0374')
+            opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:E1', 'datarange', 'A2:E65', 'sheet', sheetname);
+        elseif contains(ratID, 'R0372') || contains(ratID, 'R0378')|| contains(ratID, 'R0396')
+            opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:J1', 'datarange', 'A2:J65', 'sheet', sheetname);
+        elseif contains(ratID, 'R0379') || contains(ratID, 'R0413')
+            opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:L1', 'datarange', 'A2:L65', 'sheet', sheetname);
+        elseif contains(ratID, 'R0376')
+            opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:O1', 'datarange', 'A2:O65', 'sheet', sheetname);
+        elseif contains(ratID, 'R0394')
+            opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:G1', 'datarange', 'A2:G65', 'sheet', sheetname);            
+        elseif contains(ratID, 'R0395') || contains(ratID, 'R0427')
+            opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:K1', 'datarange', 'A2:K65', 'sheet', sheetname);
+        elseif contains(ratID, 'R0412')
+            opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:M1', 'datarange', 'A2:M65', 'sheet', sheetname);
+        elseif contains(ratID, 'R0419')
+            opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:P1', 'datarange', 'A2:P65', 'sheet', sheetname);
+        elseif contains(ratID, 'R0420')
+            opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:N1', 'datarange', 'A2:N65', 'sheet', sheetname);
+        elseif contains(ratID, 'R0425')
+            opts = detectImportOptions(fname, 'filetype', 'spreadsheet', 'VariableNamesRange', 'A1:V1', 'datarange', 'A2:V65', 'sheet', sheetname);
+        end
 
         probe_channel_info = load_channel_information(fname, sheetname);
         [channel_information, intan_site_order, site_order] = channel_by_probe_site_ALL(probe_channel_info, probe_type);
@@ -172,14 +167,14 @@ for i_ratfolder = 1 : length(valid_trials_original_folder)
             end
 
 %         % Start of generation of trials structure
-            [session_folder, ~, ~] = fileparts(intan_folders{i_session_folder}); % even with loading in trials structure, still need logData but it is quick to load.
-            session_log = find_session_log(session_folder);
-            
-            if isempty(session_log)
-                sprintf('no log file found for %s', session_folder)
-            end
-    
-            logData = readLogData(session_log); %gathering logData information
+        [session_folder, ~, ~] = fileparts(intan_folders{i_sessionfolder}); % even with loading in trials structure, still need logData but it is quick to load.
+        session_log = find_session_log(session_folder);
+        
+        if isempty(session_log)
+            sprintf('no log file found for %s', session_folder)
+        end
+
+        logData = readLogData(session_log); %gathering logData information
 %         
 %         % calculate nexData, need digital input and analog input files
 %         digin_fname = fullfile(intan_folders{i_sessionfolder}, 'digitalin.dat');
@@ -253,7 +248,7 @@ for i_ratfolder = 1 : length(valid_trials_original_folder)
                     %find the column header that matches session_name (session_name and
                     %the column headers should match for each session to pull in the
                     %info for probe site health
-                    valid_sites_reordered = channel_information.(trial_session_name);
+                    valid_sites_reordered = channel_information.(session_name);
                     %channel_descriptions = find(probe_channel_info.Properties.VariableNames, session_name);
             
                     % Generate event triggered LFPs
@@ -262,7 +257,7 @@ for i_ratfolder = 1 : length(valid_trials_original_folder)
                                 % for each separate event
                                
             %                    % create a filename to save the trials_structure 
-                               trials_fname_to_save = char(strcat(trial_session_name, '_', eventFieldnames{i_event}, '_', trialType, '_', 'trials', '.mat')); % add in ''_', sprintf('trial%u.pdf', trial_idx)' should you want to save files individually
+                               trials_fname_to_save = char(strcat(session_name, '_', eventFieldnames{i_event}, '_', trialType, '_', 'trials', '.mat')); % add in ''_', sprintf('trial%u.pdf', trial_idx)' should you want to save files individually
                                trials_full_name = fullfile(session_trials_folder, trials_fname_to_save);
                                
             
@@ -289,7 +284,7 @@ for i_ratfolder = 1 : length(valid_trials_original_folder)
                                 % above here, the lfp file, trial structure never change
                                 
                                  % create a filename to save the plots 
-                               trials_plot_fname_to_save = char(strcat(trial_session_name, '_', eventFieldnames{i_event}, '_', trialType, '_', 'trials', '.pdf')); % add in ''_', sprintf('trial%u.pdf', trial_idx)' should you want to save files individually
+                               trials_plot_fname_to_save = char(strcat(session_name, '_', eventFieldnames{i_event}, '_', trialType, '_', 'trials', '.pdf')); % add in ''_', sprintf('trial%u.pdf', trial_idx)' should you want to save files individually
                                trials_plot_full_name = fullfile(trials_structure_plots, trials_plot_fname_to_save);
                     
             % %                     pts_per_event = size(event_triggered_lfps,3); % I think these lines need to go into the for loop for whenever a set of data is loaded into the workspace.
@@ -387,7 +382,7 @@ for i_ratfolder = 1 : length(valid_trials_original_folder)
                                         % Gives the whole plot page a name
                                          A=cell(1,5);
                                          A{1} = ['Subject: ' ratID];
-                                         A{2} = ['Session: ' trial_session_name];
+                                         A{2} = ['Session: ' session_name];
                                          A{3} = ['Task Level: ' choiceRTdifficulty{logData.taskLevel+1}];
                                          A{4} = ['Trial Number: ' num2str(trial_idx)];
                                          A{5} = ['EventFieldname and Trial Type: ' eventFieldnames{i_event} '_' trialType];
@@ -401,7 +396,9 @@ for i_ratfolder = 1 : length(valid_trials_original_folder)
                                         end
                                         close; 
                                 end
-                    end
+                                end
+            
         end
-   end
+     end
+
 end
