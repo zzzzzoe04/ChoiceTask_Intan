@@ -26,13 +26,6 @@ switch lower(probe_type)
             mono_chan_start_idx = (i_shank-1) * sites_per_shank + 1;
             mono_chan_end_idx = i_shank * sites_per_shank;
 
-            % take differences going down columns
             diff_lfps(diff_chan_start_idx:diff_chan_end_idx, :) = ...
-                diff(monopolar_ordered_lfp(mono_chan_start_idx:mono_chan_end_idx,:),1,1);
-
-        end
-
-end
-
-
+                diff(monopolar_ordered_lfp(mono_chan_start_idx:mono_chan_end_idx))
 end
