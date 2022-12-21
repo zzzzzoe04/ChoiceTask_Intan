@@ -38,8 +38,6 @@ for i_rat = 1 : num_rats
     session_dirs = dir(fullfile(processed_folder, strcat(ratID, '*')));
     num_sessions = length(session_dirs);
 
-    probe_lfp_type = sprintf('%s_%s', probe_type, lfp_type);
-
     for i_session = 1 : num_sessions
         
         session_name = session_dirs(i_session).name;
@@ -63,8 +61,6 @@ for i_rat = 1 : num_rats
                 'frequencylimits', [1, 100]);
 
         [ordered_lfp, intan_site_order, intan_site_order_for_trials_struct, site_order] = lfp_by_probe_site_ALL(lfp_data, probe_type);
-        
-        num_channels = size(ordered_lfp, 1);
 
         % load trials structure
         trials_name = sprintf('%s_trials.mat', session_name);
@@ -82,6 +78,11 @@ for i_rat = 1 : num_rats
         for i_lfptype = 1 : length(lfp_types)
 
             lfp_type = lfp_types{i_lfptype};
+            if strcmpi(lfp_type, 'bipolar')
+                ordered_lfp = diff_lfp_from_monopolar(ordered_lfp, probe_type);
+            end
+            probe_lfp_type = sprintf('%s_%s', probe_type, lfp_type);
+            num_channels = size(ordered_lfp, 1);
 
             for i_event = 1 : length(event_list)
                 event_name = event_list{i_event};

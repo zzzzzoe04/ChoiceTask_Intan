@@ -2,6 +2,7 @@ function diff_lfps = diff_lfp_from_monopolar(monopolar_ordered_lfp,probe_type)
 %UNTITLED8 Summary of this function goes here
 % INPUTS
 %   monopolar_ordered_lfp: num_channels x num_points array
+%   probe_type: string containing probe type. possibilities are 'nn8x8',
 
 num_sites = size(monopolar_ordered_lfp, 1);
 num_points = size(monopolar_ordered_lfp, 2);

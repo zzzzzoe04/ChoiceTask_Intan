@@ -9,6 +9,7 @@ summary_xls = fullfile(summary_xls_dir, summary_xls);
 % change the line below to allow looping through multiple trial types,
 % extract left vs right, etc.
 trials_to_analyze = 'correct';
+lfp_types = {'monopolar', 'bipolar'};
 lfp_type = 'monopolar';
 % trials_to_analyze = 'all';
 
@@ -62,9 +63,7 @@ for i_rat = 1 : num_rats
                 'frequencylimits', [1, 100]);
 
         [ordered_lfp, intan_site_order, intan_site_order_for_trials_struct, site_order] = lfp_by_probe_site_ALL(lfp_data, probe_type);
-        if strcmpi(lfp_type, 'bipolar')
-            % CODE HERE TO EXTRACT BIPOLAR LFP
-        end
+        
         num_channels = size(ordered_lfp, 1);
 
         % load trials structure
@@ -80,32 +79,46 @@ for i_rat = 1 : num_rats
         
         selected_trials = extract_trials_by_features(trials, trials_to_analyze);
 
-        for i_event = 1 : length(event_list)
-            event_name = event_list{i_event};
-            sprintf('working on session %s, event %s', session_name, event_name)
+        for i_lfptype = 1 : length(lfp_types)
 
-            perievent_data = extract_perievent_data(ordered_lfp, selected_trials, event_list{4}, t_window, Fs);
+            lfp_type = lfp_types{i_lfptype};
+            if strcmpi(lfp_type, 'monopolar')
+                lfps_for_calculations = ordered_lfp;
+            elseif strcmpi(lfp_type, 'bipolar')
+                lfps_for_ca
 
-            scalo_folder = sprintf('%s_scalos_%s', session_name, event_name);
-            scalo_folder = fullfile(cur_dir, scalo_folder);
-            if ~exist(scalo_folder, 'di')
+            for i_event = 1 : length(event_list)
+                event_name = event_list{i_event};
+                sprintf('working on session %s, event %s', session_name, event_name)
     
-            for i_channel = 1 : num_channels
-                [shank_num, site_num] = get_shank_and_site_num(probe_lfp_type, i_channel);
+                perievent_data = extract_perievent_data(ordered_lfp, selected_trials, event_list{4}, t_window, Fs);
     
-                scalo_name = sprintf('%s_scalos_%s_shank%02d_site%02d.mat',session_name, event_name, shank_num, site_num);
-                scalo_name = fullfile(scalo_folder, scalo_name);
-    
-                if exist(scalo_name, 'file')
-                    continue
+                scalo_folder = create_scalo_folder(session_name, event_name, parent_directory);
+    %             scalo_folder = sprintf('%s_scalos_%s', session_name, event_name);
+    %             scalo_folder = fullfile(cur_dir, scalo_folder);
+                if ~exist(scalo_folder, 'dir')
+                    mkdir(scalo_folder)
                 end
-    
-                event_triggered_lfps = squeeze(perievent_data(:, i_channel, :));
-    
-                [event_related_scalos, ~, coi] = trial_scalograms(event_triggered_lfps, fb);
-    
-                save(scalo_name, 'event_related_scalos', 'event_triggered_lfps', 'fb', 'coi', 't_window');
-    
+        
+                for i_channel = 1 : num_channels
+                    [shank_num, site_num] = get_shank_and_site_num(probe_lfp_type, i_channel);
+        
+                    scalo_name = sprintf('%s_scalos_%s_%s_shank%02d_site%02d.mat',session_name, lfp_type, event_name, shank_num, site_num);
+                    scalo_name = fullfile(scalo_folder, scalo_name);
+        
+                    if exist(scalo_name, 'file')
+                        continue
+                    end
+        
+                    event_triggered_lfps = squeeze(perievent_data(:, i_channel, :));
+        
+                    [event_related_scalos, ~, coi] = trial_scalograms(event_triggered_lfps, fb);
+        
+                    save(scalo_name, 'event_related_scalos', 'event_triggered_lfps', 'fb', 'coi', 't_window', 'i_channel');
+                    % saving i_channel is a check to make sure that shank
+                    % and site are numbered correctly later
+        
+                end
             end
         end
     end
