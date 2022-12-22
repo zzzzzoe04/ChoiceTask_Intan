@@ -25,7 +25,7 @@ probe_types = read_Jen_xls_summary(summary_xls, probe_type_sheet);
 
 num_rats = length(ratIDs);
 
-for i_rat = 1 : num_rats
+for i_rat = 3 : num_rats
     ratID = ratIDs{i_rat};
     rat_folder = fullfile(parent_directory, ratID);
 
@@ -67,13 +67,17 @@ for i_rat = 1 : num_rats
         trials_name = fullfile(cur_dir, trials_name);
 
         if ~exist(trials_name)
-            sprintf('no trials structure found for %s', session_name)
+            sprintf('no trials structure found for %s', trials_to_analyze, session_name)
             continue
         end
 
         load(trials_name)
         
         selected_trials = extract_trials_by_features(trials, trials_to_analyze);
+        if isempty(selected_trials)
+            sprintf('no %s trials found for %s', session_name)
+            continue
+        end
 
         for i_lfptype = 1 : length(lfp_types)
 
@@ -86,7 +90,7 @@ for i_rat = 1 : num_rats
 
             for i_event = 1 : length(event_list)
                 event_name = event_list{i_event};
-                sprintf('working on session %s, event %s', session_name, event_name)
+                sprintf('working on session %s, event %s, %s', session_name, event_name, lfp_type)
     
                 perievent_data = extract_perievent_data(ordered_lfp, selected_trials, event_list{4}, t_window, Fs);
     
@@ -108,9 +112,16 @@ for i_rat = 1 : num_rats
                     end
         
                     event_triggered_lfps = squeeze(perievent_data(:, i_channel, :));
-        
-                    [event_related_scalos, ~, coi] = trial_scalograms(event_triggered_lfps, fb);
-        
+                    
+                    % comment back in if running on a machine without a gpu
+%                     disp('cpu')
+%                     tic
+%                     [event_related_scalos, ~, coi] = trial_scalograms(event_triggered_lfps, fb);
+%                     toc
+                    
+                    etl_g = gpuArray(event_triggered_lfps);
+                    [event_related_scalos, ~, coi] = trial_scalograms(etl_g, fb);
+
                     save(scalo_name, 'event_related_scalos', 'event_triggered_lfps', 'fb', 'coi', 't_window', 'i_channel');
                     % saving i_channel is a check to make sure that shank
                     % and site are numbered correctly later
