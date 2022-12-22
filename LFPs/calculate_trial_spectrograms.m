@@ -44,6 +44,23 @@ for i_rat = 3 : num_rats
         cur_dir = fullfile(session_dirs(i_session).folder, session_name);
         cd(cur_dir)
 
+        % load trials structure
+        trials_name = sprintf('%s_trials.mat', session_name);
+        trials_name = fullfile(cur_dir, trials_name);
+
+        if ~exist(trials_name)
+            sprintf('no trials structure found for %s', session_name)
+            continue
+        end
+
+        load(trials_name)
+        
+        selected_trials = extract_trials_by_features(trials, trials_to_analyze);
+        if isempty(selected_trials)
+            sprintf('no %s trials found for %s', trials_to_analyze, session_name)
+            continue
+        end
+
         lfp_fname = strcat(session_name, '_lfp.mat');
         if ~isfile(lfp_fname)
             sprintf('%s not found, skipping', lfp_fname)
@@ -61,23 +78,6 @@ for i_rat = 3 : num_rats
                 'frequencylimits', [1, 100]);
 
         [ordered_lfp, intan_site_order, intan_site_order_for_trials_struct, site_order] = lfp_by_probe_site_ALL(lfp_data, probe_type);
-
-        % load trials structure
-        trials_name = sprintf('%s_trials.mat', session_name);
-        trials_name = fullfile(cur_dir, trials_name);
-
-        if ~exist(trials_name)
-            sprintf('no trials structure found for %s', trials_to_analyze, session_name)
-            continue
-        end
-
-        load(trials_name)
-        
-        selected_trials = extract_trials_by_features(trials, trials_to_analyze);
-        if isempty(selected_trials)
-            sprintf('no %s trials found for %s', session_name)
-            continue
-        end
 
         for i_lfptype = 1 : length(lfp_types)
 
