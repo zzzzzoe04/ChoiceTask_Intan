@@ -37,8 +37,11 @@ for i_ts = 1 : num_events
     else
         start_sample = floor(trial_ts(i_ts) * Fs);
         end_sample = start_sample + samples_per_event - 1;
-        
+        try
         current_lfp = ordered_lfp(:, start_sample:end_sample); % changed LFP to ordered_lfp for the calculate_cwt_3D_matrix script
+        catch
+            keyboard
+        end
     end
     
     event_triggered_lfps(i_ts, :, :) = current_lfp;
