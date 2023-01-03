@@ -83,7 +83,9 @@ elseif strcmpi(probe_type, 'ASSY156')
     % Per Jen, Intan chip is facing down on the ASSY-156 probe, but this
     % numbering suggests the chip was facing up. This doesn't seem to match
     % with the way she did the NN mapping; for example, site 1 from
-    % Cambridge DOES NOT map to site 0 intan
+    % Cambridge DOES NOT map to site 0 intan. I redid the mapping and they
+    % seem to match other than the duplication of site 36 in
+    % Cambridge156_order
      intan_amplifier = [1:17,19:32,63,...% Shank A   
         18,33:62, 64]; % Shank B
      intan_amplifier_DL = [47, 46, 45, 44, 43, 42, 41, 40, ...
@@ -119,6 +121,8 @@ elseif strcmpi(probe_type, 'ASSY156')
      intan_to_site_map_DL = intan_amplifier_DL(Cambridge156_order_DL)';   
 
 elseif strcmpi(probe_type, 'ASSY236')
+
+    % need to discuss with Jen, this doesn't make obvious sense...
     intan_amplifier = [1:32,...% Shank A % Verified 11/5/2022 JM
         33:64]; % Shank B
      Cambridge236_order = [1,9,21,4,26,5,20,27,...% Shank A % Verified 11/5/2022
