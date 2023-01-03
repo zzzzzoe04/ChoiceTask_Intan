@@ -1,8 +1,0 @@
-function [outputArg1,outputArg2] = create_scalo_folder(session_name,event_name,lfp_type,parent_directory)
-%UNTITLED2 Summary of this function goes here
-%   Detailed explanation goes here
-
-session_name_parts = split(session_name,'_');
-
-
-end

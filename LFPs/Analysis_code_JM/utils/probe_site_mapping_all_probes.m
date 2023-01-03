@@ -6,7 +6,7 @@ function intan_to_site_map_DL = probe_site_mapping_all_probes(probe_type)
     % intan_to_site_map - structure containing reorganization of the lfp_amplifier
     % variable ordering each shank from ventral to dorsal
 
-if strcmpi(probe_type, 'NN8x8')
+if strcmpi(probe_type, 'nn8x8')
     %this is how the lfp.mat file is organized
     %    lfp_organization = [1:64];
             
@@ -79,7 +79,7 @@ if strcmpi(probe_type, 'NN8x8')
    intan_to_site_map = intan_amplifier(NNsite_order)';            % THIS IS VENTRAL TO DORSAL
    intan_to_site_map_DL = intan_amplifier_DL(NNsite_order_DL)';   % THIS IS DORSAL TO VENTRAL
    
-elseif strcmpi(probe_type, 'ASSY156')
+elseif strcmpi(probe_type, 'assy156')
     % Per Jen, Intan chip is facing down on the ASSY-156 probe, but this
     % numbering suggests the chip was facing up. This doesn't seem to match
     % with the way she did the NN mapping; for example, site 1 from
@@ -120,7 +120,7 @@ elseif strcmpi(probe_type, 'ASSY156')
      intan_to_site_map = intan_amplifier(Cambridge156_order)';   
      intan_to_site_map_DL = intan_amplifier_DL(Cambridge156_order_DL)';   
 
-elseif strcmpi(probe_type, 'ASSY236')
+elseif strcmpi(probe_type, 'assy236')
 
     % need to discuss with Jen, this doesn't make obvious sense...
     intan_amplifier = [1:32,...% Shank A % Verified 11/5/2022 JM

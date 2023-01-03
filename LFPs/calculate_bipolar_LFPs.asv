@@ -25,16 +25,10 @@ num_bipolar_lfps = num_lfps - num_columns;
 
 bipolar_LFPs = zeros(num_bipolar_lfps, num_pts);
 
-for i_sitecol = 1 : num_columns
+for i_col = 1 : num_columns
 
-    start_LFP_row = (i_sitecol - 1) * sites_per_column + 1;
-    end_LFP_row = i_sitecol * sites_per_column;
+    start_row = (i_col - 1) * site
 
-    start_bipolar_row = (i_sitecol-1) * (sites_per_column-1) + 1;
-    end_bipolar_row = i_sitecol * (sites_per_column-1);
-
-    bipolar_LFPs(start_bipolar_row:end_bipolar_row, :) = diff(lfp(start_LFP_row:end_LFP_row, :), 1, 1);
-
-end
-
+outputArg1 = inputArg1;
+outputArg2 = inputArg2;
 end
