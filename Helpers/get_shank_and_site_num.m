@@ -18,4 +18,9 @@ switch lower(probe_type)
         % sites)
         shank_num = ceil(row_idx / 7);
         site_num = row_idx - (shank_num-1) * 7;
+
+    case 'assy156_monopolar'
+
+
+    case 'assy156_bipolar'
 end

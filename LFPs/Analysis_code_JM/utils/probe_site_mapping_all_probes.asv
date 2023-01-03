@@ -16,7 +16,7 @@ if strcmpi(probe_type, 'NN8x8')
     % DL - this maps the numbering on the NeuroNexus omnetics connector to
     % the numbering on the Intan amplifier
 
-    % NOTE: site 35 is entered twice in the matrix below
+    % NOTE: site 35 is entered twi
         intan_amplifier = [49:56,...%shank1, nn sites 1-8
         57:64,...%shank2
         33:35, 37:39, 41:42,...%shank3
