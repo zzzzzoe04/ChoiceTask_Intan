@@ -1,6 +1,8 @@
 function [lfp_data, actual_lfpFs] = calculate_monopolar_LFPs(intan_folder, target_Fs)
-
-% This file should not need to be probe_type specific JM 20220909
+%
+% INPUTS
+%   intan_folder - folder containing intan data (amplifier.dat, info.rhd)
+%   target_Fs - target sampling rate
 
 raw_block_size = 100000;    % number of samples to handle at a time (titrate to memory), may want to make this a varargin
 bytes_per_sample = 2;
@@ -52,7 +54,7 @@ LFPstart = 1;
 LFPend = (LFPstart + lfp_block_size - 1) - lfp_overlap_size;
 
 disp(['Block 1 of ' num2str(num_blocks)]);
-amplifier_data = readIntanAmplifierData_by_sample_number_DL(amp_file.name,1,raw_block_size,amplifier_channels,convert_to_microvolts);
+amplifier_data = readIntanAmplifierData_by_sample_number(amp_file.name,1,raw_block_size,amplifier_channels,convert_to_microvolts);
 for i_ch = 1 : num_channels
     currentLFP(i_ch, :) = ...
         decimate(amplifier_data(i_ch, :), r, filtOrder, 'fir');
@@ -74,7 +76,7 @@ for i_block = 2 : num_blocks
     read_start_sample = (LFPstart-1) * r - raw_overlap_size;
     read_end_sample = read_start_sample + raw_block_plus_overlap_size - 1;
    
-    new_amplifier_data = readIntanAmplifierData_by_sample_number_DL(amp_file.name,read_start_sample,read_end_sample,amplifier_channels,convert_to_microvolts);
+    new_amplifier_data = readIntanAmplifierData_by_sample_number(amp_file.name,read_start_sample,read_end_sample,amplifier_channels,convert_to_microvolts);
    
     if i_block < num_blocks
         if read_end_sample > samples_per_channel
