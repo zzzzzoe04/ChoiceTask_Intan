@@ -44,13 +44,14 @@ for i_rat = 1 : num_rats
         else
             continue
         end
+        actual_Fs = lfp_data.actual_Fs;
 
         sprintf('working on %s', session_name)
         lfp_bipolar_name = strcat(session_name, '_bipolar_lfp.mat');
         lfp_bipolar_name = fullfile(processed_folder, lfp_bipolar_name);
-        bipolar_lfp = calculate_bipolar_LFPs(lfp_data., probe_type);
+        bipolar_lfp = calculate_bipolar_LFPs(lfp_data.lfp, probe_type);
 
-        save(full_lfp_name, 'lfp', 'actual_Fs');
+        save(lfp_bipolar_name, 'bipolar_lfp', 'actual_Fs');
 
     end
 
