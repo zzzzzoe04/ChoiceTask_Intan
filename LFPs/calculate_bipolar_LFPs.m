@@ -8,7 +8,7 @@ probe_site_mapping = probe_site_mapping_all_probes(probe_type);
 % first, rearrange field potentials so they are sorted from dorsal to
 % ventral
 
-sorted_lfps = lfp(probe_site_mapping);
+sorted_lfps = lfp(probe_site_mapping, :);
 num_lfps = size(lfp, 1);   % assume each row is a recording channel
 num_pts = size(lfp, 2);
 

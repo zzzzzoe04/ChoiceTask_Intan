@@ -1,4 +1,4 @@
-function [lfp_data, actual_lfpFs] = calculate_monopolar_LFPs(intan_folder, target_Fs)
+function [lfp_data, actual_lfpFs] = calculate_monopolar_LFPs(intan_folder, target_Fs, convert_to_microvolts)
 %
 % INPUTS
 %   intan_folder - folder containing intan data (amplifier.dat, info.rhd)
@@ -6,7 +6,6 @@ function [lfp_data, actual_lfpFs] = calculate_monopolar_LFPs(intan_folder, targe
 
 raw_block_size = 100000;    % number of samples to handle at a time (titrate to memory), may want to make this a varargin
 bytes_per_sample = 2;
-convert_to_microvolts = false;
 filtOrder = 1000;
 
 cd(intan_folder);

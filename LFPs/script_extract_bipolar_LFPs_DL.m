@@ -39,8 +39,8 @@ for i_rat = 1 : num_rats
 
         lfp_fname = strcat(session_name, '_lfp.mat');
         full_lfp_name = fullfile(processed_folder, session_name, lfp_fname);
-        if isfile(lfp_fname)
-            lfp_data = load(lfp_name);
+        if isfile(full_lfp_name)
+            lfp_data = load(full_lfp_name);
         else
             continue
         end
@@ -48,10 +48,10 @@ for i_rat = 1 : num_rats
 
         sprintf('working on %s', session_name)
         lfp_bipolar_name = strcat(session_name, '_bipolar_lfp.mat');
-        lfp_bipolar_name = fullfile(processed_folder, lfp_bipolar_name);
+        lfp_bipolar_name = fullfile(processed_folder, session_name, lfp_bipolar_name);
         [bipolar_lfp, intan2probe_mapping] = calculate_bipolar_LFPs(lfp_data.lfp, probe_type);
 
-        save(lfp_bipolar_name, 'bipolar_lfp', 'actual_Fs', 'probe_type', 'intan2probe_mapping');
+        save(lfp_bipolar_name, 'bipolar_lfp', 'actual_Fs', 'probe_type', 'intan2probe_mapping', 'full_lfp_name');
 
     end
 

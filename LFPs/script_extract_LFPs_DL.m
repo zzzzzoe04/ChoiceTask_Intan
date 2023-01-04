@@ -14,10 +14,11 @@ probe_types = read_Jen_xls_summary(summary_xls, probe_type_sheet);
 [rat_nums, ratIDs, ratIDs_goodhisto] = get_rat_list();
 
 target_Fs = 500;   % in Hz, target LFP sampling rate after decimating the raw signal
+convert_to_microvolts = false;
 
 num_rats = length(ratIDs);
 
-for i_rat = 1 : num_rats
+for i_rat = 3 : num_rats
     ratID = ratIDs{i_rat};
     rat_folder = fullfile(parent_directory, ratID);
 
@@ -45,16 +46,20 @@ for i_rat = 1 : num_rats
         end
 
         lfp_fname = strcat(session_name, '_lfp.mat');
-        full_lfp_name = fullfile(processed_folder, session_name, lfp_fname);
+        processed_session_folder = fullfile(processed_folder, session_name);
+        full_lfp_name = fullfile(processed_session_folder, lfp_fname);
+        if ~isfolder(processed_session_folder)
+            mkdir(processed_session_folder)
+        end
 %         if isfile(lfp_fname)
 %             sprintf('%s already calculated, skipping', lfp_fname)
 %             continue
 %         end
 
         sprintf('working on %s', session_name)
-        [lfp, actual_Fs] = calculate_monopolar_LFPs(phys_folder, target_Fs);
+        [lfp, actual_Fs] = calculate_monopolar_LFPs(phys_folder, target_Fs, convert_to_microvolts);
 
-        save(full_lfp_name, 'lfp', 'actual_Fs');
+        save(full_lfp_name, 'lfp', 'actual_Fs', 'convert_to_microvolts');
 
     end
 
