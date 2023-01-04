@@ -49,9 +49,9 @@ for i_rat = 1 : num_rats
         sprintf('working on %s', session_name)
         lfp_bipolar_name = strcat(session_name, '_bipolar_lfp.mat');
         lfp_bipolar_name = fullfile(processed_folder, lfp_bipolar_name);
-        bipolar_lfp = calculate_bipolar_LFPs(lfp_data.lfp, probe_type);
+        [bipolar_lfp, intan2probe_mapping] = calculate_bipolar_LFPs(lfp_data.lfp, probe_type);
 
-        save(lfp_bipolar_name, 'bipolar_lfp', 'actual_Fs');
+        save(lfp_bipolar_name, 'bipolar_lfp', 'actual_Fs', 'probe_type', 'intan2probe_mapping');
 
     end
 

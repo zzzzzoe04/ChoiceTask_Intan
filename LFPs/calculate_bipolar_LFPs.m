@@ -1,4 +1,4 @@
-function bipolar_LFPs = calculate_bipolar_LFPs(lfp, probe_type)
+function [bipolar_LFPs, probe_site_mapping] = calculate_bipolar_LFPs(lfp, probe_type)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -33,7 +33,7 @@ for i_sitecol = 1 : num_columns
     start_bipolar_row = (i_sitecol-1) * (sites_per_column-1) + 1;
     end_bipolar_row = i_sitecol * (sites_per_column-1);
 
-    bipolar_LFPs(start_bipolar_row:end_bipolar_row, :) = diff(lfp(start_LFP_row:end_LFP_row, :), 1, 1);
+    bipolar_LFPs(start_bipolar_row:end_bipolar_row, :) = diff(sorted_lfps(start_LFP_row:end_LFP_row, :), 1, 1);
 
 end
 
