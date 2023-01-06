@@ -5,6 +5,17 @@ physiology_folder = '';
 [~, session_name, ~] = fileparts(session_dir);
 str_parts = split(session_name, '_');
 ratID = str_parts{1};
+
+
+if length(str_parts) == 1
+    % workaround for a poorly named folder
+    return
+end
+if strcmpi('str_parts{2}', 'check')
+    % workaround for a poorly named pair of folders
+    return
+end
+
 session_datestr = str_parts{2}(1:8);   % assume yyyymmdd date format
 
 rat_date = strcat(ratID, '_', session_datestr);
