@@ -83,8 +83,11 @@ for i_rat = 1 : num_rats
 
             lfp_type = lfp_types{i_lfptype};
             if strcmpi(lfp_type, 'bipolar')
-                ordered_lfp = diff_lfp_from_monopolar(ordered_lfp, probe_type);
+                lfp_fname = strcat(session_name, '_bipolar_lfp.mat');
+            else
+                lfp_fname = strcat(session_name, '_lfp.mat');
             end
+            lfp_fname = fullfile(cur_dir, )
             probe_lfp_type = sprintf('%s_%s', probe_type, lfp_type);
             num_channels = size(ordered_lfp, 1);
 

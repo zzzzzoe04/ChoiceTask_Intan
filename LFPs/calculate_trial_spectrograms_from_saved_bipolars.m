@@ -61,13 +61,13 @@ for i_rat = 1 : num_rats
             continue
         end
 
-        lfp_fname = strcat(session_name, '_lfp.mat');
-        if ~isfile(lfp_fname)
-            sprintf('%s not found, skipping', lfp_fname)
-            continue
-        end
-
-        lfp_data = load(lfp_fname);
+%         lfp_fname = strcat(session_name, '_lfp.mat');
+%         if ~isfile(lfp_fname)
+%             sprintf('%s not found, skipping', lfp_fname)
+%             continue
+%         end
+% 
+%         lfp_data = load(lfp_fname);
 
         Fs = lfp_data.actual_Fs;
         samp_window = round(t_window * Fs);
@@ -77,14 +77,31 @@ for i_rat = 1 : num_rats
                 'wavelet','amor',...
                 'frequencylimits', [1, 100]);
 
-        [ordered_lfp, intan_site_order, intan_site_order_for_trials_struct, site_order] = lfp_by_probe_site_ALL(lfp_data, probe_type);
+%         [ordered_lfp, intan_site_order, intan_site_order_for_trials_struct, site_order] = lfp_by_probe_site_ALL(lfp_data, probe_type);
 
         for i_lfptype = 1 : length(lfp_types)
 
             lfp_type = lfp_types{i_lfptype};
             if strcmpi(lfp_type, 'bipolar')
-                ordered_lfp = diff_lfp_from_monopolar(ordered_lfp, probe_type);
+                lfp_fname = strcat(session_name, '_bipolar_lfp.mat');
+            else
+                lfp_fname = strcat(session_name, '_lfp.mat');
             end
+            lfp_fname = fullfile(cur_dir, lfp_fname);
+            if ~isfile(lfp_fname)
+                sprintf('%s not found, skipping', lfp_fname)
+                continue
+            end
+
+            lfp_data = load(lfp_fname);
+
+            if strcmpi(lfp_type, 'bipolar')
+                ordered_lfp = lfp_data.bipolar_lfp;
+            else
+                probe_site_mapping = probe_site_mapping_all_probes(probe_type);
+                ordered_lfp = lfp_data.lfp(probe_site_mapping, :);
+            end
+
             probe_lfp_type = sprintf('%s_%s', probe_type, lfp_type);
             num_channels = size(ordered_lfp, 1);
 
@@ -92,7 +109,7 @@ for i_rat = 1 : num_rats
                 event_name = event_list{i_event};
                 sprintf('working on session %s, event %s, %s', session_name, event_name, lfp_type)
     
-                perievent_data = extract_perievent_data(ordered_lfp, selected_trials, event_list{4}, t_window, Fs);
+                perievent_data = extract_perievent_data(ordered_lfp, selected_trials, event_name, t_window, Fs);
     
                 scalo_folder = create_scalo_folder(session_name, event_name, parent_directory);
     %             scalo_folder = sprintf('%s_scalos_%s', session_name, event_name);

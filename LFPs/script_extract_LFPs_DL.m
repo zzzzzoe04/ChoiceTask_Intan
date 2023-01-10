@@ -18,7 +18,7 @@ convert_to_microvolts = false;
 
 num_rats = length(ratIDs);
 
-for i_rat = 14 : num_rats
+for i_rat = 1 : num_rats
     ratID = ratIDs{i_rat};
     rat_folder = fullfile(parent_directory, ratID);
 

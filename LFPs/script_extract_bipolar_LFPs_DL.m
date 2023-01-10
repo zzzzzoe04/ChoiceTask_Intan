@@ -17,7 +17,7 @@ target_Fs = 500;   % in Hz, target LFP sampling rate after decimating the raw si
 
 num_rats = length(ratIDs);
 
-for i_rat = 1 : num_rats
+for i_rat = 16 : num_rats
     ratID = ratIDs{i_rat};
     rat_folder = fullfile(parent_directory, ratID);
 
@@ -34,6 +34,11 @@ for i_rat = 1 : num_rats
     for i_session = 1 : num_sessions
         
         session_name = session_dirs(i_session).name;
+        if strcmp(session_name, 'R0378_20210507a') || strcmp(session_name, 'R0425_20220728a')
+            % skip this session because for some reason only 63 channels
+            % were recorded
+            continue
+        end
         cur_dir = fullfile(session_dirs(i_session).folder, session_name);
         cd(cur_dir)
 
