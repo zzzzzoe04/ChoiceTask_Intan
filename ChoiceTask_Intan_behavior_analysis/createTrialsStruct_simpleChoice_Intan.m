@@ -95,7 +95,7 @@ GO_startIdx = strfind(round((GO_markEnd_ts-GO_markStart_ts)/.005),[1 2 3 4]);
 %why are there two Idxs? is this legacy for some system that had these
 %times on different rows or something?
 if isempty(GO_startIdx)
-    error('lognexmerge:lognexmismatch', 'Could not find trial start sequence.');
+    error('Could not find trial start sequence.');
 else
     GO_endIdx = GO_startIdx;
 end
@@ -459,12 +459,11 @@ if trialCorrectFlag
             trialData.countsAsTrial = 0;
             trialData.valid = 0;
             trialData.correct = 0;
-        else
+                else
             trialData.timestamps.sideIn = sideInAfterCue(1); % Patched for sideIn timestamp empty JM 20200612
             trialData.timestamps.sideOut = ...
                 events{NoseOutidx(CueID(1) - 1)}.timestamps(events{NoseOutidx(CueID(1) - 1)}.timestamps > NoseInTS(1));
             trialData.timestamps.sideOut = trialData.timestamps.sideOut(1);
-            trialData.timestamps.foodClick = trialEvents{FHidx}.timestamps;
 
             trialData.timing.MT = trialData.timestamps.sideIn - ...  % Patched for sideIn timestamp empty JM 20200612 R0326_20200226 trial 162 example
             trialData.timestamps.centerOut;
@@ -473,7 +472,11 @@ if trialCorrectFlag
             trialData.timing.sidePortHold = trialData.timestamps.sideOut - ...
                 trialData.timestamps.sideIn;
         end
-
+        trialData.timestamps.sideIn = sideInAfterCue(1);
+        trialData.timestamps.sideOut = ...
+                events{NoseOutidx(CueID(1) + 1)}.timestamps(events{NoseOutidx(CueID(1) + 1)}.timestamps > NoseInTS(1));
+        trialData.timestamps.sideOut = trialData.timestamps.sideOut(1);
+            % done this way to prevent the algorithm from counting a nose-out
     else
         % tone 1 (low tone) was played
         trialData.tone = 1;
@@ -497,7 +500,6 @@ if trialCorrectFlag
             trialData.timestamps.sideOut = ...
                 events{NoseOutidx(CueID(1) - 1)}.timestamps(events{NoseOutidx(CueID(1) - 1)}.timestamps > NoseInTS(1));
             trialData.timestamps.sideOut = trialData.timestamps.sideOut(1);
-            trialData.timestamps.foodClick = trialEvents{FHidx}.timestamps;
 
             trialData.timing.MT = trialData.timestamps.sideIn - ...  % Patched for sideIn timestamp empty JM 20200612 R0326_20200226 trial 162 example
             trialData.timestamps.centerOut;
@@ -510,6 +512,8 @@ if trialCorrectFlag
         % done this way to prevent the algorithm from counting a nose-out
         % event that may be left over from a previous trial
     end    % end if isempty(trialEvents{Tone1idx}.timestamps)
+ 
+    trialData.timestamps.foodClick = trialEvents{FHidx}.timestamps;
 
     % calculate timing of events within the trial
     trialData.timing.pretone = trialData.timestamps.tone - ...
@@ -522,7 +526,7 @@ if trialCorrectFlag
     % depending on how the behavior software was running and if the food
     % port sensor was working at all
     
-    if FoodSensidx ~= 0 && ~isempty(sideInAfterCue)       % the food port sensor was working and there was a valid sideInAfterCue event
+    if FoodSensidx ~= 0         % the food port sensor was working
         firstFoodRetrieval = find(events{FoodSensidx}.timestamps > ...
             trialData.timestamps.sideIn);
         if ~isempty(firstFoodRetrieval)
@@ -543,13 +547,7 @@ if trialCorrectFlag
     % and target ports match up
     boxLogConflicts.outcome = ~(logTrial.outcome == 0);
     boxLogConflicts.RT = ~(abs(logTrial.RT - trialData.timing.RT) < timingTolerance);
-    if ~isempty(sideInAfterCue)
-        % no MT is there was no sideIn, which could happen on a "correct"
-        % trial according to the behavior log if this was the very last
-        % trial so the sideIn was not registered on the Intan system
-        % -DL 12/19/2022
-        boxLogConflicts.MT = ~(abs(logTrial.MT - trialData.timing.MT) < timingTolerance);
-    end
+    boxLogConflicts.MT = ~(abs(logTrial.MT - trialData.timing.MT) < timingTolerance);
     boxLogConflicts.pretone = ~(abs(logTrial.pretone - trialData.timing.pretone) < timingTolerance);
     boxLogConflicts.centerNP = ~(logTrial.Center == trialData.centerNP);
     boxLogConflicts.sideNP = ~(logTrial.Target == trialData.sideNP);
