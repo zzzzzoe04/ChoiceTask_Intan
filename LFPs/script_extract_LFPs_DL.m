@@ -57,10 +57,10 @@ for i_rat = 1 : num_rats
         if ~isfolder(processed_session_folder)
             mkdir(processed_session_folder)
         end
-%         if isfile(lfp_fname)
-%             sprintf('%s already calculated, skipping', lfp_fname)
-%             continue
-%         end
+        if isfile(lfp_fname) % the lfp_fname exists in the processed folder but this section is not recognizing it exists so still writes the file.
+            sprintf('%s already calculated, skipping', lfp_fname)
+            continue
+        end
 
         sprintf('working on %s', session_name)
         [lfp, actual_Fs] = calculate_monopolar_LFPs_DL(phys_folder, target_Fs, convert_to_microvolts);
