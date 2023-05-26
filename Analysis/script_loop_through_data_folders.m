@@ -1,9 +1,9 @@
 % script to calculate scalograms for all of Jen's rats; store in files in
 % the processed data folders
 
-parent_directory = 'Z:\data\ChoiceTask\';
+parent_directory = 'X:\Neuro-Leventhal\data\ChoiceTask';
 summary_xls = 'ProbeSite_Mapping_MATLAB.xlsx';
-summary_xls_dir = 'Z:\data\ChoiceTask\Probe Histology Summary';
+summary_xls_dir = 'X:\Neuro-Leventhal\data\ChoiceTask\Probe Histology Summary';
 summary_xls = fullfile(summary_xls_dir, summary_xls);
 
 % change the line below to allow looping through multiple trial types,

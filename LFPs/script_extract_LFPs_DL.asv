@@ -57,7 +57,7 @@ for i_rat = 1 : num_rats
         if ~isfolder(processed_session_folder)
             mkdir(processed_session_folder)
         end
-        if isfile(full_lfp_name) == 1 % the lfp_fname exists in the processed folder but this section is not recognizing it exists so still writes the file.
+        if exist(lfp_fname) % the lfp_fname exists in the processed folder but this section is not recognizing it exists so still writes the file.
             sprintf('%s already calculated, skipping', lfp_fname)
             continue
         end
