@@ -17,7 +17,6 @@ function plotSpikeRaster_color(xPoints,yPoints,groups,colors,figPos,markerSize)
 %       they will show up as different colors in the raster
 %   colors - vector of colors corresponding to groups (i.e., colors(1) is
 %       the color that all members of group 1 will be plotted)
-%   figPos - figure position
 %   markerSize - size of the marker to use for each raster point
 
 

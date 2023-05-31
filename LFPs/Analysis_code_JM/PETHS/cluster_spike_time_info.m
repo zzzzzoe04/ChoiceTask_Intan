@@ -5,6 +5,9 @@ spike_times = readNPY('spike_times.npy');
 % concatenate spike clusters and spike times
 cluster_times = [spike_clusters spike_times];
 
+% This file is grandfathered in and is replaced by the sort_ts_to_units
+%   function
+
 % Where spike times == st and cluster numbers == clu
 sClust=nan(max(spike_clusters)+1,1);
 for a=1:length(sClust)
