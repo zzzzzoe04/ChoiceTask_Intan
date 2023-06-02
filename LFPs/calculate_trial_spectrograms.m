@@ -107,9 +107,9 @@ for i_rat = 1 : num_rats
                     scalo_name = sprintf('%s_scalos_%s_%s_shank%02d_site%02d.mat',session_name, lfp_type, event_name, shank_num, site_num);
                     scalo_name = fullfile(scalo_folder, scalo_name);
         
-%                     if exist(scalo_name, 'file')
-%                         continue
-%                     end
+                    if exist(scalo_name, 'file')
+                        continue
+                    end
         
                     event_triggered_lfps = squeeze(perievent_data(:, i_channel, :));
                     

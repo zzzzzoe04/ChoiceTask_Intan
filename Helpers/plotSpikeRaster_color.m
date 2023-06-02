@@ -1,8 +1,8 @@
-function plotSpikeRaster_color(xPoints,yPoints,groups,colors,figPos,markerSize)
+function plotSpikeRaster_color(unitBehavior,event_idx,groups,colors,figPos,markerSize)
 % INPUTS
-%   xPoints - vector of x coordinates at which to put a raster mark
+%   xPoints (unitBehavior) - vector of x coordinates at which to put a raster mark
 %       (timestamps relative to a behavioral event for an entire session)
-%   yPoints - vector of y coordinates at which to put a raster mark
+%   yPoints (event_idx) - vector of y coordinates at which to put a raster mark
 %       xPoints and yPoints should have the same length, and xPoints(1)
 %       goes with yPoints(1), xPoints(2)-->yPoints(2), etc.
 %       the unique values of yPoints indicates a single trial, so all
@@ -26,18 +26,18 @@ function plotSpikeRaster_color(xPoints,yPoints,groups,colors,figPos,markerSize)
 % %     error('check input dimensions');
 % % end
 
-yPoints_unique = unique(yPoints);
+yPoints_unique = unique(event_idx);
 
 if ~isempty(figPos)
     figure('position',figPos);
 end
-for iTrial = 1:numel(unique(yPoints))
+for iTrial = 1:numel(unique(event_idx))
     cur_y = yPoints_unique(iTrial);
-    pointIdxs = find(yPoints == cur_y);
-    plot(xPoints(pointIdxs),yPoints(pointIdxs),'.','color',colors(groups(iTrial) == unique(groups),:),'markerSize',markerSize);
+    pointIdxs = find(event_idx == cur_y);
+    plot(unitBehavior(pointIdxs),event_idx(pointIdxs),'.','color',colors(groups(iTrial) == unique(groups),:),'markerSize',markerSize);
     hold on;
 end
-ylim([1 numel(unique(yPoints))]);
+ylim([1 numel(unique(event_idx))]);
 set(gca,'ydir','reverse');
 if ~isempty(figPos)
     xlabel('time (s)');

@@ -1,6 +1,6 @@
-function [unitBehavior, event_idx]  = test_peths(unit_struct, trial_ts)
+function [unitBehavior, event_idx, unit_peths]  = test_peths(unit_struct, trial_ts)
 % INPUTS
-%   sClust - matrix for each neuron, could be for each channel
+%   unit_struct - matrix for each neuron, could be for each channel
 %   trial_ts - trial_ts is an m x n array where m is num_trials and n is
 %       samples. This is generated looking for a specific time of the trial
 %       structure (e.g. correct trials). Units should be seconds
@@ -15,18 +15,18 @@ function [unitBehavior, event_idx]  = test_peths(unit_struct, trial_ts)
 %       second event. unitBehavior and event_idx can be input to 
 %       plotSpikeRaster_color as xPoints and yPoints, respectively
 
-% This code assumes spike times and behavior initiation times in ms
 pre=3; % in seconds
 post=3; 
 % pre (before the behavior of interest), post (after the behavior of interest), and bw (bin width) are all in milliseconds
 binW=0.050;   % in seconds
 
-trial_ts = sort(trial_ts);
-pethEntries=[];
-event_num = [];
+trial_ts = sort(trial_ts); %trial_ts is in seconds
+% pethEntries=[]; % I think this variable changed to unitBehavior
+% event_num = []; % unused?
 num_units = length(unit_struct);
 num_hist_bins = 1 + (pre + post) / binW;
-unit_peths = zeros(num_units, num_hist_bins);
+unit_peths = zeros(num_units, num_hist_bins); % uncomment out if you plot
+%       graphs using this function.
 unitBehavior = cell(num_units, 1);
 event_idx = cell(num_units, 1);
 for iUnit=1:length(unit_struct) % matrix for each neuron, could be for each channel
@@ -49,20 +49,27 @@ for iUnit=1:length(unit_struct) % matrix for each neuron, could be for each chan
         event_idx{iUnit} = [event_idx{iUnit}, ones(1, num_points) * i_event];
     end
     
-%     thisH=hist(unitBehavior, -pre:binW:post)./(length(trial_ts)); % vector that holds a trial averaged histogram, trial_ts is controlling for trial count
-%     unit_peths(iUnit, :)=thisH/(binW); % matrix that holds the trial-averaged histograms for each unit, adjusted to Hz
+    thisH=hist(unitBehavior{iUnit}, -pre:binW:post)./(length(trial_ts)); % vector that holds a trial averaged histogram, trial_ts is controlling for trial count
+    unit_peths(iUnit, :)=thisH/(binW); % matrix that holds the trial-averaged histograms for each unit, adjusted to Hz
 end
 % figure;
 % imagesc(unit_peths);colorbar;
 % figure
 % plot(unit_peths(end,:))
-
-
-% nn is a matrix of spike times (columns) and units (rows)
-% n1 is an iterator
-% nt is the activity (spike times) of a given unit
-% thisN is a matrix of this unit's behavior-related activity
-% bt is an iterator
-% st is a vector of behavior start times
-% thisH is a vector that holds a trial-averaged histogram
-% thisBresponse is a matrix that holds the trial-averaged histograms for each unit
+% %%
+% % Heatmap
+% figure;
+% imagesc(zscore(unitBehavior)');
+% colorbar;
+% %individual unit peths
+% figure;
+% for iUnit=1:size(unitBehavior,1)
+%     subplot(5,8,iUnit),plot(unitBehavior(iUnit,:));ylabel('Fr (Hz)');xlabel('Time (bins)');title(['Unit ',char(string(iUnit))]);
+% end
+% %%
+% % rasters
+% figure;
+% for iUnit=1:length(byUnit_Spikes4raster)
+%     subplot(5,8,iUnit),imagesc(abs(1-byUnit_Spikes4raster(iUnit).spike_times));colormap('bone');
+%     ylabel('trial');xlabel('Time (3001=event)');title(['Unit ',char(string(iUnit))]);
+% end
