@@ -32,7 +32,7 @@ t_win = [-2.5, 5]; % need this line for the event_triggered_lfps to select the c
 % lists for ratID probe_type
 NN8x8 = ["R0326", "R0327", "R0372", "R0379", "R0374", "R0376", "R0378", "R0394", "R0395", "R0396", "R0412", "R0413"]; % Specify list of ratID associated with each probe_type
 ASSY156 = ["R0411", "R0419"];
-ASSY236 = ["R0420", "R0425", "R0427", "R0457"];
+ASSY236 = ["R0420", "R0425", "R0427", "R0457", "R0456", "R0459", "R0460", "R0463", "R0465", "R0466", "R0467", "R0477"];
 
 sessions_to_ignore = {'R0378_20210507a', 'R0326_20191107a', 'R0425_20220728a', 'R0425_20220816b', 'R0427_20220920a', 'R0427_20220920a', 'R0427_20220919a'};
 sessions_to_ignore1 = {'R0425_20220728_ChVE_220728_112601', 'R0427_20220920_Testing_220920_150255'}; 
