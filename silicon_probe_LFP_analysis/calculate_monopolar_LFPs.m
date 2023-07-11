@@ -3,6 +3,13 @@ function [lfp_data, actual_lfpFs] = calculate_monopolar_LFPs(intan_folder, targe
 % INPUTS
 %   intan_folder - folder containing intan data (amplifier.dat, info.rhd)
 %   target_Fs - target sampling rate
+%
+% OUTPUTS:
+%   lfp_data - num_channels x num_samples array containing the LFP data.
+%       NOTE - the channels have NOT been rearranged to reflect probe
+%       geometry
+%   actual_lfpFs - sampling rate actually achieved when trying to hit
+%       target_Fs (may be different due to rounding)
 
 raw_block_size = 100000;    % number of samples to handle at a time (titrate to memory), may want to make this a varargin
 bytes_per_sample = 2;

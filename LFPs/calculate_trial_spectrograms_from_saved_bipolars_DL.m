@@ -4,7 +4,8 @@
 % parent_directory = 'Z:\data\ChoiceTask\';
 parent_directory = '\\corexfs.med.umich.edu\SharedX\Neuro-Leventhal\data\ChoiceTask';
 summary_xls = 'ProbeSite_Mapping_MATLAB.xlsx';
-summary_xls_dir = 'Z:\data\ChoiceTask\Probe Histology Summary';
+% summary_xls_dir = 'Z:\data\ChoiceTask\Probe Histology Summary';
+summary_xls_dir = '\\corexfs.med.umich.edu\SharedX\Neuro-Leventhal\data\ChoiceTask\Probe Histology Summary';
 summary_xls = fullfile(summary_xls_dir, summary_xls);
 
 % change the line below to allow looping through multiple trial types,
@@ -34,7 +35,7 @@ for i_rat = 1 : num_rats
         continue;
     end
 
-    probe_type = probe_types{probe_types.RatID == ratID, 2};
+    probe_type = probe_types{probe_types.ratID == ratID, 2};
     processed_folder = find_data_folder(ratID, 'processed', parent_directory);
     session_dirs = dir(fullfile(processed_folder, strcat(ratID, '*')));
     num_sessions = length(session_dirs);
@@ -62,13 +63,13 @@ for i_rat = 1 : num_rats
             continue
         end
 
-%         lfp_fname = strcat(session_name, '_lfp.mat');
-%         if ~isfile(lfp_fname)
-%             sprintf('%s not found, skipping', lfp_fname)
-%             continue
-%         end
-% 
-%         lfp_data = load(lfp_fname);
+        lfp_fname = strcat(session_name, '_lfp.mat');
+        if ~isfile(lfp_fname)
+            sprintf('%s not found, skipping', lfp_fname)
+            continue
+        end
+
+        lfp_data = load(lfp_fname);
 
         Fs = lfp_data.actual_Fs;
         samp_window = round(t_window * Fs);
@@ -125,9 +126,9 @@ for i_rat = 1 : num_rats
                     scalo_name = sprintf('%s_scalos_%s_%s_shank%02d_site%02d.mat',session_name, lfp_type, event_name, shank_num, site_num);
                     scalo_name = fullfile(scalo_folder, scalo_name);
         
-%                     if exist(scalo_name, 'file')
-%                         continue
-%                     end
+                    if exist(scalo_name, 'file')
+                        continue
+                    end
         
                     event_triggered_lfps = squeeze(perievent_data(:, i_channel, :));
                     

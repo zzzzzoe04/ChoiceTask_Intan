@@ -1,6 +1,16 @@
 function [bipolar_LFPs, probe_site_mapping] = calculate_bipolar_LFPs(lfp, probe_type)
-%UNTITLED Summary of this function goes here
-%   Detailed explanation goes here
+% function to calculate 
+%
+% INPUTS:
+%   lfp - num_channels x num_samples array where each row is an LFP
+%   probe_type - string describing the type of probe being used
+%       "nnx8x8" - neuronexus 8 x 8 probe (FIND PART # HERE)
+%       "assy156" - cambridge neurotech
+%       "assy236" - cambrdige neurotech
+%
+% OUTPUTS:
+%
+
 
 % re-arrange the rows to reflect the order of LFPs
 probe_site_mapping = probe_site_mapping_all_probes(probe_type);
