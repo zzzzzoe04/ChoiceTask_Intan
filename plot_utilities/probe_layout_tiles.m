@@ -1,4 +1,9 @@
-function probe_layout_tiles(nrows, ncols, title_text)
+function [h_fig, h_axes, t] = probe_layout_tiles(nrows, ncols, title_text)
+% 
+% INPUTS:
+%
+% OUTPUTS:
+%
 
 top_margin = 1.;
 bot_margin = 0.5;
@@ -8,7 +13,6 @@ r_margin = 0.5;
 if nrows > ncols
     fig_w = 8.5;
     fig_h = 11;
-    fig_h = 6;
 else
     fig_w = 11;
     fig_h = 8.5;
@@ -23,7 +27,7 @@ tile_bot = bot_margin;
 tile_w = fig_w - (l_margin + r_margin);
 tile_left = l_margin;
 
-fig = figure('units', ...
+h_fig = figure('units', ...
     'inches','position',[1,1,fig_w,fig_h]);
 
 t = tiledlayout(nrows, ncols, ...
