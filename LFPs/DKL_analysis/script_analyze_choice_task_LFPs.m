@@ -5,9 +5,10 @@ intan_parent_directory = '\\corexfs.med.umich.edu\SharedX\Neuro-Leventhal\data\C
 
 rat_xldbfile = 'ProbeSite_Mapping_MATLAB.xlsx';
 rat_xldbfile = fullfile(intan_parent_directory, 'Probe Histology Summary', rat_xldbfile);
-probe_list_sheet = 'probe_type';
+probe_type_sheet = 'probe_type';
 
-rat_probe_table = readtable(rat_xldbfile, filetype='spreadsheet', Sheet=probe_list_sheet);
+% rat_probe_table = readtable(rat_xldbfile, filetype='spreadsheet', Sheet=probe_type_sheet);
+rat_probe_table = read_Jen_xls_summary(rat_xldbfile, probe_type_sheet);
 
 lfp_types = {'monopolar', 'bipolar'};
 target_Fs = 500;
