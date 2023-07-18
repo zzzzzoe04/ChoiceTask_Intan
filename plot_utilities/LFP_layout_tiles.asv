@@ -31,12 +31,8 @@ t = tiledlayout(nrows, ncols, ...
     PositionConstraint="outerposition");
 
 for i_row = 1 : nrows
-    for i_col = 1 : 2
-        if i_col == 1
-            ax = nexttile([1, ncols-1]);
-        else
-            ax = nexttile;
-        end
+    for i_col = 1 : ncols
+        ax = nexttile;
         h_axes(i_row, i_col) = ax;
 %         imagesc(rand(20))
         if i_col > 1

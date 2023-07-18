@@ -2,7 +2,12 @@
 
 rats_to_analyze = [326, 327, 372, 374, 376, 378, 379, 394, 395, 396, 411, 412, 413, 419, 420, 425];
 
-rows_per_page = 16;
+sessions_to_skip = {'R0326_20191107a'};
+lfp_type = 'monopolar';
+n
+
+rows_per_page = 8;
+ylims = [-1, 1] * 1000;
 
 % parent_directory = 'Z:\data\ChoiceTask\';
 intan_parent_directory = '\\corexfs.med.umich.edu\SharedX\Neuro-Leventhal\data\ChoiceTask';
@@ -48,7 +53,14 @@ for i_rat = 1 : num_rats
     for i_session = 1 : num_sessions
         
         session_name = session_dirs(i_session).name;
+
+        if contains(sessions_to_skip, session_name)
+            sprintf('skipping %s', session_name)
+            continue
+        end
         cur_dir = fullfile(session_dirs(i_session).folder, session_name);
+
+        pd_metadata = parse_processed_folder(cur_dir);
         cd(cur_dir)
 
 %         % load trials structure
@@ -68,45 +80,75 @@ for i_rat = 1 : num_rats
 %             continue
 %         end
 
-        lfp_fname = strcat(session_name, '_lfp.mat');
+        lfp_fname = strcat(session_name, sprintf('_%s_lfp.mat', lfp_type));
         if ~isfile(lfp_fname)
             sprintf('%s not found, skipping', lfp_fname)
             continue
         end
 
         lfp_data = load(lfp_fname);
+        if ~lfp_data.convert_to_microvolts
+            lfp_data.lfp = lfp_data.lfp * 0.195;   % assumes data collected by Intan system
+            lfp_data.convert_to_microvolts = true;
+        end
         num_channels = size(lfp_data.lfp, 1);
         num_samples = size(lfp_data.lfp, 2);
-        ordered_lfp = lfp_data.lfp(probe_site_mapping, :);
+%         ordered_lfp = lfp_data.lfp(probe_site_mapping, :);
 
         Fs = lfp_data.actual_Fs;
         t = linspace(1/Fs, num_samples/Fs, num_samples);
 
         total_pages = ceil(num_channels / rows_per_page);
-        text_string = sprintf('%s, page %d of %d', session_name, 1, total_pages);
-        [h_fig, h_axes, tlayout] = LFP_layout_tiles(rows_per_page, 1, text_string);
+        
+        [h_fig, h_axes, tlayout] = LFP_layout_tiles(rows_per_page, 6, text_string);
         num_pages = 0;
         
+        session_pgf = create_processedgraphs_folder(pd_metadata, intan_parent_directory);
+        
+        save_name_pdf = sprintf('%s_%sLFPplots.pdf', session_name, lfp_type);
+        save_name_pdf = fullfile(session_pgf, save_name_pdf);
+
         for i_lfp = 1 : num_channels
 
+            
             plot_row = mod(i_lfp, rows_per_page);
             if plot_row == 0
                 plot_row = rows_per_page;
             end
+            if plot_row == 1
+                channels_string = sprintf('%02d', i_lfp-1);
+            else
+                channels_string = sprintf('%s, %02d', channels_string, i_lfp-1);
+            end
 
-            axes(h_axes(plot_row))
-            plot(t, ordered_lfp(i_lfp, :));
+            axes(h_axes(plot_row, 1))
+
+            plot(t, lfp_data.lfp(i_lfp, :));
+%             plot(t, ordered_lfp(i_lfp, :));
+            set(gca,'xlim',[0, max(t)],'ylim', ylims)
+            if plot_row < rows_per_page
+                xticklabels([])
+            end
 
             if plot_row == rows_per_page
                 % save this image; append 
                 num_pages = num_pages + 1;
+
+                title_string = sprintf('%s; ch %s; page %d of %d', session_name, channels_string, num_pages, total_pages);
+                title(tlayout, title_string, 'interpreter', 'none')
+
+                save_name = sprintf('%s_%sLFPplots_p%02d', session_name, lfp_type, num_pages);
+                save_name = fullfile(session_pgf, save_name);
                 if num_pages == 1
-                    % save file
+                    % save fig as pdf
+                    print(save_name_pdf, '-bestfit', '-dpdf')
                 else
                     % append to file
+                    print(save_name_pdf, '-append', '-bestfit', '-dpdf')
                 end
+                savefig(h_fig, save_name);
                 close(h_fig)
-                [h_fig, h_axes, tlayout] = LFP_layout_tiles(rows_per_page, 1, text_string);
+                [h_fig, h_axes, tlayout] = LFP_layout_tiles(rows_per_page, num_pages + 1, text_string);
             end
 
         end
