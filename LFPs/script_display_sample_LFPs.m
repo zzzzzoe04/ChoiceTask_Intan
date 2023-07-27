@@ -6,8 +6,8 @@ sessions_to_skip = {'R0326_20191107a'};
 lfp_type = 'monopolar';
 ncols = 6;
 
-max_f = 100;
-power_range = [0, 10];
+max_f = 50;
+power_range = [0, 5];
 
 rows_per_page = 8;
 ylims = [-1, 1] * 1000;
@@ -38,7 +38,7 @@ probe_types = read_Jen_xls_summary(rat_xldbfile, probe_type_sheet);
 
 num_rats = length(ratIDs);
 
-for i_rat = 1 : num_rats
+for i_rat = 5 : num_rats
     ratID = ratIDs{i_rat};
     rat_folder = fullfile(intan_parent_directory, ratID);
 
@@ -53,7 +53,12 @@ for i_rat = 1 : num_rats
     session_dirs = dir(fullfile(processed_folder, strcat(ratID, '*')));
     num_sessions = length(session_dirs);
 
-    for i_session = 1 : num_sessions
+    if i_rat == 5
+        start_session = 6;
+    else
+        start_session = 1;
+    end
+    for i_session = start_session : num_sessions
         
         session_name = session_dirs(i_session).name;
 
@@ -107,9 +112,6 @@ for i_rat = 1 : num_rats
         num_pages = 0;
         
         session_pgf = create_processedgraphs_folder(pd_metadata, intan_parent_directory);
-        
-        save_name_pdf = sprintf('%s_%sLFPplots.pdf', session_name, lfp_type);
-        save_name_pdf = fullfile(session_pgf, save_name_pdf);
 
         for i_lfp = 1 : num_channels
 
@@ -140,26 +142,39 @@ for i_rat = 1 : num_rats
             if plot_row < rows_per_page
                 xticklabels([])
             end
+            if plot_row == 1
+                title('log10 power')
+            end
 
             if plot_row == rows_per_page
                 % save this image; append 
                 num_pages = num_pages + 1;
+
+                axes(h_axes(plot_row, 1))
+                xlabel('time (s)')
+
+                axes(h_axes(plot_row, 2))
+                xlabel('frequency (Hz)')
 
                 title_string = sprintf('%s; ch %s; page %d of %d', session_name, channels_string, num_pages, total_pages);
                 title(tlayout, title_string, 'interpreter', 'none')
 
                 save_name = sprintf('%s_%sLFPplots_p%02d', session_name, lfp_type, num_pages);
                 save_name = fullfile(session_pgf, save_name);
-                if num_pages == 1
+                save_name_pdf = sprintf('%s_%sLFPplots_p%02d.pdf', session_name, lfp_type, num_pages);
+                save_name_pdf = fullfile(session_pgf, save_name_pdf);
+%                 if num_pages == 1
                     % save fig as pdf
                     print(save_name_pdf, '-bestfit', '-dpdf')
-                else
-                    % append to file
-                    print(save_name_pdf, '-append', '-bestfit', '-dpdf')
-                end
+%                 else
+%                     % append to file
+%                     print(save_name_pdf, '-append', '-bestfit', '-dpdf')
+%                 end
                 savefig(h_fig, save_name);
                 close(h_fig)
-                [h_fig, h_axes, tlayout] = LFP_layout_tiles(rows_per_page, ncols, text_string);
+                if num_pages < total_pages
+                    [h_fig, h_axes, tlayout] = LFP_layout_tiles(rows_per_page, ncols, text_string);
+                end
             end
 
         end

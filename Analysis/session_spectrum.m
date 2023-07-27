@@ -4,7 +4,7 @@ function [p, f] = session_spectrum(lfp, Fs)
 smoothwin = 10;
 
 [p, f] = pspectrum(lfp, Fs);
-psmoot = smoothdata(p, smoothwin);
+% psmooth = smoothdata(p, smoothwin);
 
 
 end
