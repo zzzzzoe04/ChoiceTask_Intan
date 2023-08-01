@@ -1,4 +1,4 @@
-function [outputArg1,outputArg2] = detect_LFP_artifacts(LFP,inputArg2)
+function [outputArg1,outputArg2] = detect_LFP_artifacts(LFP, Fs)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 max_amp = 2000;
