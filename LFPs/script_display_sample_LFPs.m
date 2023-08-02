@@ -38,7 +38,7 @@ probe_types = read_Jen_xls_summary(rat_xldbfile, probe_type_sheet);
 
 num_rats = length(ratIDs);
 
-for i_rat = 1 : num_rats
+for i_rat = 2 : num_rats
     ratID = ratIDs{i_rat};
     rat_folder = fullfile(intan_parent_directory, ratID);
 
@@ -53,8 +53,8 @@ for i_rat = 1 : num_rats
     session_dirs = dir(fullfile(processed_folder, strcat(ratID, '*')));
     num_sessions = length(session_dirs);
 
-    if i_rat == 5
-        start_session = 6;
+    if i_rat == 2
+        start_session = 5;
     else
         start_session = 1;
     end

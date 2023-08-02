@@ -27,4 +27,4 @@ lfp_data = load(lfp_name);
 test_line = 1;
 
 probe_type = probe_types{probe_types.ratID == ratID, 2};
-artifact_bool = detect_LFP_artifacts(lfp_data, probe_type);
+valid_ranges = detect_LFP_artifacts(lfp_data, probe_type);

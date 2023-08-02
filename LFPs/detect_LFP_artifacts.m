@@ -1,4 +1,4 @@
-function artifact_bool = detect_LFP_artifacts(lfp_data, probe_type, varargin)
+function valid_ranges = detect_LFP_artifacts(lfp_data, probe_type, varargin)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -9,7 +9,8 @@ zthresh = 10;
 
 for iarg = 1 : 2 : nargin - 2
     switch lower(varargin{iarg})
-
+        case 'zthresh'
+            zthresh = varargin{iarg + 1}
     end
 end
 
@@ -43,7 +44,6 @@ artifact_pts = find(boolvec);
 
 % pad the threshold crossing
 artifact_bool = false(num_samples, 1);
-
 for i_art = 1 : length(artifact_pts)
 
     pad_start = max(1, artifact_pts(i_art) - artifact_padding_samples);
@@ -55,6 +55,30 @@ for i_art = 1 : length(artifact_pts)
     artifact_bool = artifact_bool | cur_bool;
 
 end
+
+if ~any(artifact_bool)
+    valid_ranges = [1, num_samples];
+else
+
+    valid_range_ends = find(diff(artifact_bool) > 0) + 1;
+    valid_range_starts = find(diff(artifact_bool) < 0) + 2;
+
+    if ~artifact_bool(1)
+        % if the first value isn't inside an artifact, make the first valid
+        % interval start with the first sample
+        valid_range_starts = [1; valid_range_starts];
+    end
+    if ~artifact_bool(end)
+        % if the last value isn't inside an artifact, make the last valid
+        % interval end with the last sample
+        valid_range_ends = [valid_range_ends; num_samples];
+    end
+    valid_ranges = zeros(length(valid_range_starts), 2);
+    for i_interval = 1 : length(valid_range_starts)
+        valid_ranges(i_interval, 1) = valid_range_starts(i_interval);
+        valid_ranges(i_interval, 2) = valid_range_ends(find(valid_range_ends > valid_range_starts(i_interval), 1, 'first'));
+    end
+
 
 end
 
