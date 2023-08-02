@@ -6,6 +6,9 @@ rat_xldbfile = 'ProbeSite_Mapping_MATLAB.xlsx';
 summary_xls_dir = '\\corexfs.med.umich.edu\SharedX\Neuro-Leventhal\data\ChoiceTask\Probe Histology Summary';
 rat_xldbfile = fullfile(summary_xls_dir, rat_xldbfile);
 
+probe_type_sheet = 'probe_type';
+probe_types = read_Jen_xls_summary(rat_xldbfile, probe_type_sheet);
+
 session_name = 'R0326_20200220a';
 ratID = session_name(1:5);
 rat_folder = fullfile(intan_parent_directory, ratID);
@@ -23,4 +26,5 @@ lfp_data = load(lfp_name);
 
 test_line = 1;
 
-detect_LFP_artifacts(lfp_data.lfp(test_line, :), lfp_data.actual_Fs);
+probe_type = probe_types{probe_types.ratID == ratID, 2};
+artifact_bool = detect_LFP_artifacts(lfp_data, probe_type);

@@ -38,7 +38,7 @@ probe_types = read_Jen_xls_summary(rat_xldbfile, probe_type_sheet);
 
 num_rats = length(ratIDs);
 
-for i_rat = 5 : num_rats
+for i_rat = 1 : num_rats
     ratID = ratIDs{i_rat};
     rat_folder = fullfile(intan_parent_directory, ratID);
 
@@ -99,6 +99,14 @@ for i_rat = 5 : num_rats
             lfp_data.lfp = lfp_data.lfp * 0.195;   % assumes data collected by Intan system
             lfp_data.convert_to_microvolts = true;
         end
+
+        if strcmpi(lfp_type, 'monopolar')
+            % re-order sites to match probe geometry
+            sorted_lfps = lfp_data.lfp(probe_site_mapping, :);
+        else
+            sorted_lfps = lfp_data.lfp;
+        end
+
         num_channels = size(lfp_data.lfp, 1);
         num_samples = size(lfp_data.lfp, 2);
 %         ordered_lfp = lfp_data.lfp(probe_site_mapping, :);
@@ -108,34 +116,37 @@ for i_rat = 5 : num_rats
 
         total_pages = ceil(num_channels / rows_per_page);
         
-        [h_fig, h_axes, tlayout] = LFP_layout_tiles(rows_per_page, ncols, text_string);
+        [h_fig, h_axes, tlayout] = LFP_layout_tiles(rows_per_page, ncols, '');
         num_pages = 0;
         
         session_pgf = create_processedgraphs_folder(pd_metadata, intan_parent_directory);
 
         for i_lfp = 1 : num_channels
-
             
             plot_row = mod(i_lfp, rows_per_page);
             if plot_row == 0
                 plot_row = rows_per_page;
             end
-            if plot_row == 1
-                channels_string = sprintf('%02d', i_lfp-1);
-            else
-                channels_string = sprintf('%s, %02d', channels_string, i_lfp-1);
+            if strcmpi(lfp_type, 'monopolar')
+                if plot_row == 1
+                    channels_string = sprintf('%02d', probe_site_mapping(i_lfp));
+                else
+                    channels_string = sprintf('%s, %02d', channels_string, probe_site_mapping(i_lfp));
+                end
             end
 
             axes(h_axes(plot_row, 1))
 
-            plot(t, lfp_data.lfp(i_lfp, :));
+%             plot(t, lfp_data.lfp(i_lfp, :));
+            plot(t, sorted_lfps(i_lfp, :));
 %             plot(t, ordered_lfp(i_lfp, :));
             set(gca,'xlim',[0, max(t)],'ylim', ylims)
             if plot_row < rows_per_page
                 xticklabels([])
             end
 
-            [p, f] = pspectrum(lfp_data.lfp(i_lfp, :), lfp_data.actual_Fs);
+%             [p, f] = pspectrum(lfp_data.lfp(i_lfp, :), lfp_data.actual_Fs);
+            [p, f] = pspectrum(sorted_lfps(i_lfp, :), lfp_data.actual_Fs);
             axes(h_axes(plot_row, 2));
             plot(f(f<max_f), log10(p(f<max_f)));
             set(gca,'xlim',[0, max_f],'ylim',power_range);
@@ -173,7 +184,7 @@ for i_rat = 5 : num_rats
                 savefig(h_fig, save_name);
                 close(h_fig)
                 if num_pages < total_pages
-                    [h_fig, h_axes, tlayout] = LFP_layout_tiles(rows_per_page, ncols, text_string);
+                    [h_fig, h_axes, tlayout] = LFP_layout_tiles(rows_per_page, ncols, '');
                 end
             end
 

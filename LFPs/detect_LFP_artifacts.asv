@@ -1,4 +1,4 @@
-function artifact_bool = detect_LFP_artifacts(lfp_data, probe_type, varargin)
+function [outputArg1,outputArg2] = detect_LFP_artifacts(lfp_data, probe_type, varargin)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -42,19 +42,25 @@ boolvec = channel_mean > zthresh;
 artifact_pts = find(boolvec);
 
 % pad the threshold crossing
-artifact_bool = false(num_samples, 1);
+final_bool = false(num_samples, 1);
 
 for i_art = 1 : length(artifact_pts)
 
     pad_start = max(1, artifact_pts(i_art) - artifact_padding_samples);
-    pad_end = min(artifact_pts(i_art) + artifact_padding_samples, num_samples);
+    pad_end = min(artifact_pts) + artifact_padding_samples, num_samples);
 
     cur_bool = false(num_samples, 1);
     cur_bool(pad_start:pad_end) = true;
 
-    artifact_bool = artifact_bool | cur_bool;
+    final_bool = final_
 
-end
+% analytic_lfps = hilbert(sorted_lfps);
+% lfps_amp_envelope = abs(analytic_lfps);
+
+
+max_amp = 2000;
+
+
 
 end
 
