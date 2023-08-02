@@ -143,8 +143,7 @@ for i_rat = 2 : num_rats
             % overlay valid range markers
             hold on
             for i_range = 1 : size(valid_ranges, 1)
-                plot(t(valid_ranges(i_range,1)) : valid_ranges(i_range, 2), ylims(2)-50, 'r')
-            end
+                plot(t(valid_ranges(i_range,1)) : valid_ranges(i_range, 2))
 
 %             plot(t, ordered_lfp(i_lfp, :));
             set(gca,'xlim',[0, max(t)],'ylim', ylims)

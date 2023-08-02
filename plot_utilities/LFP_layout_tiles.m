@@ -31,9 +31,9 @@ t = tiledlayout(nrows, ncols, ...
     PositionConstraint="outerposition");
 
 for i_row = 1 : nrows
-    for i_col = 1 : 2
+    for i_col = 1 : 3
         if i_col == 1
-            ax = nexttile([1, ncols-1]);
+            ax = nexttile([1, ncols-2]);
         else
             ax = nexttile;
         end
