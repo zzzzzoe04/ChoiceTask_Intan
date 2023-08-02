@@ -1,6 +1,10 @@
 function [mean_p, f] = psd_without_artifacts(lfp, Fs, valid_ranges)
 %UNTITLED2 Summary of this function goes here
-%   Detailed explanation goes here
+% INPUTS
+%   lfp - vector containing the lfp
+%   Fs - sampling rate of the lfp
+%   valid_ranges - n x 2 array where the first column is the start of each
+%       valid interval; second column is the end of each valid interval
 
 num_valid_ranges = size(valid_ranges, 1);
 
