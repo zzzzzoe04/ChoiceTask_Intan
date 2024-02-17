@@ -1,5 +1,7 @@
 % script for testing artifact rejection
 
+lfp_type = 'monopolar';
+
 intan_parent_directory = '\\corexfs.med.umich.edu\SharedX\Neuro-Leventhal\data\ChoiceTask';
 rat_xldbfile = 'ProbeSite_Mapping_MATLAB.xlsx';
 % summary_xls_dir = 'Z:\data\ChoiceTask\Probe Histology Summary';

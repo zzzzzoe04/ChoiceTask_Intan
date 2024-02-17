@@ -53,11 +53,12 @@ for i_rat = 2 : num_rats
     session_dirs = dir(fullfile(processed_folder, strcat(ratID, '*')));
     num_sessions = length(session_dirs);
 
-    if i_rat == 1
-        start_session = 1;
-    else
-        start_session = 1;
-    end
+%     if i_rat == 1
+%         start_session = 1;
+%     else
+%         start_session = 1;
+%     end
+    start_session = 1;
     for i_session = start_session : num_sessions
         
         session_name = session_dirs(i_session).name;
@@ -121,7 +122,9 @@ for i_rat = 2 : num_rats
         
         session_pgf = create_processedgraphs_folder(pd_metadata, intan_parent_directory);
 
+        tic
         valid_ranges = detect_LFP_artifacts(lfp_data, probe_type);
+        toc
         for i_lfp = 1 : num_channels
             
             plot_row = mod(i_lfp, rows_per_page);
@@ -212,76 +215,3 @@ for i_rat = 2 : num_rats
     end
 
 end
-
-            
-% 
-%         for i_lfptype = 1 : length(lfp_types)
-% 
-%             lfp_type = lfp_types{i_lfptype};
-%             if strcmpi(lfp_type, 'bipolar')
-%                 lfp_fname = strcat(session_name, '_bipolar_lfp.mat');
-%             else
-%                 lfp_fname = strcat(session_name, '_lfp.mat');
-%             end
-%             lfp_fname = fullfile(cur_dir, lfp_fname);
-%             if ~isfile(lfp_fname)
-%                 sprintf('%s not found, skipping', lfp_fname)
-%                 continue
-%             end
-% 
-%             lfp_data = load(lfp_fname);
-% 
-%             if strcmpi(lfp_type, 'bipolar')
-%                 ordered_lfp = lfp_data.bipolar_lfp;
-%             else
-%                 probe_site_mapping = probe_site_mapping_all_probes(probe_type);
-%                 ordered_lfp = lfp_data.lfp(probe_site_mapping, :);
-%             end
-% 
-%             probe_lfp_type = sprintf('%s_%s', probe_type, lfp_type);
-%             num_channels = size(ordered_lfp, 1);
-% 
-%             for i_event = 1 : length(event_list)
-%                 event_name = event_list{i_event};
-%                 sprintf('working on session %s, event %s, %s', session_name, event_name, lfp_type)
-%     
-%                 perievent_data = extract_perievent_data(ordered_lfp, selected_trials, event_name, t_window, Fs);
-%     
-%                 scalo_folder = create_scalo_folder(session_name, event_name, intan_parent_directory);
-%     %             scalo_folder = sprintf('%s_scalos_%s', session_name, event_name);
-%     %             scalo_folder = fullfile(cur_dir, scalo_folder);
-%                 if ~exist(scalo_folder, 'dir')
-%                     mkdir(scalo_folder)
-%                 end
-%         
-%                 for i_channel = 1 : num_channels
-%                     [shank_num, site_num] = get_shank_and_site_num(probe_lfp_type, i_channel);
-%         
-%                     scalo_name = sprintf('%s_scalos_%s_%s_shank%02d_site%02d.mat',session_name, lfp_type, event_name, shank_num, site_num);
-%                     scalo_name = fullfile(scalo_folder, scalo_name);
-%         
-%                     if exist(scalo_name, 'file')
-%                         continue
-%                     end
-%         
-%                     event_triggered_lfps = squeeze(perievent_data(:, i_channel, :));
-%                     
-%                     % comment back in if running on a machine without a gpu
-% %                     disp('cpu')
-% %                     tic
-% %                     [event_related_scalos, ~, coi] = trial_scalograms(event_triggered_lfps, fb);
-% %                     toc
-%                     
-%                     etl_g = gpuArray(event_triggered_lfps);
-%                     [event_related_scalos, ~, coi] = trial_scalograms(etl_g, fb);
-% 
-%                     save(scalo_name, 'event_related_scalos', 'event_triggered_lfps', 'fb', 'coi', 't_window', 'i_channel');
-%                     % saving i_channel is a check to make sure that shank
-%                     % and site are numbered correctly later
-%         
-%                 end
-%             end
-%         end
-%     end
-% 
-% end
