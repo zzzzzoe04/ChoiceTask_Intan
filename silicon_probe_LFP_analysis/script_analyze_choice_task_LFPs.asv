@@ -1,6 +1,5 @@
 % DEPENDENCIES
 % intan_choice_task_navigation_utils-->find_rawdata_folders
-% Helpers-->get_rat_list
 
 %%
 % this segment finds all the rat folders with electrophysiology data. It
@@ -10,6 +9,7 @@
 % change the line below depending on where SharedX is mounted on each
 % computer
 intan_parent_directory = '\\corexfs.med.umich.edu\SharedX\Neuro-Leventhal\data\ChoiceTask';
+probe_mapping_fname = fullfile(intan_parent_directory, 'Probe Histology Summary', 'ProbeSite_Mapping_MATLAB.xlsx');
 
 rats_with_intan_sessions = find_rawdata_folders(intan_parent_directory);
 
@@ -21,16 +21,6 @@ rats_with_intan_sessions = find_rawdata_folders(intan_parent_directory);
 % at the end of this calculation, the LFP matrix is still in the order of
 % the recorded channels, NOT the order of electrical sites along each probe
 % shank
-
-probe_mapping_fname = fullfile(intan_parent_directory, 'Probe Histology Summary', 'ProbeSite_Mapping_MATLAB.xlsx');
-
-probe_type_sheet = 'probe_type';
-probe_types = read_choicetask_xls_summary(summary_xls, probe_type_sheet);
-
-[rat_nums, ratIDs, ratIDs_goodhisto] = get_rat_list();
-
-convert_to_microvolts = true;
-target_Fs = 500;    % target downsampled sampling rate
 for i_rat = 1 : length(rats_with_intan_sessions)
     
     intan_folders = rats_with_intan_sessions(i_rat).intan_folders;
@@ -39,16 +29,17 @@ for i_rat = 1 : length(rats_with_intan_sessions)
         rd_metadata = parse_rawdata_folder(intan_folders{i_sessionfolder});
         pd_folder = create_processed_data_folder(rd_metadata, intan_parent_directory);
         
-        full_lfp_name = fullfile(pd_folder, create_lfp_fname(rd_metadata));
+        lfp_fname = fullfile(pd_folder, create_lfp_fname(rd_metadata));
         
-        monopolar_lfp_calculated = false;
-        if ~exist(full_lfp_name, 'file')
+        if ~exist(lfp_fname, 'file')
         
-            [lfp, actual_Fs] = calculate_monopolar_LFPs(intan_folders{i_sessionfolder}, target_Fs); % This file does not need to be probe_type specific
+            [lfp, actual_Fs] = calculate_monopolar_LFPs(intan_folders{i_sessionfolder}, 500); % This file should not need to be probe_type specific JM 20220909
             
-            save(full_lfp_name, 'lfp', 'actual_Fs');
+            save(lfp_fname, 'lfp', 'actual_Fs');
 
-            monopolar_lfp_calculated = true;
+        else
+
+            load(lfp_fname);
 
         end
 
@@ -56,13 +47,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
 
         if ~exist(bp_lfpname, 'file')
 
-            load(full_lfp_name);
-
-            [bipolar_lfp, intan2probe_mapping] = calculate_bipolar_LFPs(lfp, probe_type);
-
-            save(bp_lfpname, 'bipolar_lfp', 'actual_Fs', 'probe_type', 'intan2probe_mapping', 'full_lfp_name');
-
-        end
+            [bipolar_LFPs, probe_site_mapping] = calculate_bipolar_LFPs(lfp, probe_type)
         
     end
     

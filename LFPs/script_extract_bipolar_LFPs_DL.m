@@ -7,11 +7,11 @@ summary_xls_dir = 'Z:\data\ChoiceTask\Probe Histology Summary';
 summary_xls = fullfile(summary_xls_dir, summary_xls);
 
 probe_type_sheet = 'probe_type';
-probe_types = read_Jen_xls_summary(summary_xls, probe_type_sheet);
+probe_types = read_choicetask_xls_summary(summary_xls, probe_type_sheet);
 % NOTE - UPDATE FUNCTION read_Jen_xls_summary WHEN WE NEED OTHER
 % INFORMATION OUT OF THAT SPREADSHEET
 
-[rat_nums, ratIDs, ratIDs_goodhisto] = get_rat_list();
+[rat_nums, ratIDs, ratIDs_goodhisto] = get_rat_list(summary_xls);
 
 target_Fs = 500;   % in Hz, target LFP sampling rate after decimating the raw signal
 
