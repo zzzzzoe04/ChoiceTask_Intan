@@ -37,15 +37,16 @@ for i_rat = 1 : length(rats_with_intan_sessions)
     ratID = rats_with_intan_sessions(i_rat).ratID;
     
     for i_sessionfolder = 1 : length(intan_folders)
-        rd_metadata = parse_rawdata_folder(intan_folders{i_sessionfolder});
+        [session_folder, ~, ~] = fileparts(intan_folders{i_sessionfolder});
+        rd_metadata = parse_rawdata_folder(session_folder);
         pd_folder = create_processed_data_folder(rd_metadata, intan_parent_directory);
         
-        full_lfp_name = fullfile(pd_folder, create_lfp_fname(rd_metadata));
+        full_lfp_name = fullfile(pd_folder, create_lfp_fname(rd_metadata, 'monopolar'));
         
         monopolar_lfp_calculated = false;
         if ~exist(full_lfp_name, 'file')
         
-            [lfp, actual_Fs] = calculate_monopolar_LFPs(intan_folders{i_sessionfolder}, target_Fs); % This file does not need to be probe_type specific
+            [lfp, actual_Fs] = calculate_monopolar_LFPs(intan_folders{i_sessionfolder}, target_Fs, convert_to_microvolts); % This file does not need to be probe_type specific
             
             save(full_lfp_name, 'lfp', 'actual_Fs');
 
@@ -53,7 +54,7 @@ for i_rat = 1 : length(rats_with_intan_sessions)
 
         end
 
-        bp_lfpname = fullfile(pd_folder, create_lfp_fname(rd_metadata), 'bipolar');
+        bp_lfpname = fullfile(pd_folder, create_lfp_fname(rd_metadata, 'bipolar'));
 
         if ~exist(bp_lfpname, 'file')
 
