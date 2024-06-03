@@ -1,6 +1,6 @@
 % DEPENDENCIES
 % intan_choice_task_navigation_utils-->find_rawdata_folders
-% Helpers-->get_rat_list
+% Helpers-->get_rats2process
 
 %%
 % this segment finds all the rat folders with electrophysiology data. It
@@ -25,15 +25,16 @@ rats_with_intan_sessions = find_rawdata_folders(intan_parent_directory);
 probe_mapping_fname = fullfile(intan_parent_directory, 'Probe Histology Summary', 'ProbeSite_Mapping_MATLAB.xlsx');
 
 probe_type_sheet = 'probe_type';
-probe_types = read_choicetask_xls_summary(summary_xls, probe_type_sheet);
+probe_types = read_choicetask_xls_summary(probe_mapping_fname, probe_type_sheet);
 
-[rat_nums, ratIDs, ratIDs_goodhisto] = get_rat_list();
+ratIDs = get_rats2process(probe_mapping_fname);   % not sure we need this...
 
 convert_to_microvolts = true;
 target_Fs = 500;    % target downsampled sampling rate
 for i_rat = 1 : length(rats_with_intan_sessions)
     
     intan_folders = rats_with_intan_sessions(i_rat).intan_folders;
+    ratID = rats_with_intan_sessions(i_rat).ratID;
     
     for i_sessionfolder = 1 : length(intan_folders)
         rd_metadata = parse_rawdata_folder(intan_folders{i_sessionfolder});
@@ -56,8 +57,13 @@ for i_rat = 1 : length(rats_with_intan_sessions)
 
         if ~exist(bp_lfpname, 'file')
 
-            load(full_lfp_name);
+            if ~monopolar_lfp_calculated
+                % if monopolar lfp file already existed but bipolar
+                % doesn't, load the monopolar file
+                load(full_lfp_name);
+            end
 
+            probe_type = probe_types{probe_types.RatID == ratID, 2};
             [bipolar_lfp, intan2probe_mapping] = calculate_bipolar_LFPs(lfp, probe_type);
 
             save(bp_lfpname, 'bipolar_lfp', 'actual_Fs', 'probe_type', 'intan2probe_mapping', 'full_lfp_name');
@@ -67,12 +73,3 @@ for i_rat = 1 : length(rats_with_intan_sessions)
     end
     
 end
-
-%%
-% calculate the bipolar LFPs
-% lfp_name = 
-probe_anatomy_info = read_probe_mapping_xls(probe_mapping_fname); % Still not clear what Dan was trying to accomplish here. 
-% The probe mapping file basically makes a table of R0326 even if the
-% cur_sheet is for R0425?
-% Plus we don't 'need' to read the probe mapping on this file (lfp's are
-% lfp's)

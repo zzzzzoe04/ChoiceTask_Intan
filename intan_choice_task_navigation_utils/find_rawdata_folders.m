@@ -80,6 +80,7 @@ for i_ratfolder = 1 : num_valid_rat_folders
         num_rat_folders_with_intan_data = num_rat_folders_with_intan_data + 1;
         valid_rat_folder(num_rat_folders_with_intan_data).name = rat_folders{i_ratfolder};
         valid_rat_folder(num_rat_folders_with_intan_data).intan_folders = intan_datafolders;
+        valid_rat_folder(num_rat_folders_with_intan_data).ratID = cur_ratID;
     end
     
 end
