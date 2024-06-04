@@ -42,9 +42,18 @@ for i_rat = 1 : length(rats_with_intan_sessions)
         pd_folder = create_processed_data_folder(rd_metadata, intan_parent_directory);
         
         full_lfp_name = fullfile(pd_folder, create_lfp_fname(rd_metadata, 'monopolar'));
+
+        if ~any(probe_types.ratID == ratID)
+            % if this rat isn't included in the excel workbook, skip.
+            % Presumably, the data aren't any good
+            continue
+        end
         
         monopolar_lfp_calculated = false;
         if ~exist(full_lfp_name, 'file')
+
+            textstr = sprintf('calculating monopolar LFP for %s', rd_metadata.session_name);
+            disp(textstr)
         
             [lfp, actual_Fs] = calculate_monopolar_LFPs(intan_folders{i_sessionfolder}, target_Fs, convert_to_microvolts); % This file does not need to be probe_type specific
             
@@ -64,7 +73,10 @@ for i_rat = 1 : length(rats_with_intan_sessions)
                 load(full_lfp_name);
             end
 
-            probe_type = probe_types{probe_types.RatID == ratID, 2};
+            textstr = sprintf('calculating monopolar LFP for %s', rd_metadata.session_name);
+            disp(textstr)
+            
+            probe_type = probe_types{probe_types.ratID == ratID, 2};
             [bipolar_lfp, intan2probe_mapping] = calculate_bipolar_LFPs(lfp, probe_type);
 
             save(bp_lfpname, 'bipolar_lfp', 'actual_Fs', 'probe_type', 'intan2probe_mapping', 'full_lfp_name');
